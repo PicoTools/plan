@@ -115,3 +115,20 @@ func (v *Visitor) invokeRuntimeFunc(fn *object.RuntimeFunc, isClosure bool, para
 	}
 	return types.Success
 }
+
+// InvokeRuntimeFunc invokes directly runtime function with context
+func (v *Visitor) InvokeRuntimeFunc(fn *object.RuntimeFunc, params ...object.Object) any {
+	// create new context to execute function in
+	scope.CurrentScope = scope.NewScope(
+		scope.CurrentScope,
+		scope.CurrentScope.Depth()+1,
+		true,
+		false,
+		make(map[string]object.Object),
+	)
+	defer func() {
+		scope.CurrentScope = scope.CurrentScope.Parent()
+	}()
+
+	return v.invokeRuntimeFunc(fn, false, params...)
+}
