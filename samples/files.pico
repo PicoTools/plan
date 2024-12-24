@@ -1,0 +1,4 @@
+path = "/tmp/test";
+str01 = "Hello world";
+fwrite(path, str01);
+assert(fread(path) == str01);

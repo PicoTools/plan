@@ -1,0 +1,51 @@
+a = true;
+b = {"a":"b"};
+c = 1.0;
+d = 1;
+e = [1,2,3];
+f = null;
+g = "world";
+
+// bool
+println("bool:");
+println(bool(a));
+println(bool(b));
+println(bool(c));
+println(bool(d));
+println(bool(e));
+println(bool(f));
+println(bool(g));
+println();
+
+// int
+fn cast_int(x) {
+  return int(x);
+}
+println("int:");
+println(cast_int(a));
+if !is_dict(b) {
+  println(cast_int(b));
+}
+println(cast_int(c));
+println(cast_int(d));
+if !is_list(e) {
+  println(cast_int(e));
+}
+if !is_null(f) {
+  println(cast_int(f));
+}
+if !is_str(g) {
+  println(cast_int(g));
+}
+println();
+
+// str
+println("str:");
+println(str(a));
+println(str(b));
+println(str(c));
+println(str(d));
+println(str(e));
+println(str(f));
+println(str(g));
+println();

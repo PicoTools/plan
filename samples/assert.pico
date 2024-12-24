@@ -1,0 +1,349 @@
+// bool
+assert(true);
+assert(!false);
+assert(true || false);
+assert(!false || false);
+assert(!!true || false);
+assert(true && true);
+assert(true && !false && !!true);
+assert(true && (false || true));
+assert((true || false) && (!false));
+assert(true == !false);
+assert(false != true);
+assert((!true || true) != false);
+assert(!false >= true);
+assert(false < true);
+assert(false <= false);
+assert(false + true == true);
+assert(true + true + true == 3);
+assert(true ** true == 1);
+assert(true ** false == 1);
+assert(true * true == true);
+assert(true * false == 0);
+assert(true / true == true);
+assert(true ^ true == false);
+assert(true ^ false == !false);
+
+// dict
+assert(!{});
+assert({"a":"b"} == {"a":"b"});
+assert({"key1":"val1", "key2":"val2"} == {"key2":"val2", "key1":"val1"});
+assert(!{"a":"b"} == false);
+assert({"key1":"val1"} != {"key2":"val1"});
+
+// float
+assert(!0.0);
+assert(78.3 == 78.3);
+assert(1.0 == true);
+assert(0.0 == false);
+assert(231.123 == 231.123);
+assert(-0.999 != -0.9998);
+assert(1.2 >= 1.19999999999999);
+assert(0.0 <= true);
+assert(1.1 > 1);
+assert(false <= 0.0);
+assert(1.21 - 0.01 == true + 0.20);
+assert(0.5 + 0.4 + 0.3 + 0.2 + 0.1 == 2.5 - 1.0);
+assert(2.5 ** 3 == 15.625);
+assert(3.33 * 3 == 9.99);
+assert(99999.0 % 3.0 == 0);
+assert(-5.25 * -1.25 == 6.5625);
+
+// int
+assert(!0);
+assert(0x25 == 0x25);
+assert(123 == 123);
+assert(1 == true);
+assert(false == 0);
+assert(1 != -1);
+assert(-true == -1);
+assert(-false == 0);
+assert(-0 == false);
+assert(1 >= true);
+assert(!(1 > true));
+assert(0 <= 0);
+assert(1 + 1 == 3 - 1);
+assert(2 - -2 == 4);
+assert(1 - 50 == -49);
+assert(3**3 == 27);
+assert(4**3**2 == 262144);
+assert((4**3)**2 == 4096);
+assert((12 ^ 23) == 27);
+
+// list
+assert(![]);
+assert([1,2,3] == [1,2,3]);
+assert(![1,2,3] == false);
+assert([1,2,3] != [1,3,2]);
+assert([] + 1 + 2 + 3 == [1, 2, 3]);
+assert(["a","b"] + [1,2] == ["a", "b", [1,2]]);
+assert([] + {"a":"b"} == [{"a":"b"}]);
+assert([1,2,3] * 2 == [1,2,3,1,2,3]);
+assert(["a","b"] * false == []);
+
+// null
+assert(!null);
+assert(null == null);
+assert(!null == !!!null);
+assert(!(null != null));
+
+// str
+assert(!"");
+assert("abc" == "abc");
+assert("привет" == "привет");
+assert("abc" != "abd");
+assert("abcd" > "abc");
+assert("AbCd" <= "AbCd");
+assert("Привет" > "Привес");
+assert("м" + "и" + "р" == "мир");
+assert("abc" + "DEF" >= "abcDEE");
+assert("a" * -1 == "");
+assert("world" * 3 == "worldworldworld");
+assert("abc" * false == "");
+
+// for loop
+total01 = 0;
+for i = 0; i <= 10; i += 1 {
+  total01 += i;
+}
+assert(total01 == 0+1+2+3+4+5+6+7+8+9+10);
+
+// while loop
+total02 = 0;
+counter02 = -10;
+while counter02 <= 0 {
+  total02 += counter02;
+  counter02 += 1;
+}
+assert(total02 == -10-9-8-7-6-5-4-3-2-1-0);
+
+// if simple
+total03 = 10;
+if total03 > 25 {
+  assert(false);
+}
+
+// if/else simple
+total04 = 10;
+if total04 > 25 {
+  total04 += 1;
+} else {
+  total04 += 2;
+}
+assert(total04 == 12);
+
+// if/elif/else
+total05 = 5;
+if total05 < 5 {
+  assert(false);
+} elif total05 == 5 {
+  total05 += 25;
+} else {
+  total05 = 0;
+}
+assert(total05 == 30);
+
+// functions
+fn twice(n) {
+  return n + n;
+}
+
+fn square(n) {
+  return n * n;
+}
+
+fn new_list() {
+  return [1,2,3,4,5,6];
+}
+
+fn new_dict() {
+  return {"key1":"val1", "key2":"val2"};
+}
+
+fn combiner(n) {
+  return twice(square(n));
+}
+
+assert(twice(square(5)) == 50);
+assert(twice(25) == 25 + 25);
+assert(square(666) == 666 ** 2);
+assert(combiner(2) == 8);
+assert(new_list() == [1,2,3,4,5,6]);
+assert(new_list()[2] == 3);
+assert(new_dict()["key1"] == "val1");
+x = new_list();
+assert(x.len() == 6);
+y = new_dict();
+assert(y.len() == 2);
+
+// nested dict in list
+list_double = [[1,{"a":"b"},3],[4,5,6]];
+assert(list_double[0][1]["a"] == "b");
+
+// bubble sort func
+fn bubble_sort(l) {
+  for i = 0; i < l.len() - 1; i += 1 {
+    for j = 0; j < l.len() - 1 - i; j += 1 {
+      if l[j] > l[j+1] {
+        temp = l[j];
+        l[j] = l[j+1];
+        l[j+1] = temp;
+      }
+    }
+  }
+  return l;
+}
+assert(bubble_sort([3, 4, 5, 2, 1]) == [1,2,3,4,5]);
+
+// recursive fib
+fn fib(n) {
+  if n < 2 {
+    return n;
+  } else {
+    return fib(n-2) + fib(n-1);
+  }
+}
+assert(fib(4) == 3);
+list03 = [];
+for i = 0; i <= 10; i += 1 {
+  list03 += fib(i);
+}
+assert(list03 == [0,1,1,2,3,5,8,13,21,34,55]);
+
+// recursive factorial
+fn factorial(n) {
+  if n < 1 {
+    return 1;
+  } else {
+    return n * factorial(n - 1);
+  }
+}
+assert(factorial(6) == 1*2*3*4*5*6);
+assert(factorial(10) == 1*2*3*4*5*6*7*8*9*10);
+assert(factorial(-1) == 1);
+
+// closure func
+my_fn = fn (a, b, c, d) {
+  return a + b + c + d;
+};
+my_fn_2 = my_fn;
+assert(@my_fn(1,2,3,4) == 1+2+3+4);
+assert(fib(@my_fn_2(1,2,3,4)) == 55);
+
+// closure as expression
+fn clos_test(a, b) {
+  @a();
+}
+
+clos_test(
+  fn () {
+  assert(true);
+  },
+  fn () {
+  assert(false);
+  }
+);
+
+// reverse list
+list04 = [2,1,3,1,4,5];
+list04.reverse();
+assert(list04 == [5,4,1,3,1,2]);
+
+// bytes (on strings)
+a = "\u0035\u0036\u0037";
+b = "\105\106\107";
+assert(a + b == "567EFG");
+
+// xor string
+str001 = "hello world";
+str002 = "";
+for i = 0; i < str001.len(); i += 1 {
+  str002 += chr(ord(str001[i]) ^ 0x30);
+}
+assert(str002 == "XU\\\\_\u0010G_B\\T");
+
+// string index assignment
+str003 = "good";
+str003[3] = "t";
+str003[0] = "\u0000";
+assert("\u0000oot" == str003);
+assert("\x00oot" == str003);
+
+// utf string assignment
+str003 = "пр\x00вет";
+assert(str003[2] == "\x00");
+str003[2] = "и";
+assert(str003 == "привет");
+
+// ascii string
+ascii_str = "abcdef";
+ascii_codes = [97, 98, 99, 100, 101, 102];
+for i = 0; i < ascii_str.len(); i += 1 {
+  assert(ord(ascii_str[i]) == ascii_codes[i]);
+  assert(ascii_str[i] == chr(ascii_codes[i]));
+}
+
+// split
+abc = "a b c d";
+x = abc.split(" ");
+assert(x[1] == "b");
+abc = "привет мир";
+x = abc.split("и");
+assert(x == ["пр", "вет м", "р"]);
+
+// utf string
+utf_str = "привет";
+utf_codes = [1087,1088,1080,1074,1077,1090];
+for i = 0; i < utf_str.len(); i += 1 {
+  assert(ord(utf_str[i]) == utf_codes[i]);
+  assert(utf_str[i] == chr(utf_codes[i]));
+}
+
+// pop values from list
+list005 = [1,2,3,4,5,6];
+list005.pop(0);
+list005.pop(list005.len() - 1);
+assert(list005 == [2,3,4,5]);
+
+// pop value from dict
+dict002 = {"a":"b", "c":"d"};
+dict002.pop("a");
+dict002.pop("b");
+assert(dict002 == {"c":"d"});
+
+// includes
+include("samples/add.pico");
+include("samples/sub.pico");
+assert(add(25, 32) == 57);
+assert(sub(25, 32) == -7);
+
+// base64
+str01 = "hello";
+str02 = "привет";
+assert(base64_enc(str01) == "aGVsbG8=");
+assert(base64_enc(str02) == "0L/RgNC40LLQtdGC");
+assert(base64_dec(base64_enc(str01)) == "hello");
+assert(base64_dec(base64_enc(str02)) == "привет");
+
+// base32
+assert(base32_enc(str01) == "NBSWY3DP");
+assert(base32_enc(str02) == "2C75DAGQXDILFUFV2GBA====");
+assert(base32_dec(base32_enc(str01)) == "hello");
+assert(base32_dec(base32_enc(str02)) == "привет");
+
+// md5
+assert(md5(str01) == "5d41402abc4b2a76b9719d911017c592");
+assert(md5(str02) == "608333adc72f545078ede3aad71bfe74");
+
+// sha1
+assert(sha1(str01) == "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d");
+assert(sha1(str02) == "e24505f94db2b5df4c7c2596b0788e720e073021");
+
+// sha256
+assert(sha256(str01) == "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824");
+assert(sha256(str02) == "e58f1e8c55fa105bdd3f40e5037eb0b039b5998d52c05e6cd98878dd2da5cab2");
+
+// gzip
+assert(md5(gzip(str01)) == "b63eabd2d899faccef61146402be1a79");
+assert(md5(gzip(str02)) == "7a552a1049233a61dfbf9945f2f6092b");
+assert(gunzip(gzip(str01)) == str01);
