@@ -14,7 +14,7 @@ func (v *Visitor) invokeFunc(name string, params ...object.Object) any {
 	// get function object from storage
 	val := storage.GetFunction(name)
 	if val == nil {
-		v.SetError(fmt.Errorf("undefined function '%s", name))
+		v.SetError(fmt.Errorf("undefined function '%s'", name))
 		return types.Failure
 	}
 
