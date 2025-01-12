@@ -6,7 +6,7 @@ PLAN (Pico LANguage) is a scripting language (interpreter based) for embedding i
 
 ## Why yet another scripting language?
 
-Development of language was part of creation C2 framework - [pico](https://github.com/PicoTools/piko), which we position as interface between operator and beacon. PLAN runtime used in [operator's CLI](https://github.com/PicoTools/pico-cli) to give possibility of extending stocked functionality of interaction with server and beacons, which we provided.
+Development of language was part of creation C2 framework - [pico](https://github.com/PicoTools/pico), which we position as interface between operator and beacon. PLAN runtime used in [operator's CLI](https://github.com/PicoTools/pico-cli) to give possibility of extending stocked functionality of interaction with server and beacons, which we provided.
 
 Speed was not a goal of this language, but it can be easily reached by mapping functions written on native Golang.
 
