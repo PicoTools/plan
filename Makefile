@@ -24,14 +24,16 @@ test-plan-base: plan
 
 test-plan-sorting: plan
 	@echo "------------------------------"
+	@echo "Testing gnome sort (3333 items)"
+	@time ${BIN_DIR}/plan samples/sorting/gnome_sort.pico
 	@echo "Testing bubble sort (3333 items)"
 	@time ${BIN_DIR}/plan samples/sorting/bubble_sort.pico
 	@echo "Testing shaker sort (3333 items)"
 	@time ${BIN_DIR}/plan samples/sorting/shaker_sort.pico
-	@echo "Testing comb sort (3333 items)"
-	@time ${BIN_DIR}/plan samples/sorting/comb_sort.pico
 	@echo "Testing insertion sort (3333 items)"
 	@time ${BIN_DIR}/plan samples/sorting/insertion_sort.pico
+	@echo "Testing comb sort (3333 items)"
+	@time ${BIN_DIR}/plan samples/sorting/comb_sort.pico
 	@echo "Testing shell sort (3333 items)"
 	@time ${BIN_DIR}/plan samples/sorting/shell_sort.pico
 	@echo "------------------------------"
