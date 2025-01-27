@@ -487,8 +487,11 @@ func (v *Visitor) VisitExpLogicalOr(ctx *parser.ExpLogicalOrContext) any {
 	}
 	// fast exit hack to return value in case of left expression is true
 	// true || X == true, where X is undefined
-	if lhs.GetValue().(bool) {
-		return lhs
+	switch lhs.(type) {
+	case *object.Bool:
+		if lhs.GetValue().(bool) {
+			return lhs
+		}
 	}
 	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
@@ -513,8 +516,11 @@ func (v *Visitor) VisitExpLogicalAnd(ctx *parser.ExpLogicalAndContext) any {
 	}
 	// fast exit hack to return value in case of left expression is false
 	// false && X == false, where X is undefined
-	if !lhs.GetValue().(bool) {
-		return lhs
+	switch lhs.(type) {
+	case *object.Bool:
+		if !lhs.GetValue().(bool) {
+			return lhs
+		}
 	}
 	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
