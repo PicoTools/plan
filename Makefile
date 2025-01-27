@@ -30,6 +30,8 @@ test-plan-sorting: plan
 	@time ${BIN_DIR}/plan samples/sorting/bubble_sort.pico
 	@echo "Testing shaker sort"
 	@time ${BIN_DIR}/plan samples/sorting/shaker_sort.pico
+	@echo "Testing selection sort"
+	@time ${BIN_DIR}/plan samples/sorting/selection_sort.pico
 	@echo "Testing insertion sort"
 	@time ${BIN_DIR}/plan samples/sorting/insertion_sort.pico
 	@echo "Testing heap sort"
