@@ -32,6 +32,8 @@ test-plan-sorting: plan
 	@time ${BIN_DIR}/plan samples/sorting/comb_sort.pico
 	@echo "Testing insertion sort (3333 items)"
 	@time ${BIN_DIR}/plan samples/sorting/insertion_sort.pico
+	@echo "Testing shell sort (3333 items)"
+	@time ${BIN_DIR}/plan samples/sorting/shell_sort.pico
 	@echo "------------------------------"
 
 gen-parser: download-antlr
