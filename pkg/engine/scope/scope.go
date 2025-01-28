@@ -154,15 +154,21 @@ func (s *Scope) Depth() int {
 	return s.depth
 }
 
-// Get returns value of variable from storage (with search inside of parent scope)
-func (s *Scope) Get(n string, p bool) object.Object {
+// Get returns value of variable from storage (with search inside of parent scope and checking is scope function)
+func (s *Scope) Get(n string, stopOnFunc bool) object.Object {
 	val, ok := s.objects[n]
 	if ok {
 		return val
 	}
-	if p && !s.IsGlobal() {
+	// stop searching if scope is function
+	if stopOnFunc {
+		if s.isFunc {
+			return nil
+		}
+	}
+	if !s.IsGlobal() {
 		// search in parent scope
-		return s.Parent().Get(n, p)
+		return s.Parent().Get(n, stopOnFunc)
 	} else {
 		// nothing founded
 		return nil
@@ -171,7 +177,8 @@ func (s *Scope) Get(n string, p bool) object.Object {
 
 // Put saves variable in scope
 func (s *Scope) Put(n string, o object.Object) {
-	val := s.Get(n, !s.IsFunc())
+	// search value recursively in parents scopes and stop if scope is function
+	val := s.Get(n, true)
 	if val == nil {
 		s.objects[n] = o
 	} else {
