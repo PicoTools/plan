@@ -210,6 +210,16 @@ for i = 0; i <= 10; i += 1 {
 }
 assert(list03 == [0,1,1,2,3,5,8,13,21,34,55]);
 
+// index assignement
+list999 = [1, 2, 3, 4, 5, 6];
+list999[0] += 3;
+list999[1] -= 1.23;
+list999[2] *= 0.5;
+list999[3] /= 20.0;
+list999[4] %= 25;
+list999[5] **= 2;
+assert(list999 == [4, 0.77, 1.5, 0.2, 5, 36]);
+
 // recursive factorial
 fn factorial(n) {
   if n < 1 {
