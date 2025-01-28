@@ -52,6 +52,24 @@ type PLANVisitor interface {
 	// Visit a parse tree produced by PLANParser#assignIdxRegular.
 	VisitAssignIdxRegular(ctx *AssignIdxRegularContext) interface{}
 
+	// Visit a parse tree produced by PLANParser#assignIdxSum.
+	VisitAssignIdxSum(ctx *AssignIdxSumContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxSub.
+	VisitAssignIdxSub(ctx *AssignIdxSubContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxMul.
+	VisitAssignIdxMul(ctx *AssignIdxMulContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxDiv.
+	VisitAssignIdxDiv(ctx *AssignIdxDivContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxMod.
+	VisitAssignIdxMod(ctx *AssignIdxModContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxPow.
+	VisitAssignIdxPow(ctx *AssignIdxPowContext) interface{}
+
 	// Visit a parse tree produced by PLANParser#list.
 	VisitList(ctx *ListContext) interface{}
 
