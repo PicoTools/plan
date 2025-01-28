@@ -36,6 +36,8 @@ test-plan-sorting: plan
 	@time ${BIN_DIR}/plan samples/sorting/insertion_sort.pico
 	@echo "Testing heap sort"
 	@time ${BIN_DIR}/plan samples/sorting/heap_sort.pico
+	@echo "Testing merge sort"
+	@time ${BIN_DIR}/plan samples/sorting/merge_sort.pico
 	@echo "Testing comb sort"
 	@time ${BIN_DIR}/plan samples/sorting/comb_sort.pico
 	@echo "Testing shell sort"
