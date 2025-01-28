@@ -141,6 +141,18 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 		return v.VisitExpIdx(val)
 	case *parser.AssignIdxRegularContext:
 		return v.VisitAssignIdxRegular(val)
+	case *parser.AssignIdxSumContext:
+		return v.VisitAssignIdxSum(val)
+	case *parser.AssignIdxSubContext:
+		return v.VisitAssignIdxSub(val)
+	case *parser.AssignIdxMulContext:
+		return v.VisitAssignIdxMul(val)
+	case *parser.AssignIdxDivContext:
+		return v.VisitAssignIdxDiv(val)
+	case *parser.AssignIdxModContext:
+		return v.VisitAssignIdxMod(val)
+	case *parser.AssignIdxPowContext:
+		return v.VisitAssignIdxPow(val)
 	case *parser.ExpCsInvokeContext:
 		return v.VisitExpCsInvoke(val)
 	case *parser.IdentifierCsInvokeContext:
@@ -999,6 +1011,228 @@ func (v *Visitor) VisitAssignIdxRegular(ctx *parser.AssignIdxRegularContext) any
 	}
 	// update value by index in variable
 	if err := lhs.IndexSet(idx, val); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxSum(ctx *parser.AssignIdxSumContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	// get index
+	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get value by index
+	val, err := lhs.IndexGet(idx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssSum, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(idx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxSub(ctx *parser.AssignIdxSubContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	// get index
+	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get value by index
+	val, err := lhs.IndexGet(idx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssSub, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(idx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxMul(ctx *parser.AssignIdxMulContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	// get index
+	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get value by index
+	val, err := lhs.IndexGet(idx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssMul, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(idx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxDiv(ctx *parser.AssignIdxDivContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	// get index
+	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get value by index
+	val, err := lhs.IndexGet(idx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssDiv, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(idx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxMod(ctx *parser.AssignIdxModContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	// get index
+	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get value by index
+	val, err := lhs.IndexGet(idx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssMod, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(idx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxPow(ctx *parser.AssignIdxPowContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	// get index
+	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get value by index
+	val, err := lhs.IndexGet(idx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssPow, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(idx, res); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}

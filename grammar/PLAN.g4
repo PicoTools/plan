@@ -48,6 +48,12 @@ assignment
     | name = Identifier AssMod exp #assignMod
     | name = Identifier AssPow exp #assignPow
     | name = Identifier idx '=' exp #assignIdxRegular
+    | name = Identifier idx AssSum exp #assignIdxSum
+    | name = Identifier idx AssSub exp #assignIdxSub
+    | name = Identifier idx AssMul exp #assignIdxMul
+    | name = Identifier idx AssDiv exp #assignIdxDiv
+    | name = Identifier idx AssMod exp #assignIdxMod
+    | name = Identifier idx AssPow exp #assignIdxPow
     ;
 
 list

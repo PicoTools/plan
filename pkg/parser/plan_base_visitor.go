@@ -67,6 +67,30 @@ func (v *BasePLANVisitor) VisitAssignIdxRegular(ctx *AssignIdxRegularContext) in
 	return v.VisitChildren(ctx)
 }
 
+func (v *BasePLANVisitor) VisitAssignIdxSum(ctx *AssignIdxSumContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitAssignIdxSub(ctx *AssignIdxSubContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitAssignIdxMul(ctx *AssignIdxMulContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitAssignIdxDiv(ctx *AssignIdxDivContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitAssignIdxMod(ctx *AssignIdxModContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitAssignIdxPow(ctx *AssignIdxPowContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BasePLANVisitor) VisitList(ctx *ListContext) interface{} {
 	return v.VisitChildren(ctx)
 }

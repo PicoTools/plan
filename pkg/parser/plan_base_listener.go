@@ -110,6 +110,42 @@ func (s *BasePLANListener) EnterAssignIdxRegular(ctx *AssignIdxRegularContext) {
 // ExitAssignIdxRegular is called when production assignIdxRegular is exited.
 func (s *BasePLANListener) ExitAssignIdxRegular(ctx *AssignIdxRegularContext) {}
 
+// EnterAssignIdxSum is called when production assignIdxSum is entered.
+func (s *BasePLANListener) EnterAssignIdxSum(ctx *AssignIdxSumContext) {}
+
+// ExitAssignIdxSum is called when production assignIdxSum is exited.
+func (s *BasePLANListener) ExitAssignIdxSum(ctx *AssignIdxSumContext) {}
+
+// EnterAssignIdxSub is called when production assignIdxSub is entered.
+func (s *BasePLANListener) EnterAssignIdxSub(ctx *AssignIdxSubContext) {}
+
+// ExitAssignIdxSub is called when production assignIdxSub is exited.
+func (s *BasePLANListener) ExitAssignIdxSub(ctx *AssignIdxSubContext) {}
+
+// EnterAssignIdxMul is called when production assignIdxMul is entered.
+func (s *BasePLANListener) EnterAssignIdxMul(ctx *AssignIdxMulContext) {}
+
+// ExitAssignIdxMul is called when production assignIdxMul is exited.
+func (s *BasePLANListener) ExitAssignIdxMul(ctx *AssignIdxMulContext) {}
+
+// EnterAssignIdxDiv is called when production assignIdxDiv is entered.
+func (s *BasePLANListener) EnterAssignIdxDiv(ctx *AssignIdxDivContext) {}
+
+// ExitAssignIdxDiv is called when production assignIdxDiv is exited.
+func (s *BasePLANListener) ExitAssignIdxDiv(ctx *AssignIdxDivContext) {}
+
+// EnterAssignIdxMod is called when production assignIdxMod is entered.
+func (s *BasePLANListener) EnterAssignIdxMod(ctx *AssignIdxModContext) {}
+
+// ExitAssignIdxMod is called when production assignIdxMod is exited.
+func (s *BasePLANListener) ExitAssignIdxMod(ctx *AssignIdxModContext) {}
+
+// EnterAssignIdxPow is called when production assignIdxPow is entered.
+func (s *BasePLANListener) EnterAssignIdxPow(ctx *AssignIdxPowContext) {}
+
+// ExitAssignIdxPow is called when production assignIdxPow is exited.
+func (s *BasePLANListener) ExitAssignIdxPow(ctx *AssignIdxPowContext) {}
+
 // EnterList is called when production list is entered.
 func (s *BasePLANListener) EnterList(ctx *ListContext) {}
 
