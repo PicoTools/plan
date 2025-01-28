@@ -67,6 +67,22 @@ a.pop(1);
 println(a); // [2, 4, 5]
 ```
 
+## list.append
+
+Signature: `list.append(arg0, arg1, ..., argN)`
+
+Aguments:
+- `arg0`: `*`
+- `arg1`: `*`
+- `argN`: `*`
+
+Append values to `list`.
+```
+a = [1];
+a.append(2, 3, 4, 5);
+println(a); /// [1, 2, 3, 4, 5]
+```
+
 ## str.len
 
 Signature: `str.len()`
