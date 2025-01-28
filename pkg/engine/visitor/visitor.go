@@ -358,7 +358,7 @@ func (v *Visitor) VisitIdentifierFnInvoke(ctx *parser.IdentifierFnInvokeContext)
 }
 
 func (v *Visitor) VisitExpIdentifier(ctx *parser.ExpIdentifierContext) any {
-	val := scope.CurrentScope.Get(ctx.GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetText()))
 		return types.Failure
@@ -982,7 +982,7 @@ func (v *Visitor) VisitIdx(ctx *parser.IdxContext) any {
 
 func (v *Visitor) VisitAssignIdxRegular(ctx *parser.AssignIdxRegularContext) any {
 	// get variable from scope
-	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1064,7 +1064,7 @@ func (v *Visitor) VisitClosure(ctx *parser.ClosureContext) interface{} {
 
 func (v *Visitor) VisitAssignSum(ctx *parser.AssignSumContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1086,7 +1086,7 @@ func (v *Visitor) VisitAssignSum(ctx *parser.AssignSumContext) any {
 
 func (v *Visitor) VisitAssignSub(ctx *parser.AssignSubContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1108,7 +1108,7 @@ func (v *Visitor) VisitAssignSub(ctx *parser.AssignSubContext) any {
 
 func (v *Visitor) VisitAssignMul(ctx *parser.AssignMulContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1130,7 +1130,7 @@ func (v *Visitor) VisitAssignMul(ctx *parser.AssignMulContext) any {
 
 func (v *Visitor) VisitAssignDiv(ctx *parser.AssignDivContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1152,7 +1152,7 @@ func (v *Visitor) VisitAssignDiv(ctx *parser.AssignDivContext) any {
 
 func (v *Visitor) VisitAssignMod(ctx *parser.AssignModContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1174,7 +1174,7 @@ func (v *Visitor) VisitAssignMod(ctx *parser.AssignModContext) any {
 
 func (v *Visitor) VisitAssignPow(ctx *parser.AssignPowContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1200,7 +1200,7 @@ func (v *Visitor) VisitExpMethodInvoke(ctx *parser.ExpMethodInvokeContext) inter
 
 func (v *Visitor) VisitIdentifierMethodInvoke(ctx *parser.IdentifierMethodInvokeContext) interface{} {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetVar_().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetVar_().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetVar_().GetText()))
 		return types.Failure

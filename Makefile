@@ -4,14 +4,13 @@ CC=gcc
 CXX=g++
 ANTLR_VERSION=4.13.2
 
-.PHONY: plan
 plan: gen-parser
 	@mkdir -p ${BIN_DIR}
 	@echo "Building PLAN..."
 	@CGO_ENABLED=0 CC=${CC} CXX=${CXX} go build -o ${BIN_DIR}/plan ${PLAN_DIR}
 
-.PHONY: test-plan
-test-plan: plan
+test-plan-base: plan
+	@echo "------------------------------"
 	@echo "Testing language..."
 	@${BIN_DIR}/plan samples/assert.pico
 	@echo "  assert.pico: OK"
@@ -21,8 +20,28 @@ test-plan: plan
 	@echo "  cast.pico: OK"
 	@${BIN_DIR}/plan samples/files.pico
 	@echo "  files.pico: OK"
+	@echo "------------------------------"
 
-.PHONY: gen-parser
+test-plan-sorting: plan
+	@echo "---------------------"
+	@echo "Testing gnome sort"
+	@time ${BIN_DIR}/plan samples/sorting/gnome_sort.pico
+	@echo "Testing bubble sort"
+	@time ${BIN_DIR}/plan samples/sorting/bubble_sort.pico
+	@echo "Testing shaker sort"
+	@time ${BIN_DIR}/plan samples/sorting/shaker_sort.pico
+	@echo "Testing selection sort"
+	@time ${BIN_DIR}/plan samples/sorting/selection_sort.pico
+	@echo "Testing insertion sort"
+	@time ${BIN_DIR}/plan samples/sorting/insertion_sort.pico
+	@echo "Testing heap sort"
+	@time ${BIN_DIR}/plan samples/sorting/heap_sort.pico
+	@echo "Testing comb sort"
+	@time ${BIN_DIR}/plan samples/sorting/comb_sort.pico
+	@echo "Testing shell sort"
+	@time ${BIN_DIR}/plan samples/sorting/shell_sort.pico
+	@echo "---------------------"
+
 gen-parser: download-antlr
 	@echo "Generating parser..."
 	@java -jar files/antlr-${ANTLR_VERSION}.jar -o pkg/parser -visitor -package parser -Dlanguage=Go -Xexact-output-dir ./grammar/PLAN.g4

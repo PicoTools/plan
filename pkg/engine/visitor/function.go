@@ -53,7 +53,7 @@ func (v *Visitor) invokeFunc(name string, params ...object.Object) any {
 // invokeClosure invokes closure function
 func (v *Visitor) invokeClosure(name string, params ...object.Object) any {
 	// get function name from scope
-	fn := scope.CurrentScope.Get(name, true)
+	fn := scope.CurrentScope.Get(name, false)
 	if fn == nil {
 		v.SetError(fmt.Errorf("undefined closure '%s'", name))
 		return types.Failure
