@@ -7,11 +7,39 @@ type BasePLANVisitor struct {
 	*antlr.BaseParseTreeVisitor
 }
 
-func (v *BasePLANVisitor) VisitProg(ctx *ProgContext) interface{} {
+func (v *BasePLANVisitor) VisitProgFile(ctx *ProgFileContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitInclude(ctx *IncludeContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitFn(ctx *FnContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitFnBody(ctx *FnBodyContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitFnParams(ctx *FnParamsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitStmts(ctx *StmtsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
 func (v *BasePLANVisitor) VisitStmt(ctx *StmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitSimpleStmt(ctx *SimpleStmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitCompountStmt(ctx *CompountStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -20,6 +48,22 @@ func (v *BasePLANVisitor) VisitWhileStmt(ctx *WhileStmtContext) interface{} {
 }
 
 func (v *BasePLANVisitor) VisitForStmt(ctx *ForStmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitIfStmt(ctx *IfStmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitIfBlockStmt(ctx *IfBlockStmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitElifBlockStmt(ctx *ElifBlockStmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -223,38 +267,6 @@ func (v *BasePLANVisitor) VisitExpSumSub(ctx *ExpSumSubContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitIfBlockStmt(ctx *IfBlockStmtContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitElifBlockStmt(ctx *ElifBlockStmtContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitIfStmt(ctx *IfStmtContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitFnParams(ctx *FnParamsContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitFnBody(ctx *FnBodyContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitFn(ctx *FnContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BasePLANVisitor) VisitClosure(ctx *ClosureContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitInclude(ctx *IncludeContext) interface{} {
 	return v.VisitChildren(ctx)
 }

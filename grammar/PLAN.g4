@@ -2,23 +2,53 @@ grammar PLAN;
 
 WS: [ \t\r\n] -> channel(HIDDEN);
 
-prog: (stmt | fn | include)* EOF;
+// STARTING RULES
+progFile: (stmts | fn | include)* EOF;
 
-stmt:
-	assignment ';'
-	| methodInvoke ';'
-	| csInvoke ';'
-	| fnInvoke ';'
-	| breakStmt ';'
-	| continueStmt ';'
-	| returnStmt ';'
-	| whileStmt
-	| forStmt
-	| ifStmt;
+// INCLUDE
+
+include: 'include' '(' exp ')' ';';
+
+// FN
+
+fn: 'fn' name = Identifier fnBody;
+
+fnBody: '(' fnParams? ')' '{' stmt* '}';
+
+fnParams: Identifier (',' Identifier)*;
+
+// GENERAL STATEMENTS
+
+stmts: stmt+;
+
+stmt: simpleStmt ';' | compountStmt;
+
+simpleStmt:
+	assignment
+	| methodInvoke
+	| csInvoke
+	| fnInvoke
+	| breakStmt
+	| continueStmt
+	| returnStmt;
+
+compountStmt: whileStmt | forStmt | ifStmt;
+
+// COMPOUND STATEMENTS
 
 whileStmt: 'while' exp '{' stmt* '}';
 
 forStmt: 'for' assignment ';' exp ';' assignment '{' stmt* '}';
+
+ifStmt: ifBlock elifBlock* elseBlock?;
+
+ifBlock: 'if' exp '{' stmt* '}' # ifBlockStmt;
+
+elifBlock: 'elif' exp '{' stmt* '}' # elifBlockStmt;
+
+elseBlock: 'else' '{' stmt* '}' # elseBlockStmt;
+
+// SIMPLE STATEMENTS
 
 returnStmt: 'return' exp?;
 
@@ -88,23 +118,7 @@ exp:
 	| list											# expList
 	| dict											# expDict;
 
-ifBlock: 'if' exp '{' stmt* '}' # ifBlockStmt;
-
-elifBlock: 'elif' exp '{' stmt* '}' # elifBlockStmt;
-
-elseBlock: 'else' '{' stmt* '}' # elseBlockStmt;
-
-ifStmt: ifBlock elifBlock* elseBlock?;
-
-fnParams: Identifier (',' Identifier)*;
-
-fnBody: '(' fnParams? ')' '{' stmt* '}';
-
-fn: 'fn' name = Identifier fnBody;
-
 closure: 'fn' fnBody;
-
-include: 'include' '(' exp ')' ';';
 
 Eq: '==';
 Neq: '!=';

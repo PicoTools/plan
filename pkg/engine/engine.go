@@ -46,7 +46,7 @@ func Evaluate(file string) error {
 		return err
 	}
 
-	tree, err := utils.CreateAST(string(data))
+	tree, err := utils.CreateAstProgFile(string(data))
 	if err != nil {
 		return err
 	}

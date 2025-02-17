@@ -67,10 +67,16 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 	}
 
 	switch val := tree.(type) {
-	case *parser.ProgContext:
-		return v.VisitProg(val)
+	case *parser.ProgFileContext:
+		return v.VisitProgFile(val)
+	case *parser.StmtsContext:
+		return v.VisitStmts(val)
 	case *parser.StmtContext:
 		return v.VisitStmt(val)
+	case *parser.SimpleStmtContext:
+		return v.VisitSimpleStmt(val)
+	case *parser.CompountStmtContext:
+		return v.VisitCompountStmt(val)
 	case *parser.AssignRegularContext:
 		return v.VisitAssignRegular(val)
 	case *parser.ExpBoolContext:
@@ -193,7 +199,7 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 	}
 }
 
-func (v *Visitor) VisitProg(ctx *parser.ProgContext) any {
+func (v *Visitor) VisitProgFile(ctx *parser.ProgFileContext) any {
 	// resolve includes
 	for _, item := range ctx.AllInclude() {
 		tree, ok := v.Visit(item).(antlr.ParseTree)
@@ -213,6 +219,16 @@ func (v *Visitor) VisitProg(ctx *parser.ProgContext) any {
 	}
 
 	// execute statements
+	for _, item := range ctx.AllStmts() {
+		if ok := v.Visit(item).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	return types.Success
+}
+
+func (v *Visitor) VisitStmts(ctx *parser.StmtsContext) any {
 	for _, item := range ctx.AllStmt() {
 		if ok := v.Visit(item).(types.VisitResultType); !ok {
 			return types.Failure
@@ -223,6 +239,23 @@ func (v *Visitor) VisitProg(ctx *parser.ProgContext) any {
 }
 
 func (v *Visitor) VisitStmt(ctx *parser.StmtContext) any {
+	// process simple statements
+	if ctx.SimpleStmt() != nil {
+		if ok := v.Visit(ctx.SimpleStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	// process compound statements
+	if ctx.CompountStmt() != nil {
+		if ok := v.Visit(ctx.CompountStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitSimpleStmt(ctx *parser.SimpleStmtContext) any {
 	// assignment
 	if ctx.Assignment() != nil {
 		if ok := v.Visit(ctx.Assignment()).(types.VisitResultType); !ok {
@@ -230,6 +263,58 @@ func (v *Visitor) VisitStmt(ctx *parser.StmtContext) any {
 		}
 	}
 
+	// invoke function
+	if ctx.FnInvoke() != nil {
+		if res, ok := v.Visit(ctx.FnInvoke()).(types.VisitResultType); ok {
+			if !res {
+				return types.Failure
+			}
+		}
+	}
+
+	// invoke closure
+	if ctx.CsInvoke() != nil {
+		if res, ok := v.Visit(ctx.CsInvoke()).(types.VisitResultType); ok {
+			if !res {
+				return types.Failure
+			}
+		}
+	}
+
+	// invoke object's method
+	if ctx.MethodInvoke() != nil {
+		if res, ok := v.Visit(ctx.MethodInvoke()).(types.VisitResultType); ok {
+			if !res {
+				return types.Failure
+			}
+		}
+	}
+
+	// break
+	if ctx.BreakStmt() != nil {
+		if ok := v.Visit(ctx.BreakStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	// continue
+	if ctx.ContinueStmt() != nil {
+		if ok := v.Visit(ctx.ContinueStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	// return
+	if ctx.ReturnStmt() != nil {
+		if ok := v.Visit(ctx.ReturnStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	return types.Success
+}
+
+func (v *Visitor) VisitCompountStmt(ctx *parser.CompountStmtContext) any {
 	// if/elif/else
 	if ctx.IfStmt() != nil {
 		scope.CurrentScope = scope.NewScope(
@@ -279,54 +364,6 @@ func (v *Visitor) VisitStmt(ctx *parser.StmtContext) any {
 			return types.Failure
 		}
 		scope.CurrentScope = scope.CurrentScope.Parent()
-	}
-
-	// invoke function
-	if ctx.FnInvoke() != nil {
-		if res, ok := v.Visit(ctx.FnInvoke()).(types.VisitResultType); ok {
-			if !res {
-				return types.Failure
-			}
-		}
-	}
-
-	// invoke closure
-	if ctx.CsInvoke() != nil {
-		if res, ok := v.Visit(ctx.CsInvoke()).(types.VisitResultType); ok {
-			if !res {
-				return types.Failure
-			}
-		}
-	}
-
-	// invoke object's method
-	if ctx.MethodInvoke() != nil {
-		if res, ok := v.Visit(ctx.MethodInvoke()).(types.VisitResultType); ok {
-			if !res {
-				return types.Failure
-			}
-		}
-	}
-
-	// break
-	if ctx.BreakStmt() != nil {
-		if ok := v.Visit(ctx.BreakStmt()).(types.VisitResultType); !ok {
-			return types.Failure
-		}
-	}
-
-	// continue
-	if ctx.ContinueStmt() != nil {
-		if ok := v.Visit(ctx.ContinueStmt()).(types.VisitResultType); !ok {
-			return types.Failure
-		}
-	}
-
-	// return
-	if ctx.ReturnStmt() != nil {
-		if ok := v.Visit(ctx.ReturnStmt()).(types.VisitResultType); !ok {
-			return types.Failure
-		}
 	}
 
 	return types.Success
@@ -1371,7 +1408,7 @@ func (v *Visitor) VisitInclude(ctx *parser.IncludeContext) any {
 		v.SetError(err)
 		return types.Failure
 	}
-	tree, err := utils.CreateAST(string(data))
+	tree, err := utils.CreateAstProgFile(string(data))
 	if err != nil {
 		v.SetError(err)
 		return types.Failure

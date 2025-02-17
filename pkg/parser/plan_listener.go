@@ -7,17 +7,50 @@ import "github.com/antlr4-go/antlr/v4"
 type PLANListener interface {
 	antlr.ParseTreeListener
 
-	// EnterProg is called when entering the prog production.
-	EnterProg(c *ProgContext)
+	// EnterProgFile is called when entering the progFile production.
+	EnterProgFile(c *ProgFileContext)
+
+	// EnterInclude is called when entering the include production.
+	EnterInclude(c *IncludeContext)
+
+	// EnterFn is called when entering the fn production.
+	EnterFn(c *FnContext)
+
+	// EnterFnBody is called when entering the fnBody production.
+	EnterFnBody(c *FnBodyContext)
+
+	// EnterFnParams is called when entering the fnParams production.
+	EnterFnParams(c *FnParamsContext)
+
+	// EnterStmts is called when entering the stmts production.
+	EnterStmts(c *StmtsContext)
 
 	// EnterStmt is called when entering the stmt production.
 	EnterStmt(c *StmtContext)
+
+	// EnterSimpleStmt is called when entering the simpleStmt production.
+	EnterSimpleStmt(c *SimpleStmtContext)
+
+	// EnterCompountStmt is called when entering the compountStmt production.
+	EnterCompountStmt(c *CompountStmtContext)
 
 	// EnterWhileStmt is called when entering the whileStmt production.
 	EnterWhileStmt(c *WhileStmtContext)
 
 	// EnterForStmt is called when entering the forStmt production.
 	EnterForStmt(c *ForStmtContext)
+
+	// EnterIfStmt is called when entering the ifStmt production.
+	EnterIfStmt(c *IfStmtContext)
+
+	// EnterIfBlockStmt is called when entering the ifBlockStmt production.
+	EnterIfBlockStmt(c *IfBlockStmtContext)
+
+	// EnterElifBlockStmt is called when entering the elifBlockStmt production.
+	EnterElifBlockStmt(c *ElifBlockStmtContext)
+
+	// EnterElseBlockStmt is called when entering the elseBlockStmt production.
+	EnterElseBlockStmt(c *ElseBlockStmtContext)
 
 	// EnterReturnStmt is called when entering the returnStmt production.
 	EnterReturnStmt(c *ReturnStmtContext)
@@ -169,44 +202,53 @@ type PLANListener interface {
 	// EnterExpSumSub is called when entering the expSumSub production.
 	EnterExpSumSub(c *ExpSumSubContext)
 
-	// EnterIfBlockStmt is called when entering the ifBlockStmt production.
-	EnterIfBlockStmt(c *IfBlockStmtContext)
-
-	// EnterElifBlockStmt is called when entering the elifBlockStmt production.
-	EnterElifBlockStmt(c *ElifBlockStmtContext)
-
-	// EnterElseBlockStmt is called when entering the elseBlockStmt production.
-	EnterElseBlockStmt(c *ElseBlockStmtContext)
-
-	// EnterIfStmt is called when entering the ifStmt production.
-	EnterIfStmt(c *IfStmtContext)
-
-	// EnterFnParams is called when entering the fnParams production.
-	EnterFnParams(c *FnParamsContext)
-
-	// EnterFnBody is called when entering the fnBody production.
-	EnterFnBody(c *FnBodyContext)
-
-	// EnterFn is called when entering the fn production.
-	EnterFn(c *FnContext)
-
 	// EnterClosure is called when entering the closure production.
 	EnterClosure(c *ClosureContext)
 
-	// EnterInclude is called when entering the include production.
-	EnterInclude(c *IncludeContext)
+	// ExitProgFile is called when exiting the progFile production.
+	ExitProgFile(c *ProgFileContext)
 
-	// ExitProg is called when exiting the prog production.
-	ExitProg(c *ProgContext)
+	// ExitInclude is called when exiting the include production.
+	ExitInclude(c *IncludeContext)
+
+	// ExitFn is called when exiting the fn production.
+	ExitFn(c *FnContext)
+
+	// ExitFnBody is called when exiting the fnBody production.
+	ExitFnBody(c *FnBodyContext)
+
+	// ExitFnParams is called when exiting the fnParams production.
+	ExitFnParams(c *FnParamsContext)
+
+	// ExitStmts is called when exiting the stmts production.
+	ExitStmts(c *StmtsContext)
 
 	// ExitStmt is called when exiting the stmt production.
 	ExitStmt(c *StmtContext)
+
+	// ExitSimpleStmt is called when exiting the simpleStmt production.
+	ExitSimpleStmt(c *SimpleStmtContext)
+
+	// ExitCompountStmt is called when exiting the compountStmt production.
+	ExitCompountStmt(c *CompountStmtContext)
 
 	// ExitWhileStmt is called when exiting the whileStmt production.
 	ExitWhileStmt(c *WhileStmtContext)
 
 	// ExitForStmt is called when exiting the forStmt production.
 	ExitForStmt(c *ForStmtContext)
+
+	// ExitIfStmt is called when exiting the ifStmt production.
+	ExitIfStmt(c *IfStmtContext)
+
+	// ExitIfBlockStmt is called when exiting the ifBlockStmt production.
+	ExitIfBlockStmt(c *IfBlockStmtContext)
+
+	// ExitElifBlockStmt is called when exiting the elifBlockStmt production.
+	ExitElifBlockStmt(c *ElifBlockStmtContext)
+
+	// ExitElseBlockStmt is called when exiting the elseBlockStmt production.
+	ExitElseBlockStmt(c *ElseBlockStmtContext)
 
 	// ExitReturnStmt is called when exiting the returnStmt production.
 	ExitReturnStmt(c *ReturnStmtContext)
@@ -358,30 +400,6 @@ type PLANListener interface {
 	// ExitExpSumSub is called when exiting the expSumSub production.
 	ExitExpSumSub(c *ExpSumSubContext)
 
-	// ExitIfBlockStmt is called when exiting the ifBlockStmt production.
-	ExitIfBlockStmt(c *IfBlockStmtContext)
-
-	// ExitElifBlockStmt is called when exiting the elifBlockStmt production.
-	ExitElifBlockStmt(c *ElifBlockStmtContext)
-
-	// ExitElseBlockStmt is called when exiting the elseBlockStmt production.
-	ExitElseBlockStmt(c *ElseBlockStmtContext)
-
-	// ExitIfStmt is called when exiting the ifStmt production.
-	ExitIfStmt(c *IfStmtContext)
-
-	// ExitFnParams is called when exiting the fnParams production.
-	ExitFnParams(c *FnParamsContext)
-
-	// ExitFnBody is called when exiting the fnBody production.
-	ExitFnBody(c *FnBodyContext)
-
-	// ExitFn is called when exiting the fn production.
-	ExitFn(c *FnContext)
-
 	// ExitClosure is called when exiting the closure production.
 	ExitClosure(c *ClosureContext)
-
-	// ExitInclude is called when exiting the include production.
-	ExitInclude(c *IncludeContext)
 }
