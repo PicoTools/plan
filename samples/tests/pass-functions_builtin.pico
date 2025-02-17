@@ -1,0 +1,30 @@
+# base64
+x = "hello";
+y = "привет";
+assert(base64_enc(x) == "aGVsbG8=");
+assert(base64_enc(y) == "0L/RgNC40LLQtdGC");
+assert(base64_dec(base64_enc(x)) == "hello");
+assert(base64_dec(base64_enc(y)) == "привет");
+
+# base32
+assert(base32_enc(x) == "NBSWY3DP");
+assert(base32_enc(y) == "2C75DAGQXDILFUFV2GBA====");
+assert(base32_dec(base32_enc(x)) == "hello");
+assert(base32_dec(base32_enc(y)) == "привет");
+
+# md5
+assert(md5(x) == "5d41402abc4b2a76b9719d911017c592");
+assert(md5(y) == "608333adc72f545078ede3aad71bfe74");
+
+# sha1
+assert(sha1(x) == "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d");
+assert(sha1(y) == "e24505f94db2b5df4c7c2596b0788e720e073021");
+
+# sha256
+assert(sha256(x) == "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824");
+assert(sha256(y) == "e58f1e8c55fa105bdd3f40e5037eb0b039b5998d52c05e6cd98878dd2da5cab2");
+
+# gzip
+assert(md5(gzip(x)) == "b63eabd2d899faccef61146402be1a79");
+assert(md5(gzip(y)) == "7a552a1049233a61dfbf9945f2f6092b");
+assert(gunzip(gzip(x)) == x);

@@ -1,0 +1,12 @@
+# closure func (this function use in samples/tests/pass-include.pico)
+my_fn = fn (a, b, c, d) {
+  return a + b + c + d;
+};
+my_fn_2 = my_fn;
+assert(@my_fn(1, 2, 3, 4) == @my_fn_2(1, 2, 3, 4));
+
+# closure as expression
+fn clos_test(a, b) {
+  @a();
+}
+clos_test(fn () {assert(true);}, fn () {assert(false);});

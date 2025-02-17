@@ -1,0 +1,15 @@
+// this is oneline comment
+
+# this is oneline comment too
+
+/*
+  this is
+  multiline
+  comment
+*/
+
+/*
+  # this is
+  // multiline comment
+  in comments
+*/

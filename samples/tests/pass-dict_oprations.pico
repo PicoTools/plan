@@ -1,0 +1,11 @@
+assert(!{});
+assert({"a":"b"} == {"a":"b"});
+assert({"key1":"val1", "key2":"val2"} == {"key2":"val2", "key1":"val1"});
+assert(!{"a":"b"} == false);
+assert({"key1":"val1"} != {"key2":"val1"});
+
+# pop value from dict
+dict002 = {"a":"b", "c":"d"};
+dict002.pop("a");
+dict002.pop("b");
+assert(dict002 == {"c":"d"});

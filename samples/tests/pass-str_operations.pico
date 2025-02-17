@@ -1,0 +1,50 @@
+assert(!"");
+assert("abc" == "abc");
+assert("привет" == "привет");
+assert("abc" != "abd");
+assert("abcd" > "abc");
+assert("AbCd" <= "AbCd");
+assert("Привет" > "Привес");
+assert("м" + "и" + "р" == "мир");
+assert("abc" + "DEF" >= "abcDEE");
+assert("a" * -1 == "");
+assert("world" * 3 == "worldworldworld");
+assert("abc" * false == "");
+
+# bytes in string
+a = "\u0035\u0036\u0037";
+assert(a + "\105\106\107" == "567EFG");
+
+# xor string
+x = "hello world";
+y = "";
+for i = 0; i < x.len(); i += 1 {
+  y += chr(ord(x[i]) ^ 0x30);
+}
+assert(y == "XU\\\\_\u0010G_B\\T");
+
+# some stuff with ascii string
+ascii_str = "abcdef";
+ascii_codes = [97, 98, 99, 100, 101, 102];
+for i = 0; i < ascii_str.len(); i += 1 {
+  assert(ord(ascii_str[i]) == ascii_codes[i]);
+  assert(ascii_str[i] == chr(ascii_codes[i]));
+}
+
+// some stuff with utf string
+utf_str = "привет";
+utf_codes = [1087,1088,1080,1074,1077,1090];
+for i = 0; i < utf_str.len(); i += 1 {
+  assert(ord(utf_str[i]) == utf_codes[i]);
+  assert(utf_str[i] == chr(utf_codes[i]));
+}
+
+# split ascii strings
+x = "a b c d";
+y = x.split(" ");
+assert(y[1] == "b");
+
+# split utf string
+x = "привет мир";
+y = x.split("и");
+assert(y == ["пр", "вет м", "р"]);

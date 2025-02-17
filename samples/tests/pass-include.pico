@@ -1,0 +1,10 @@
+include("samples/tests/pass-closures.pico");
+assert(@my_fn(1, 2, 3, 4) == 1 + 2 + 3 + 4);
+
+if true {
+    dir = "samples/tests";
+    file = "pass-functions_simple.pico";
+
+    include(dir + "/" + file);
+    assert(twice(10) == 20);
+}
