@@ -25,8 +25,7 @@ type Scope struct {
 	isLoopContinue bool
 	// variables storage
 	objects map[string]object.Object
-	// functions storage
-	// can be used to hold functions defined in scope with depth > 0
+	// runtime functions storage
 	functions map[string]*object.RuntimeFunc
 }
 
