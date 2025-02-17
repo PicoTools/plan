@@ -63,31 +63,31 @@ func (v *BasePLANVisitor) VisitAssignPow(ctx *AssignPowContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitAssignIdxRegular(ctx *AssignIdxRegularContext) interface{} {
+func (v *BasePLANVisitor) VisitAssignIdxsRegular(ctx *AssignIdxsRegularContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitAssignIdxSum(ctx *AssignIdxSumContext) interface{} {
+func (v *BasePLANVisitor) VisitAssignIdxsSum(ctx *AssignIdxsSumContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitAssignIdxSub(ctx *AssignIdxSubContext) interface{} {
+func (v *BasePLANVisitor) VisitAssignIdxsSub(ctx *AssignIdxsSubContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitAssignIdxMul(ctx *AssignIdxMulContext) interface{} {
+func (v *BasePLANVisitor) VisitAssignIdxsMul(ctx *AssignIdxsMulContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitAssignIdxDiv(ctx *AssignIdxDivContext) interface{} {
+func (v *BasePLANVisitor) VisitAssignIdxsDiv(ctx *AssignIdxsDivContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitAssignIdxMod(ctx *AssignIdxModContext) interface{} {
+func (v *BasePLANVisitor) VisitAssignIdxsMod(ctx *AssignIdxsModContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitAssignIdxPow(ctx *AssignIdxPowContext) interface{} {
+func (v *BasePLANVisitor) VisitAssignIdxsPow(ctx *AssignIdxsPowContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -104,6 +104,10 @@ func (v *BasePLANVisitor) VisitDict(ctx *DictContext) interface{} {
 }
 
 func (v *BasePLANVisitor) VisitIdx(ctx *IdxContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitIdxs(ctx *IdxsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

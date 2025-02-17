@@ -104,47 +104,47 @@ func (s *BasePLANListener) EnterAssignPow(ctx *AssignPowContext) {}
 // ExitAssignPow is called when production assignPow is exited.
 func (s *BasePLANListener) ExitAssignPow(ctx *AssignPowContext) {}
 
-// EnterAssignIdxRegular is called when production assignIdxRegular is entered.
-func (s *BasePLANListener) EnterAssignIdxRegular(ctx *AssignIdxRegularContext) {}
+// EnterAssignIdxsRegular is called when production assignIdxsRegular is entered.
+func (s *BasePLANListener) EnterAssignIdxsRegular(ctx *AssignIdxsRegularContext) {}
 
-// ExitAssignIdxRegular is called when production assignIdxRegular is exited.
-func (s *BasePLANListener) ExitAssignIdxRegular(ctx *AssignIdxRegularContext) {}
+// ExitAssignIdxsRegular is called when production assignIdxsRegular is exited.
+func (s *BasePLANListener) ExitAssignIdxsRegular(ctx *AssignIdxsRegularContext) {}
 
-// EnterAssignIdxSum is called when production assignIdxSum is entered.
-func (s *BasePLANListener) EnterAssignIdxSum(ctx *AssignIdxSumContext) {}
+// EnterAssignIdxsSum is called when production assignIdxsSum is entered.
+func (s *BasePLANListener) EnterAssignIdxsSum(ctx *AssignIdxsSumContext) {}
 
-// ExitAssignIdxSum is called when production assignIdxSum is exited.
-func (s *BasePLANListener) ExitAssignIdxSum(ctx *AssignIdxSumContext) {}
+// ExitAssignIdxsSum is called when production assignIdxsSum is exited.
+func (s *BasePLANListener) ExitAssignIdxsSum(ctx *AssignIdxsSumContext) {}
 
-// EnterAssignIdxSub is called when production assignIdxSub is entered.
-func (s *BasePLANListener) EnterAssignIdxSub(ctx *AssignIdxSubContext) {}
+// EnterAssignIdxsSub is called when production assignIdxsSub is entered.
+func (s *BasePLANListener) EnterAssignIdxsSub(ctx *AssignIdxsSubContext) {}
 
-// ExitAssignIdxSub is called when production assignIdxSub is exited.
-func (s *BasePLANListener) ExitAssignIdxSub(ctx *AssignIdxSubContext) {}
+// ExitAssignIdxsSub is called when production assignIdxsSub is exited.
+func (s *BasePLANListener) ExitAssignIdxsSub(ctx *AssignIdxsSubContext) {}
 
-// EnterAssignIdxMul is called when production assignIdxMul is entered.
-func (s *BasePLANListener) EnterAssignIdxMul(ctx *AssignIdxMulContext) {}
+// EnterAssignIdxsMul is called when production assignIdxsMul is entered.
+func (s *BasePLANListener) EnterAssignIdxsMul(ctx *AssignIdxsMulContext) {}
 
-// ExitAssignIdxMul is called when production assignIdxMul is exited.
-func (s *BasePLANListener) ExitAssignIdxMul(ctx *AssignIdxMulContext) {}
+// ExitAssignIdxsMul is called when production assignIdxsMul is exited.
+func (s *BasePLANListener) ExitAssignIdxsMul(ctx *AssignIdxsMulContext) {}
 
-// EnterAssignIdxDiv is called when production assignIdxDiv is entered.
-func (s *BasePLANListener) EnterAssignIdxDiv(ctx *AssignIdxDivContext) {}
+// EnterAssignIdxsDiv is called when production assignIdxsDiv is entered.
+func (s *BasePLANListener) EnterAssignIdxsDiv(ctx *AssignIdxsDivContext) {}
 
-// ExitAssignIdxDiv is called when production assignIdxDiv is exited.
-func (s *BasePLANListener) ExitAssignIdxDiv(ctx *AssignIdxDivContext) {}
+// ExitAssignIdxsDiv is called when production assignIdxsDiv is exited.
+func (s *BasePLANListener) ExitAssignIdxsDiv(ctx *AssignIdxsDivContext) {}
 
-// EnterAssignIdxMod is called when production assignIdxMod is entered.
-func (s *BasePLANListener) EnterAssignIdxMod(ctx *AssignIdxModContext) {}
+// EnterAssignIdxsMod is called when production assignIdxsMod is entered.
+func (s *BasePLANListener) EnterAssignIdxsMod(ctx *AssignIdxsModContext) {}
 
-// ExitAssignIdxMod is called when production assignIdxMod is exited.
-func (s *BasePLANListener) ExitAssignIdxMod(ctx *AssignIdxModContext) {}
+// ExitAssignIdxsMod is called when production assignIdxsMod is exited.
+func (s *BasePLANListener) ExitAssignIdxsMod(ctx *AssignIdxsModContext) {}
 
-// EnterAssignIdxPow is called when production assignIdxPow is entered.
-func (s *BasePLANListener) EnterAssignIdxPow(ctx *AssignIdxPowContext) {}
+// EnterAssignIdxsPow is called when production assignIdxsPow is entered.
+func (s *BasePLANListener) EnterAssignIdxsPow(ctx *AssignIdxsPowContext) {}
 
-// ExitAssignIdxPow is called when production assignIdxPow is exited.
-func (s *BasePLANListener) ExitAssignIdxPow(ctx *AssignIdxPowContext) {}
+// ExitAssignIdxsPow is called when production assignIdxsPow is exited.
+func (s *BasePLANListener) ExitAssignIdxsPow(ctx *AssignIdxsPowContext) {}
 
 // EnterList is called when production list is entered.
 func (s *BasePLANListener) EnterList(ctx *ListContext) {}
@@ -169,6 +169,12 @@ func (s *BasePLANListener) EnterIdx(ctx *IdxContext) {}
 
 // ExitIdx is called when production idx is exited.
 func (s *BasePLANListener) ExitIdx(ctx *IdxContext) {}
+
+// EnterIdxs is called when production idxs is entered.
+func (s *BasePLANListener) EnterIdxs(ctx *IdxsContext) {}
+
+// ExitIdxs is called when production idxs is exited.
+func (s *BasePLANListener) ExitIdxs(ctx *IdxsContext) {}
 
 // EnterIdentifierMethodInvoke is called when production identifierMethodInvoke is entered.
 func (s *BasePLANListener) EnterIdentifierMethodInvoke(ctx *IdentifierMethodInvokeContext) {}

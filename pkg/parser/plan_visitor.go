@@ -49,26 +49,26 @@ type PLANVisitor interface {
 	// Visit a parse tree produced by PLANParser#assignPow.
 	VisitAssignPow(ctx *AssignPowContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#assignIdxRegular.
-	VisitAssignIdxRegular(ctx *AssignIdxRegularContext) interface{}
+	// Visit a parse tree produced by PLANParser#assignIdxsRegular.
+	VisitAssignIdxsRegular(ctx *AssignIdxsRegularContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#assignIdxSum.
-	VisitAssignIdxSum(ctx *AssignIdxSumContext) interface{}
+	// Visit a parse tree produced by PLANParser#assignIdxsSum.
+	VisitAssignIdxsSum(ctx *AssignIdxsSumContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#assignIdxSub.
-	VisitAssignIdxSub(ctx *AssignIdxSubContext) interface{}
+	// Visit a parse tree produced by PLANParser#assignIdxsSub.
+	VisitAssignIdxsSub(ctx *AssignIdxsSubContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#assignIdxMul.
-	VisitAssignIdxMul(ctx *AssignIdxMulContext) interface{}
+	// Visit a parse tree produced by PLANParser#assignIdxsMul.
+	VisitAssignIdxsMul(ctx *AssignIdxsMulContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#assignIdxDiv.
-	VisitAssignIdxDiv(ctx *AssignIdxDivContext) interface{}
+	// Visit a parse tree produced by PLANParser#assignIdxsDiv.
+	VisitAssignIdxsDiv(ctx *AssignIdxsDivContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#assignIdxMod.
-	VisitAssignIdxMod(ctx *AssignIdxModContext) interface{}
+	// Visit a parse tree produced by PLANParser#assignIdxsMod.
+	VisitAssignIdxsMod(ctx *AssignIdxsModContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#assignIdxPow.
-	VisitAssignIdxPow(ctx *AssignIdxPowContext) interface{}
+	// Visit a parse tree produced by PLANParser#assignIdxsPow.
+	VisitAssignIdxsPow(ctx *AssignIdxsPowContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#list.
 	VisitList(ctx *ListContext) interface{}
@@ -81,6 +81,9 @@ type PLANVisitor interface {
 
 	// Visit a parse tree produced by PLANParser#idx.
 	VisitIdx(ctx *IdxContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#idxs.
+	VisitIdxs(ctx *IdxsContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#identifierMethodInvoke.
 	VisitIdentifierMethodInvoke(ctx *IdentifierMethodInvokeContext) interface{}

@@ -139,20 +139,20 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 		return v.VisitReturnStmt(val)
 	case *parser.ExpIdxContext:
 		return v.VisitExpIdx(val)
-	case *parser.AssignIdxRegularContext:
-		return v.VisitAssignIdxRegular(val)
-	case *parser.AssignIdxSumContext:
-		return v.VisitAssignIdxSum(val)
-	case *parser.AssignIdxSubContext:
-		return v.VisitAssignIdxSub(val)
-	case *parser.AssignIdxMulContext:
-		return v.VisitAssignIdxMul(val)
-	case *parser.AssignIdxDivContext:
-		return v.VisitAssignIdxDiv(val)
-	case *parser.AssignIdxModContext:
-		return v.VisitAssignIdxMod(val)
-	case *parser.AssignIdxPowContext:
-		return v.VisitAssignIdxPow(val)
+	case *parser.AssignIdxsRegularContext:
+		return v.VisitAssignIdxsRegular(val)
+	case *parser.AssignIdxsSumContext:
+		return v.VisitAssignIdxsSum(val)
+	case *parser.AssignIdxsSubContext:
+		return v.VisitAssignIdxsSub(val)
+	case *parser.AssignIdxsMulContext:
+		return v.VisitAssignIdxsMul(val)
+	case *parser.AssignIdxsDivContext:
+		return v.VisitAssignIdxsDiv(val)
+	case *parser.AssignIdxsModContext:
+		return v.VisitAssignIdxsMod(val)
+	case *parser.AssignIdxsPowContext:
+		return v.VisitAssignIdxsPow(val)
 	case *parser.ExpCsInvokeContext:
 		return v.VisitExpCsInvoke(val)
 	case *parser.IdentifierCsInvokeContext:
@@ -992,17 +992,30 @@ func (v *Visitor) VisitIdx(ctx *parser.IdxContext) any {
 	return v.Visit(ctx.Exp())
 }
 
-func (v *Visitor) VisitAssignIdxRegular(ctx *parser.AssignIdxRegularContext) any {
+func (v *Visitor) VisitAssignIdxsRegular(ctx *parser.AssignIdxsRegularContext) any {
 	// get variable from scope
 	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// get index
-	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
-	if !ok {
-		return types.Failure
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
 	}
 	// get value
 	val, ok := v.Visit(ctx.Exp()).(object.Object)
@@ -1010,27 +1023,40 @@ func (v *Visitor) VisitAssignIdxRegular(ctx *parser.AssignIdxRegularContext) any
 		return types.Failure
 	}
 	// update value by index in variable
-	if err := lhs.IndexSet(idx, val); err != nil {
+	if err := lhs.IndexSet(lastIdx, val); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignIdxSum(ctx *parser.AssignIdxSumContext) any {
+func (v *Visitor) VisitAssignIdxsSum(ctx *parser.AssignIdxsSumContext) any {
 	// get variable from scope
 	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// get index
-	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
-	if !ok {
-		return types.Failure
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
 	}
 	// get value by index
-	val, err := lhs.IndexGet(idx)
+	val, err := lhs.IndexGet(lastIdx)
 	if err != nil {
 		v.SetError(err)
 		return types.Failure
@@ -1047,27 +1073,40 @@ func (v *Visitor) VisitAssignIdxSum(ctx *parser.AssignIdxSumContext) any {
 		return types.Failure
 	}
 	// update value by index in variable
-	if err := lhs.IndexSet(idx, res); err != nil {
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignIdxSub(ctx *parser.AssignIdxSubContext) any {
+func (v *Visitor) VisitAssignIdxsSub(ctx *parser.AssignIdxsSubContext) any {
 	// get variable from scope
 	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// get index
-	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
-	if !ok {
-		return types.Failure
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
 	}
 	// get value by index
-	val, err := lhs.IndexGet(idx)
+	val, err := lhs.IndexGet(lastIdx)
 	if err != nil {
 		v.SetError(err)
 		return types.Failure
@@ -1084,27 +1123,40 @@ func (v *Visitor) VisitAssignIdxSub(ctx *parser.AssignIdxSubContext) any {
 		return types.Failure
 	}
 	// update value by index in variable
-	if err := lhs.IndexSet(idx, res); err != nil {
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignIdxMul(ctx *parser.AssignIdxMulContext) any {
+func (v *Visitor) VisitAssignIdxsMul(ctx *parser.AssignIdxsMulContext) any {
 	// get variable from scope
 	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// get index
-	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
-	if !ok {
-		return types.Failure
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
 	}
 	// get value by index
-	val, err := lhs.IndexGet(idx)
+	val, err := lhs.IndexGet(lastIdx)
 	if err != nil {
 		v.SetError(err)
 		return types.Failure
@@ -1121,27 +1173,40 @@ func (v *Visitor) VisitAssignIdxMul(ctx *parser.AssignIdxMulContext) any {
 		return types.Failure
 	}
 	// update value by index in variable
-	if err := lhs.IndexSet(idx, res); err != nil {
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignIdxDiv(ctx *parser.AssignIdxDivContext) any {
+func (v *Visitor) VisitAssignIdxsDiv(ctx *parser.AssignIdxsDivContext) any {
 	// get variable from scope
 	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// get index
-	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
-	if !ok {
-		return types.Failure
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
 	}
 	// get value by index
-	val, err := lhs.IndexGet(idx)
+	val, err := lhs.IndexGet(lastIdx)
 	if err != nil {
 		v.SetError(err)
 		return types.Failure
@@ -1158,27 +1223,40 @@ func (v *Visitor) VisitAssignIdxDiv(ctx *parser.AssignIdxDivContext) any {
 		return types.Failure
 	}
 	// update value by index in variable
-	if err := lhs.IndexSet(idx, res); err != nil {
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignIdxMod(ctx *parser.AssignIdxModContext) any {
+func (v *Visitor) VisitAssignIdxsMod(ctx *parser.AssignIdxsModContext) any {
 	// get variable from scope
 	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// get index
-	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
-	if !ok {
-		return types.Failure
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
 	}
 	// get value by index
-	val, err := lhs.IndexGet(idx)
+	val, err := lhs.IndexGet(lastIdx)
 	if err != nil {
 		v.SetError(err)
 		return types.Failure
@@ -1195,27 +1273,40 @@ func (v *Visitor) VisitAssignIdxMod(ctx *parser.AssignIdxModContext) any {
 		return types.Failure
 	}
 	// update value by index in variable
-	if err := lhs.IndexSet(idx, res); err != nil {
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignIdxPow(ctx *parser.AssignIdxPowContext) any {
+func (v *Visitor) VisitAssignIdxsPow(ctx *parser.AssignIdxsPowContext) any {
 	// get variable from scope
 	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// get index
-	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
-	if !ok {
-		return types.Failure
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
 	}
 	// get value by index
-	val, err := lhs.IndexGet(idx)
+	val, err := lhs.IndexGet(lastIdx)
 	if err != nil {
 		v.SetError(err)
 		return types.Failure
@@ -1232,7 +1323,7 @@ func (v *Visitor) VisitAssignIdxPow(ctx *parser.AssignIdxPowContext) any {
 		return types.Failure
 	}
 	// update value by index in variable
-	if err := lhs.IndexSet(idx, res); err != nil {
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}

@@ -49,26 +49,26 @@ type PLANListener interface {
 	// EnterAssignPow is called when entering the assignPow production.
 	EnterAssignPow(c *AssignPowContext)
 
-	// EnterAssignIdxRegular is called when entering the assignIdxRegular production.
-	EnterAssignIdxRegular(c *AssignIdxRegularContext)
+	// EnterAssignIdxsRegular is called when entering the assignIdxsRegular production.
+	EnterAssignIdxsRegular(c *AssignIdxsRegularContext)
 
-	// EnterAssignIdxSum is called when entering the assignIdxSum production.
-	EnterAssignIdxSum(c *AssignIdxSumContext)
+	// EnterAssignIdxsSum is called when entering the assignIdxsSum production.
+	EnterAssignIdxsSum(c *AssignIdxsSumContext)
 
-	// EnterAssignIdxSub is called when entering the assignIdxSub production.
-	EnterAssignIdxSub(c *AssignIdxSubContext)
+	// EnterAssignIdxsSub is called when entering the assignIdxsSub production.
+	EnterAssignIdxsSub(c *AssignIdxsSubContext)
 
-	// EnterAssignIdxMul is called when entering the assignIdxMul production.
-	EnterAssignIdxMul(c *AssignIdxMulContext)
+	// EnterAssignIdxsMul is called when entering the assignIdxsMul production.
+	EnterAssignIdxsMul(c *AssignIdxsMulContext)
 
-	// EnterAssignIdxDiv is called when entering the assignIdxDiv production.
-	EnterAssignIdxDiv(c *AssignIdxDivContext)
+	// EnterAssignIdxsDiv is called when entering the assignIdxsDiv production.
+	EnterAssignIdxsDiv(c *AssignIdxsDivContext)
 
-	// EnterAssignIdxMod is called when entering the assignIdxMod production.
-	EnterAssignIdxMod(c *AssignIdxModContext)
+	// EnterAssignIdxsMod is called when entering the assignIdxsMod production.
+	EnterAssignIdxsMod(c *AssignIdxsModContext)
 
-	// EnterAssignIdxPow is called when entering the assignIdxPow production.
-	EnterAssignIdxPow(c *AssignIdxPowContext)
+	// EnterAssignIdxsPow is called when entering the assignIdxsPow production.
+	EnterAssignIdxsPow(c *AssignIdxsPowContext)
 
 	// EnterList is called when entering the list production.
 	EnterList(c *ListContext)
@@ -81,6 +81,9 @@ type PLANListener interface {
 
 	// EnterIdx is called when entering the idx production.
 	EnterIdx(c *IdxContext)
+
+	// EnterIdxs is called when entering the idxs production.
+	EnterIdxs(c *IdxsContext)
 
 	// EnterIdentifierMethodInvoke is called when entering the identifierMethodInvoke production.
 	EnterIdentifierMethodInvoke(c *IdentifierMethodInvokeContext)
@@ -235,26 +238,26 @@ type PLANListener interface {
 	// ExitAssignPow is called when exiting the assignPow production.
 	ExitAssignPow(c *AssignPowContext)
 
-	// ExitAssignIdxRegular is called when exiting the assignIdxRegular production.
-	ExitAssignIdxRegular(c *AssignIdxRegularContext)
+	// ExitAssignIdxsRegular is called when exiting the assignIdxsRegular production.
+	ExitAssignIdxsRegular(c *AssignIdxsRegularContext)
 
-	// ExitAssignIdxSum is called when exiting the assignIdxSum production.
-	ExitAssignIdxSum(c *AssignIdxSumContext)
+	// ExitAssignIdxsSum is called when exiting the assignIdxsSum production.
+	ExitAssignIdxsSum(c *AssignIdxsSumContext)
 
-	// ExitAssignIdxSub is called when exiting the assignIdxSub production.
-	ExitAssignIdxSub(c *AssignIdxSubContext)
+	// ExitAssignIdxsSub is called when exiting the assignIdxsSub production.
+	ExitAssignIdxsSub(c *AssignIdxsSubContext)
 
-	// ExitAssignIdxMul is called when exiting the assignIdxMul production.
-	ExitAssignIdxMul(c *AssignIdxMulContext)
+	// ExitAssignIdxsMul is called when exiting the assignIdxsMul production.
+	ExitAssignIdxsMul(c *AssignIdxsMulContext)
 
-	// ExitAssignIdxDiv is called when exiting the assignIdxDiv production.
-	ExitAssignIdxDiv(c *AssignIdxDivContext)
+	// ExitAssignIdxsDiv is called when exiting the assignIdxsDiv production.
+	ExitAssignIdxsDiv(c *AssignIdxsDivContext)
 
-	// ExitAssignIdxMod is called when exiting the assignIdxMod production.
-	ExitAssignIdxMod(c *AssignIdxModContext)
+	// ExitAssignIdxsMod is called when exiting the assignIdxsMod production.
+	ExitAssignIdxsMod(c *AssignIdxsModContext)
 
-	// ExitAssignIdxPow is called when exiting the assignIdxPow production.
-	ExitAssignIdxPow(c *AssignIdxPowContext)
+	// ExitAssignIdxsPow is called when exiting the assignIdxsPow production.
+	ExitAssignIdxsPow(c *AssignIdxsPowContext)
 
 	// ExitList is called when exiting the list production.
 	ExitList(c *ListContext)
@@ -267,6 +270,9 @@ type PLANListener interface {
 
 	// ExitIdx is called when exiting the idx production.
 	ExitIdx(c *IdxContext)
+
+	// ExitIdxs is called when exiting the idxs production.
+	ExitIdxs(c *IdxsContext)
 
 	// ExitIdentifierMethodInvoke is called when exiting the identifierMethodInvoke production.
 	ExitIdentifierMethodInvoke(c *IdentifierMethodInvokeContext)

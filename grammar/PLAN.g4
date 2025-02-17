@@ -34,13 +34,13 @@ assignment:
 	| name = Identifier AssDiv exp		# assignDiv
 	| name = Identifier AssMod exp		# assignMod
 	| name = Identifier AssPow exp		# assignPow
-	| name = Identifier idx '=' exp		# assignIdxRegular
-	| name = Identifier idx AssSum exp	# assignIdxSum
-	| name = Identifier idx AssSub exp	# assignIdxSub
-	| name = Identifier idx AssMul exp	# assignIdxMul
-	| name = Identifier idx AssDiv exp	# assignIdxDiv
-	| name = Identifier idx AssMod exp	# assignIdxMod
-	| name = Identifier idx AssPow exp	# assignIdxPow;
+	| name = Identifier idxs '=' exp	# assignIdxsRegular
+	| name = Identifier idxs AssSum exp	# assignIdxsSum
+	| name = Identifier idxs AssSub exp	# assignIdxsSub
+	| name = Identifier idxs AssMul exp	# assignIdxsMul
+	| name = Identifier idxs AssDiv exp	# assignIdxsDiv
+	| name = Identifier idxs AssMod exp	# assignIdxsMod
+	| name = Identifier idxs AssPow exp	# assignIdxsPow;
 
 list: '[' (exp (',' exp)*)? ']';
 
@@ -49,6 +49,8 @@ dictUnit: exp ':' exp;
 dict: '{' (dictUnit (',' dictUnit)*)? '}';
 
 idx: '[' exp ']';
+
+idxs: idx idx*;
 
 methodInvoke:
 	var = Identifier '.' name = Identifier '(' (exp (',' exp)*)? ')' # identifierMethodInvoke;
