@@ -3,11 +3,7 @@ grammar PLAN;
 WS: [ \t\r\n] -> channel(HIDDEN);
 
 // STARTING RULES
-progFile: (stmts | fn | include)* EOF;
-
-// INCLUDE
-
-include: 'include' '(' exp ')' ';';
+progFile: (stmts | fn)* EOF;
 
 // FN
 
@@ -25,6 +21,7 @@ stmt: simpleStmt ';' | compountStmt;
 
 simpleStmt:
 	assignment
+	| includeStmt
 	| methodInvoke
 	| csInvoke
 	| fnInvoke
@@ -49,6 +46,8 @@ elifBlock: 'elif' exp '{' stmt* '}' # elifBlockStmt;
 elseBlock: 'else' '{' stmt* '}' # elseBlockStmt;
 
 // SIMPLE STATEMENTS
+
+includeStmt: 'include' '(' exp ')';
 
 returnStmt: 'return' exp?;
 

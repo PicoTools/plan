@@ -10,9 +10,6 @@ type PLANVisitor interface {
 	// Visit a parse tree produced by PLANParser#progFile.
 	VisitProgFile(ctx *ProgFileContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#include.
-	VisitInclude(ctx *IncludeContext) interface{}
-
 	// Visit a parse tree produced by PLANParser#fn.
 	VisitFn(ctx *FnContext) interface{}
 
@@ -51,6 +48,9 @@ type PLANVisitor interface {
 
 	// Visit a parse tree produced by PLANParser#elseBlockStmt.
 	VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#includeStmt.
+	VisitIncludeStmt(ctx *IncludeStmtContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#returnStmt.
 	VisitReturnStmt(ctx *ReturnStmtContext) interface{}

@@ -11,10 +11,6 @@ func (v *BasePLANVisitor) VisitProgFile(ctx *ProgFileContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitInclude(ctx *IncludeContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BasePLANVisitor) VisitFn(ctx *FnContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -64,6 +60,10 @@ func (v *BasePLANVisitor) VisitElifBlockStmt(ctx *ElifBlockStmtContext) interfac
 }
 
 func (v *BasePLANVisitor) VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitIncludeStmt(ctx *IncludeStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

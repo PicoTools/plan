@@ -26,12 +26,6 @@ func (s *BasePLANListener) EnterProgFile(ctx *ProgFileContext) {}
 // ExitProgFile is called when production progFile is exited.
 func (s *BasePLANListener) ExitProgFile(ctx *ProgFileContext) {}
 
-// EnterInclude is called when production include is entered.
-func (s *BasePLANListener) EnterInclude(ctx *IncludeContext) {}
-
-// ExitInclude is called when production include is exited.
-func (s *BasePLANListener) ExitInclude(ctx *IncludeContext) {}
-
 // EnterFn is called when production fn is entered.
 func (s *BasePLANListener) EnterFn(ctx *FnContext) {}
 
@@ -109,6 +103,12 @@ func (s *BasePLANListener) EnterElseBlockStmt(ctx *ElseBlockStmtContext) {}
 
 // ExitElseBlockStmt is called when production elseBlockStmt is exited.
 func (s *BasePLANListener) ExitElseBlockStmt(ctx *ElseBlockStmtContext) {}
+
+// EnterIncludeStmt is called when production includeStmt is entered.
+func (s *BasePLANListener) EnterIncludeStmt(ctx *IncludeStmtContext) {}
+
+// ExitIncludeStmt is called when production includeStmt is exited.
+func (s *BasePLANListener) ExitIncludeStmt(ctx *IncludeStmtContext) {}
 
 // EnterReturnStmt is called when production returnStmt is entered.
 func (s *BasePLANListener) EnterReturnStmt(ctx *ReturnStmtContext) {}

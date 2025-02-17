@@ -10,9 +10,6 @@ type PLANListener interface {
 	// EnterProgFile is called when entering the progFile production.
 	EnterProgFile(c *ProgFileContext)
 
-	// EnterInclude is called when entering the include production.
-	EnterInclude(c *IncludeContext)
-
 	// EnterFn is called when entering the fn production.
 	EnterFn(c *FnContext)
 
@@ -51,6 +48,9 @@ type PLANListener interface {
 
 	// EnterElseBlockStmt is called when entering the elseBlockStmt production.
 	EnterElseBlockStmt(c *ElseBlockStmtContext)
+
+	// EnterIncludeStmt is called when entering the includeStmt production.
+	EnterIncludeStmt(c *IncludeStmtContext)
 
 	// EnterReturnStmt is called when entering the returnStmt production.
 	EnterReturnStmt(c *ReturnStmtContext)
@@ -208,9 +208,6 @@ type PLANListener interface {
 	// ExitProgFile is called when exiting the progFile production.
 	ExitProgFile(c *ProgFileContext)
 
-	// ExitInclude is called when exiting the include production.
-	ExitInclude(c *IncludeContext)
-
 	// ExitFn is called when exiting the fn production.
 	ExitFn(c *FnContext)
 
@@ -249,6 +246,9 @@ type PLANListener interface {
 
 	// ExitElseBlockStmt is called when exiting the elseBlockStmt production.
 	ExitElseBlockStmt(c *ElseBlockStmtContext)
+
+	// ExitIncludeStmt is called when exiting the includeStmt production.
+	ExitIncludeStmt(c *IncludeStmtContext)
 
 	// ExitReturnStmt is called when exiting the returnStmt production.
 	ExitReturnStmt(c *ReturnStmtContext)

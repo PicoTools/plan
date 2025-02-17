@@ -163,8 +163,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 		return v.VisitExpCsInvoke(val)
 	case *parser.IdentifierCsInvokeContext:
 		return v.VisitIdentifierCsInvoke(val)
-	case *parser.IncludeContext:
-		return v.VisitInclude(val)
+	case *parser.IncludeStmtContext:
+		return v.VisitIncludeStmt(val)
 	case *parser.FnContext:
 		return v.VisitFn(val)
 	case *parser.FnBodyContext:
@@ -200,17 +200,6 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 }
 
 func (v *Visitor) VisitProgFile(ctx *parser.ProgFileContext) any {
-	// resolve includes
-	for _, item := range ctx.AllInclude() {
-		tree, ok := v.Visit(item).(antlr.ParseTree)
-		if !ok {
-			return types.Failure
-		}
-		if res := v.Visit(tree); res != types.Success {
-			return types.Failure
-		}
-	}
-
 	// register native functions
 	for _, item := range ctx.AllFn() {
 		if ok := v.Visit(item).(types.VisitResultType); !ok {
@@ -259,6 +248,17 @@ func (v *Visitor) VisitSimpleStmt(ctx *parser.SimpleStmtContext) any {
 	// assignment
 	if ctx.Assignment() != nil {
 		if ok := v.Visit(ctx.Assignment()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	// resolve includes
+	if ctx.IncludeStmt() != nil {
+		tree, ok := v.Visit(ctx.IncludeStmt()).(antlr.ParseTree)
+		if !ok {
+			return types.Failure
+		}
+		if res := v.Visit(tree); res != types.Success {
 			return types.Failure
 		}
 	}
@@ -1393,7 +1393,7 @@ func (v *Visitor) VisitIdentifierCsInvoke(ctx *parser.IdentifierCsInvokeContext)
 	return v.invokeClosure(ctx.GetName().GetText(), params...)
 }
 
-func (v *Visitor) VisitInclude(ctx *parser.IncludeContext) any {
+func (v *Visitor) VisitIncludeStmt(ctx *parser.IncludeStmtContext) any {
 	val, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
