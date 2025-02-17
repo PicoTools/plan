@@ -11,11 +11,15 @@ import (
 
 // invokeFunc invokes function from storage
 func (v *Visitor) invokeFunc(name string, params ...object.Object) any {
+	var val object.Object
+
 	// get function object from storage
-	val := storage.GetFunction(name)
-	if val == nil {
-		v.SetError(fmt.Errorf("undefined function '%s'", name))
-		return types.Failure
+	if val = storage.GetFunction(name); val == nil {
+		// get function from scope (runtime)
+		if val = scope.CurrentScope.GetFunction(name); val == nil {
+			v.SetError(fmt.Errorf("undefined function '%s'", name))
+			return types.Failure
+		}
 	}
 
 	// check if object callable
@@ -31,6 +35,7 @@ func (v *Visitor) invokeFunc(name string, params ...object.Object) any {
 		true,
 		false,
 		make(map[string]object.Object),
+		make(map[string]*object.RuntimeFunc),
 	)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()
@@ -72,6 +77,7 @@ func (v *Visitor) invokeClosure(name string, params ...object.Object) any {
 		true,
 		false,
 		make(map[string]object.Object),
+		make(map[string]*object.RuntimeFunc),
 	)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()
@@ -125,6 +131,7 @@ func (v *Visitor) InvokeRuntimeFunc(fn *object.RuntimeFunc, params ...object.Obj
 		true,
 		false,
 		make(map[string]object.Object),
+		make(map[string]*object.RuntimeFunc),
 	)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()

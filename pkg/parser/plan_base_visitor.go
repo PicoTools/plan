@@ -11,18 +11,6 @@ func (v *BasePLANVisitor) VisitProgFile(ctx *ProgFileContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitFn(ctx *FnContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitFnBody(ctx *FnBodyContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BasePLANVisitor) VisitFnParams(ctx *FnParamsContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BasePLANVisitor) VisitStmts(ctx *StmtsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -35,7 +23,7 @@ func (v *BasePLANVisitor) VisitSimpleStmt(ctx *SimpleStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BasePLANVisitor) VisitCompountStmt(ctx *CompountStmtContext) interface{} {
+func (v *BasePLANVisitor) VisitCompoundStmt(ctx *CompoundStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -60,6 +48,18 @@ func (v *BasePLANVisitor) VisitElifBlockStmt(ctx *ElifBlockStmtContext) interfac
 }
 
 func (v *BasePLANVisitor) VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitFnStmt(ctx *FnStmtContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitFnBody(ctx *FnBodyContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BasePLANVisitor) VisitFnParams(ctx *FnParamsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

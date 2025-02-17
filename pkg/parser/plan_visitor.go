@@ -10,15 +10,6 @@ type PLANVisitor interface {
 	// Visit a parse tree produced by PLANParser#progFile.
 	VisitProgFile(ctx *ProgFileContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#fn.
-	VisitFn(ctx *FnContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#fnBody.
-	VisitFnBody(ctx *FnBodyContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#fnParams.
-	VisitFnParams(ctx *FnParamsContext) interface{}
-
 	// Visit a parse tree produced by PLANParser#stmts.
 	VisitStmts(ctx *StmtsContext) interface{}
 
@@ -28,8 +19,8 @@ type PLANVisitor interface {
 	// Visit a parse tree produced by PLANParser#simpleStmt.
 	VisitSimpleStmt(ctx *SimpleStmtContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#compountStmt.
-	VisitCompountStmt(ctx *CompountStmtContext) interface{}
+	// Visit a parse tree produced by PLANParser#compoundStmt.
+	VisitCompoundStmt(ctx *CompoundStmtContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#whileStmt.
 	VisitWhileStmt(ctx *WhileStmtContext) interface{}
@@ -48,6 +39,15 @@ type PLANVisitor interface {
 
 	// Visit a parse tree produced by PLANParser#elseBlockStmt.
 	VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#fnStmt.
+	VisitFnStmt(ctx *FnStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#fnBody.
+	VisitFnBody(ctx *FnBodyContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#fnParams.
+	VisitFnParams(ctx *FnParamsContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#includeStmt.
 	VisitIncludeStmt(ctx *IncludeStmtContext) interface{}

@@ -26,24 +26,6 @@ func (s *BasePLANListener) EnterProgFile(ctx *ProgFileContext) {}
 // ExitProgFile is called when production progFile is exited.
 func (s *BasePLANListener) ExitProgFile(ctx *ProgFileContext) {}
 
-// EnterFn is called when production fn is entered.
-func (s *BasePLANListener) EnterFn(ctx *FnContext) {}
-
-// ExitFn is called when production fn is exited.
-func (s *BasePLANListener) ExitFn(ctx *FnContext) {}
-
-// EnterFnBody is called when production fnBody is entered.
-func (s *BasePLANListener) EnterFnBody(ctx *FnBodyContext) {}
-
-// ExitFnBody is called when production fnBody is exited.
-func (s *BasePLANListener) ExitFnBody(ctx *FnBodyContext) {}
-
-// EnterFnParams is called when production fnParams is entered.
-func (s *BasePLANListener) EnterFnParams(ctx *FnParamsContext) {}
-
-// ExitFnParams is called when production fnParams is exited.
-func (s *BasePLANListener) ExitFnParams(ctx *FnParamsContext) {}
-
 // EnterStmts is called when production stmts is entered.
 func (s *BasePLANListener) EnterStmts(ctx *StmtsContext) {}
 
@@ -62,11 +44,11 @@ func (s *BasePLANListener) EnterSimpleStmt(ctx *SimpleStmtContext) {}
 // ExitSimpleStmt is called when production simpleStmt is exited.
 func (s *BasePLANListener) ExitSimpleStmt(ctx *SimpleStmtContext) {}
 
-// EnterCompountStmt is called when production compountStmt is entered.
-func (s *BasePLANListener) EnterCompountStmt(ctx *CompountStmtContext) {}
+// EnterCompoundStmt is called when production compoundStmt is entered.
+func (s *BasePLANListener) EnterCompoundStmt(ctx *CompoundStmtContext) {}
 
-// ExitCompountStmt is called when production compountStmt is exited.
-func (s *BasePLANListener) ExitCompountStmt(ctx *CompountStmtContext) {}
+// ExitCompoundStmt is called when production compoundStmt is exited.
+func (s *BasePLANListener) ExitCompoundStmt(ctx *CompoundStmtContext) {}
 
 // EnterWhileStmt is called when production whileStmt is entered.
 func (s *BasePLANListener) EnterWhileStmt(ctx *WhileStmtContext) {}
@@ -103,6 +85,24 @@ func (s *BasePLANListener) EnterElseBlockStmt(ctx *ElseBlockStmtContext) {}
 
 // ExitElseBlockStmt is called when production elseBlockStmt is exited.
 func (s *BasePLANListener) ExitElseBlockStmt(ctx *ElseBlockStmtContext) {}
+
+// EnterFnStmt is called when production fnStmt is entered.
+func (s *BasePLANListener) EnterFnStmt(ctx *FnStmtContext) {}
+
+// ExitFnStmt is called when production fnStmt is exited.
+func (s *BasePLANListener) ExitFnStmt(ctx *FnStmtContext) {}
+
+// EnterFnBody is called when production fnBody is entered.
+func (s *BasePLANListener) EnterFnBody(ctx *FnBodyContext) {}
+
+// ExitFnBody is called when production fnBody is exited.
+func (s *BasePLANListener) ExitFnBody(ctx *FnBodyContext) {}
+
+// EnterFnParams is called when production fnParams is entered.
+func (s *BasePLANListener) EnterFnParams(ctx *FnParamsContext) {}
+
+// ExitFnParams is called when production fnParams is exited.
+func (s *BasePLANListener) ExitFnParams(ctx *FnParamsContext) {}
 
 // EnterIncludeStmt is called when production includeStmt is entered.
 func (s *BasePLANListener) EnterIncludeStmt(ctx *IncludeStmtContext) {}

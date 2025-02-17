@@ -3,21 +3,14 @@ grammar PLAN;
 WS: [ \t\r\n] -> channel(HIDDEN);
 
 // STARTING RULES
-progFile: (stmts | fn)* EOF;
 
-// FN
-
-fn: 'fn' name = Identifier fnBody;
-
-fnBody: '(' fnParams? ')' '{' stmt* '}';
-
-fnParams: Identifier (',' Identifier)*;
+progFile: stmts? EOF;
 
 // GENERAL STATEMENTS
 
 stmts: stmt+;
 
-stmt: simpleStmt ';' | compountStmt;
+stmt: simpleStmt ';' | compoundStmt;
 
 simpleStmt:
 	assignment
@@ -29,7 +22,7 @@ simpleStmt:
 	| continueStmt
 	| returnStmt;
 
-compountStmt: whileStmt | forStmt | ifStmt;
+compoundStmt: whileStmt | forStmt | ifStmt | fnStmt;
 
 // COMPOUND STATEMENTS
 
@@ -44,6 +37,12 @@ ifBlock: 'if' exp '{' stmt* '}' # ifBlockStmt;
 elifBlock: 'elif' exp '{' stmt* '}' # elifBlockStmt;
 
 elseBlock: 'else' '{' stmt* '}' # elseBlockStmt;
+
+fnStmt: 'fn' name = Identifier fnBody;
+
+fnBody: '(' fnParams? ')' '{' stmt* '}';
+
+fnParams: Identifier (',' Identifier)*;
 
 // SIMPLE STATEMENTS
 

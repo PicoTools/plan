@@ -60,6 +60,24 @@ println(test01(1, 2, 3)); // 6
 println(test02()); // <null>
 ```
 
+You can create nested functions that will be available inside the nested scope. For example:
+```
+# function in scope #0
+fn hello() {
+    # function in scope #1
+    fn hello() {
+        return "hello";
+    }
+    # function in scope #1
+    fn world() {
+        return "world";
+    }
+
+    return hello() + " " + world();
+}
+hello(); // hello world
+```
+
 ## Closures
 
 Closures can be used to store functions in variables and call it later.

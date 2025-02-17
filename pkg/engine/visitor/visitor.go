@@ -75,8 +75,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 		return v.VisitStmt(val)
 	case *parser.SimpleStmtContext:
 		return v.VisitSimpleStmt(val)
-	case *parser.CompountStmtContext:
-		return v.VisitCompountStmt(val)
+	case *parser.CompoundStmtContext:
+		return v.VisitCompoundStmt(val)
 	case *parser.AssignRegularContext:
 		return v.VisitAssignRegular(val)
 	case *parser.ExpBoolContext:
@@ -165,8 +165,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 		return v.VisitIdentifierCsInvoke(val)
 	case *parser.IncludeStmtContext:
 		return v.VisitIncludeStmt(val)
-	case *parser.FnContext:
-		return v.VisitFn(val)
+	case *parser.FnStmtContext:
+		return v.VisitFnStmt(val)
 	case *parser.FnBodyContext:
 		return v.VisitFnBody(val)
 	case *parser.AssignSumContext:
@@ -200,16 +200,9 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 }
 
 func (v *Visitor) VisitProgFile(ctx *parser.ProgFileContext) any {
-	// register native functions
-	for _, item := range ctx.AllFn() {
-		if ok := v.Visit(item).(types.VisitResultType); !ok {
-			return types.Failure
-		}
-	}
-
 	// execute statements
-	for _, item := range ctx.AllStmts() {
-		if ok := v.Visit(item).(types.VisitResultType); !ok {
+	if ctx.Stmts() != nil {
+		if ok := v.Visit(ctx.Stmts()).(types.VisitResultType); !ok {
 			return types.Failure
 		}
 	}
@@ -236,8 +229,8 @@ func (v *Visitor) VisitStmt(ctx *parser.StmtContext) any {
 	}
 
 	// process compound statements
-	if ctx.CompountStmt() != nil {
-		if ok := v.Visit(ctx.CompountStmt()).(types.VisitResultType); !ok {
+	if ctx.CompoundStmt() != nil {
+		if ok := v.Visit(ctx.CompoundStmt()).(types.VisitResultType); !ok {
 			return types.Failure
 		}
 	}
@@ -314,7 +307,7 @@ func (v *Visitor) VisitSimpleStmt(ctx *parser.SimpleStmtContext) any {
 	return types.Success
 }
 
-func (v *Visitor) VisitCompountStmt(ctx *parser.CompountStmtContext) any {
+func (v *Visitor) VisitCompoundStmt(ctx *parser.CompoundStmtContext) any {
 	// if/elif/else
 	if ctx.IfStmt() != nil {
 		scope.CurrentScope = scope.NewScope(
@@ -323,6 +316,7 @@ func (v *Visitor) VisitCompountStmt(ctx *parser.CompountStmtContext) any {
 			false,
 			false,
 			make(map[string]object.Object),
+			make(map[string]*object.RuntimeFunc),
 		)
 		// statements inside if block
 		if ok := v.Visit(ctx.IfStmt()).(types.VisitResultType); !ok {
@@ -340,6 +334,7 @@ func (v *Visitor) VisitCompountStmt(ctx *parser.CompountStmtContext) any {
 			false,
 			true,
 			make(map[string]object.Object),
+			make(map[string]*object.RuntimeFunc),
 		)
 		// statements inside while block
 		if ok := v.Visit(ctx.WhileStmt()).(types.VisitResultType); !ok {
@@ -357,6 +352,7 @@ func (v *Visitor) VisitCompountStmt(ctx *parser.CompountStmtContext) any {
 			false,
 			true,
 			make(map[string]object.Object),
+			make(map[string]*object.RuntimeFunc),
 		)
 		// statements inside for block
 		if ok := v.Visit(ctx.ForStmt()).(types.VisitResultType); !ok {
@@ -364,6 +360,13 @@ func (v *Visitor) VisitCompountStmt(ctx *parser.CompountStmtContext) any {
 			return types.Failure
 		}
 		scope.CurrentScope = scope.CurrentScope.Parent()
+	}
+
+	// register native function
+	if ctx.FnStmt() != nil {
+		if ok := v.Visit(ctx.FnStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
 	}
 
 	return types.Success
@@ -941,9 +944,15 @@ func (v *Visitor) VisitElifBlockStmt(ctx *parser.ElifBlockStmtContext) any {
 	return res
 }
 
-func (v *Visitor) VisitFn(ctx *parser.FnContext) any {
-	// check if function already exists
-	if _, ok := storage.NativeFunctions[ctx.GetName().GetText()]; ok {
+func (v *Visitor) VisitFnStmt(ctx *parser.FnStmtContext) any {
+	// check if function already exists in builtin
+	if val := storage.GetFunction(ctx.GetName().GetText()); val != nil {
+		v.SetError(fmt.Errorf("function '%s' already defined", ctx.GetName().GetText()))
+		return types.Failure
+	}
+
+	// check if function already exists in scope
+	if _, ok := scope.CurrentScope.Functions()[ctx.GetName().GetText()]; ok {
 		v.SetError(fmt.Errorf("function '%s' already defined", ctx.GetName().GetText()))
 		return types.Failure
 	}
@@ -958,7 +967,7 @@ func (v *Visitor) VisitFn(ctx *parser.FnContext) any {
 	fn.SetName(ctx.GetName().GetText())
 
 	// save native function
-	storage.NativeFunctions[ctx.GetName().GetText()] = fn
+	scope.CurrentScope.Functions()[ctx.GetName().GetText()] = fn
 
 	return types.Success
 }

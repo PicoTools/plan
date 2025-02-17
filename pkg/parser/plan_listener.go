@@ -10,15 +10,6 @@ type PLANListener interface {
 	// EnterProgFile is called when entering the progFile production.
 	EnterProgFile(c *ProgFileContext)
 
-	// EnterFn is called when entering the fn production.
-	EnterFn(c *FnContext)
-
-	// EnterFnBody is called when entering the fnBody production.
-	EnterFnBody(c *FnBodyContext)
-
-	// EnterFnParams is called when entering the fnParams production.
-	EnterFnParams(c *FnParamsContext)
-
 	// EnterStmts is called when entering the stmts production.
 	EnterStmts(c *StmtsContext)
 
@@ -28,8 +19,8 @@ type PLANListener interface {
 	// EnterSimpleStmt is called when entering the simpleStmt production.
 	EnterSimpleStmt(c *SimpleStmtContext)
 
-	// EnterCompountStmt is called when entering the compountStmt production.
-	EnterCompountStmt(c *CompountStmtContext)
+	// EnterCompoundStmt is called when entering the compoundStmt production.
+	EnterCompoundStmt(c *CompoundStmtContext)
 
 	// EnterWhileStmt is called when entering the whileStmt production.
 	EnterWhileStmt(c *WhileStmtContext)
@@ -48,6 +39,15 @@ type PLANListener interface {
 
 	// EnterElseBlockStmt is called when entering the elseBlockStmt production.
 	EnterElseBlockStmt(c *ElseBlockStmtContext)
+
+	// EnterFnStmt is called when entering the fnStmt production.
+	EnterFnStmt(c *FnStmtContext)
+
+	// EnterFnBody is called when entering the fnBody production.
+	EnterFnBody(c *FnBodyContext)
+
+	// EnterFnParams is called when entering the fnParams production.
+	EnterFnParams(c *FnParamsContext)
 
 	// EnterIncludeStmt is called when entering the includeStmt production.
 	EnterIncludeStmt(c *IncludeStmtContext)
@@ -208,15 +208,6 @@ type PLANListener interface {
 	// ExitProgFile is called when exiting the progFile production.
 	ExitProgFile(c *ProgFileContext)
 
-	// ExitFn is called when exiting the fn production.
-	ExitFn(c *FnContext)
-
-	// ExitFnBody is called when exiting the fnBody production.
-	ExitFnBody(c *FnBodyContext)
-
-	// ExitFnParams is called when exiting the fnParams production.
-	ExitFnParams(c *FnParamsContext)
-
 	// ExitStmts is called when exiting the stmts production.
 	ExitStmts(c *StmtsContext)
 
@@ -226,8 +217,8 @@ type PLANListener interface {
 	// ExitSimpleStmt is called when exiting the simpleStmt production.
 	ExitSimpleStmt(c *SimpleStmtContext)
 
-	// ExitCompountStmt is called when exiting the compountStmt production.
-	ExitCompountStmt(c *CompountStmtContext)
+	// ExitCompoundStmt is called when exiting the compoundStmt production.
+	ExitCompoundStmt(c *CompoundStmtContext)
 
 	// ExitWhileStmt is called when exiting the whileStmt production.
 	ExitWhileStmt(c *WhileStmtContext)
@@ -246,6 +237,15 @@ type PLANListener interface {
 
 	// ExitElseBlockStmt is called when exiting the elseBlockStmt production.
 	ExitElseBlockStmt(c *ElseBlockStmtContext)
+
+	// ExitFnStmt is called when exiting the fnStmt production.
+	ExitFnStmt(c *FnStmtContext)
+
+	// ExitFnBody is called when exiting the fnBody production.
+	ExitFnBody(c *FnBodyContext)
+
+	// ExitFnParams is called when exiting the fnParams production.
+	ExitFnParams(c *FnParamsContext)
 
 	// ExitIncludeStmt is called when exiting the includeStmt production.
 	ExitIncludeStmt(c *IncludeStmtContext)
