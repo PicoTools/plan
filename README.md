@@ -2,17 +2,17 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-PLAN (Pico LANguage) is a scripting language (interpreter based) for embedding in Golang applications based on ANTLR4 grammar.
+PLAN (Pico LANguage) is an interpreter-based scripting language for embedding in Golang applications created on the ANTLR4 grammar.
 
 ## Why yet another scripting language?
 
-Development of language was part of creation C2 framework - [pico](https://github.com/PicoTools/pico), which we position as interface between operator and beacon. PLAN runtime used in [operator's CLI](https://github.com/PicoTools/pico-cli) to give possibility of extending stocked functionality of interaction with server and beacons, which we provided.
+The development of the language was part of the creation of the C2 framework - [pico](https://github.com/PicoTools/pico), which we position as an interface between the operator and the agent. PLAN is used in the [operator CLI](https://github.com/PicoTools/pico-cli) to provide the ability to expand the existing functionality of interaction with the server and agents that we have provided.
 
-Speed was not a goal of this language, but it can be easily reached by mapping functions written on native Golang.
+Speed was not the goal of this language, but it can be easily achieved with display features written in native Golang.
 
-## What about syntax?
+## Syntax
 
-We can charactarized PLAN as follows: syntax more like `C` way, typification and logic of processing like `Python` way. 
+We can charactarized PLAN as follows: syntax more like `C`, typification and logic of processing like `Python`. 
 
 This example is `C` like (a lot of brakets and semicolons):
 ```
@@ -39,7 +39,7 @@ println(a);
 
 More info about [syntax](docs/syntax.md) with examples.
 
-## What about data types?
+## Data types
 
 All data types sit on top of abstration as `object`.
 
@@ -62,14 +62,3 @@ Here you can find some more information:
 - [Data types](docs/data_types.md)
 - [Builtin functions](docs/builtin_functions.md)
 - [Builtin methods](docs/builtin_methods.md)
-
-## What's next?
-
-- [ ] Improve quality of documentation
-- [x] Builtin methods for data types
-- [ ] Builtin functions to handle regexp
-- [ ] Builtin functions to handle network interaction
-- [ ] Extend builtin functions to handle FS interaction
-- [ ] Extend builtin functions for string processing
-- [ ] Tests of seprated critical components
-- [ ] Extend collection of samples with realization of different algos
