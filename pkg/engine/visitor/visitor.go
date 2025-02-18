@@ -48,6 +48,7 @@ type Visitor struct {
 
 // SetError saves error with current execution line (and file)
 func (v *Visitor) SetError(err error) {
+	// TODO: try to change model of nested visitors
 	t := v
 	for {
 		if t.parent == nil {
