@@ -29,14 +29,7 @@ func (v *Visitor) invokeFunc(name string, params ...object.Object) any {
 	}
 
 	// create new context to execute function in
-	scope.CurrentScope = scope.NewScope(
-		scope.CurrentScope,
-		scope.CurrentScope.Depth()+1,
-		true,
-		false,
-		make(map[string]object.Object),
-		make(map[string]*object.RuntimeFunc),
-	)
+	scope.NewCurrentScope(true, false)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()
 	}()
@@ -71,14 +64,7 @@ func (v *Visitor) invokeClosure(name string, params ...object.Object) any {
 	}
 
 	// create new context to execute function in
-	scope.CurrentScope = scope.NewScope(
-		scope.CurrentScope,
-		scope.CurrentScope.Depth()+1,
-		true,
-		false,
-		make(map[string]object.Object),
-		make(map[string]*object.RuntimeFunc),
-	)
+	scope.NewCurrentScope(true, false)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()
 	}()
@@ -125,14 +111,7 @@ func (v *Visitor) invokeRuntimeFunc(fn *object.RuntimeFunc, isClosure bool, para
 // InvokeRuntimeFunc invokes directly runtime function with context
 func (v *Visitor) InvokeRuntimeFunc(fn *object.RuntimeFunc, params ...object.Object) any {
 	// create new context to execute function in
-	scope.CurrentScope = scope.NewScope(
-		scope.CurrentScope,
-		scope.CurrentScope.Depth()+1,
-		true,
-		false,
-		make(map[string]object.Object),
-		make(map[string]*object.RuntimeFunc),
-	)
+	scope.NewCurrentScope(true, false)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()
 	}()

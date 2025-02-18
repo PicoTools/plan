@@ -22,22 +22,44 @@ import (
 // NewVisitor returns new Visitor object
 func NewVisitor() *Visitor {
 	return &Visitor{
-		err: nil,
+		file:   "<entrypoint>",
+		depth:  0,
+		parent: nil,
+		err:    nil,
 	}
 }
 
 // Visitor implements BasePLANVisitor interface
 type Visitor struct {
 	parser.BasePLANVisitor
+
+	// parent visitor object
+	// used for includes to process new context
+	parent *Visitor
+	// depth of visitors
+	depth int
+	// name of evaluated file (ommited if entrypoint)
+	file string
 	// line number of executed script
 	line int
 	// visitor error
 	err error
 }
 
-// SetError saves error with current execution line
+// SetError saves error with current execution line (and file)
 func (v *Visitor) SetError(err error) {
-	v.err = errors.Wrap(err, fmt.Sprintf("line %d", v.line))
+	t := v
+	for {
+		if t.parent == nil {
+			if v.file != "" {
+				t.err = errors.Wrap(err, fmt.Sprintf("%s: line %d", v.file, v.line))
+			} else {
+				t.err = errors.Wrap(err, fmt.Sprintf("line %d", v.line))
+			}
+			return
+		}
+		t = t.parent
+	}
 }
 
 // GetError returns error
@@ -50,6 +72,21 @@ func (v *Visitor) GetLine() int {
 	return v.line
 }
 
+// GetFile returns current evaluated file
+func (v *Visitor) GetFile() string {
+	return v.file
+}
+
+// SetFile sets name of evaluated file
+func (v *Visitor) SetFile(name string) {
+	v.file = name
+}
+
+// UnsetFile unsets filename used for previous evaluation
+func (v *Visitor) UnsetFile() {
+	v.file = ""
+}
+
 // Visit visits AST and evaluate statements
 func (v *Visitor) Visit(tree antlr.ParseTree) any {
 	if retValue != nil {
@@ -60,9 +97,15 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 	// set line number
 	v.line = tree.(antlr.ParserRuleContext).GetStart().GetLine()
 
-	// exit in case of max depth
+	// exit in case of max visitor depth
+	if v.depth > constants.MaxVisitorDepth {
+		v.SetError(fmt.Errorf("max include depth reached"))
+		return types.Failure
+	}
+
+	// exit in case of max scope depth
 	if scope.CurrentScope.Depth() > constants.MaxScopeDepth {
-		v.err = fmt.Errorf("max depth reached")
+		v.SetError(fmt.Errorf("max depth reached"))
 		return types.Failure
 	}
 
@@ -247,11 +290,7 @@ func (v *Visitor) VisitSimpleStmt(ctx *parser.SimpleStmtContext) any {
 
 	// resolve includes
 	if ctx.IncludeStmt() != nil {
-		tree, ok := v.Visit(ctx.IncludeStmt()).(antlr.ParseTree)
-		if !ok {
-			return types.Failure
-		}
-		if res := v.Visit(tree); res != types.Success {
+		if res := v.Visit(ctx.IncludeStmt()).(types.VisitResultType); res == types.Failure {
 			return types.Failure
 		}
 	}
@@ -310,14 +349,7 @@ func (v *Visitor) VisitSimpleStmt(ctx *parser.SimpleStmtContext) any {
 func (v *Visitor) VisitCompoundStmt(ctx *parser.CompoundStmtContext) any {
 	// if/elif/else
 	if ctx.IfStmt() != nil {
-		scope.CurrentScope = scope.NewScope(
-			scope.CurrentScope,
-			scope.CurrentScope.Depth()+1,
-			false,
-			false,
-			make(map[string]object.Object),
-			make(map[string]*object.RuntimeFunc),
-		)
+		scope.NewCurrentScope(false, false)
 		// statements inside if block
 		if ok := v.Visit(ctx.IfStmt()).(types.VisitResultType); !ok {
 			scope.CurrentScope = scope.CurrentScope.Parent()
@@ -328,14 +360,7 @@ func (v *Visitor) VisitCompoundStmt(ctx *parser.CompoundStmtContext) any {
 
 	// while
 	if ctx.WhileStmt() != nil {
-		scope.CurrentScope = scope.NewScope(
-			scope.CurrentScope,
-			scope.CurrentScope.Depth()+1,
-			false,
-			true,
-			make(map[string]object.Object),
-			make(map[string]*object.RuntimeFunc),
-		)
+		scope.NewCurrentScope(false, true)
 		// statements inside while block
 		if ok := v.Visit(ctx.WhileStmt()).(types.VisitResultType); !ok {
 			scope.CurrentScope = scope.CurrentScope.Parent()
@@ -346,14 +371,7 @@ func (v *Visitor) VisitCompoundStmt(ctx *parser.CompoundStmtContext) any {
 
 	// for
 	if ctx.ForStmt() != nil {
-		scope.CurrentScope = scope.NewScope(
-			scope.CurrentScope,
-			scope.CurrentScope.Depth()+1,
-			false,
-			true,
-			make(map[string]object.Object),
-			make(map[string]*object.RuntimeFunc),
-		)
+		scope.NewCurrentScope(false, true)
 		// statements inside for block
 		if ok := v.Visit(ctx.ForStmt()).(types.VisitResultType); !ok {
 			scope.CurrentScope = scope.CurrentScope.Parent()
@@ -1422,7 +1440,21 @@ func (v *Visitor) VisitIncludeStmt(ctx *parser.IncludeStmtContext) any {
 		v.SetError(err)
 		return types.Failure
 	}
-	return tree
+
+	// update visitor context
+	v = &Visitor{
+		parent: v,
+		err:    nil,
+		file:   path.GetValue().(string),
+		depth:  v.depth + 1,
+	}
+	// traverse AST
+	if res := v.Visit(tree); res != types.Success {
+		return types.Failure
+	}
+	// revert parent visitor
+	v = v.parent
+	return types.Success
 }
 
 func (v *Visitor) VisitExpCs(ctx *parser.ExpCsContext) any {
@@ -1588,7 +1620,7 @@ func (v *Visitor) VisitIdentifierMethodInvoke(ctx *parser.IdentifierMethodInvoke
 	// invoke method
 	obj, err := val.MethodCall(ctx.GetName().GetText(), params...)
 	if err != nil {
-		v.err = err
+		v.SetError(err)
 		return types.Failure
 	}
 	return obj

@@ -48,6 +48,18 @@ func NewScope(
 	}
 }
 
+// NewBaseScope create current scope on top of another
+func NewCurrentScope(isFunc bool, isLoop bool) {
+	CurrentScope = NewScope(
+		CurrentScope,
+		CurrentScope.depth+1,
+		isFunc,
+		isLoop,
+		map[string]object.Object{},
+		map[string]*object.RuntimeFunc{},
+	)
+}
+
 // NewGlobalScope initializes global scope
 func NewGlobalScope() {
 	GlobalScope = NewScope(
