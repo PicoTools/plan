@@ -1,0 +1,4 @@
+assert(!null);
+assert(null == null);
+assert(!null == !!!null);
+assert(!(null != null));

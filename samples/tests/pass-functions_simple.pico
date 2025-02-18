@@ -1,0 +1,32 @@
+# this function use in samples/tests/pass-include.pico
+fn twice(n) {
+  return n * 2;
+}
+
+fn square(n) {
+  return n * n;
+}
+
+fn new_list() {
+  return [1,2,3,4,5,6];
+}
+
+fn new_dict() {
+  return {"key1":"val1", "key2":"val2"};
+}
+
+fn combiner(n) {
+  return twice(square(n));
+}
+
+assert(twice(square(5)) == 50);
+assert(twice(25) == 25 + 25);
+assert(square(666) == 666 ** 2);
+assert(combiner(2) == 8);
+assert(new_list() == [1,2,3,4,5,6]);
+assert(new_list()[2] == 3);
+assert(new_dict()["key1"] == "val1");
+x = new_list();
+assert(x.len() == 6);
+y = new_dict();
+assert(y.len() == 2);

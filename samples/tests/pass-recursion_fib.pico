@@ -6,4 +6,4 @@ fn fib(n) {
   }
 }
 
-println(fib(35));
+assert(fib(15) == 610);

@@ -60,6 +60,24 @@ println(test01(1, 2, 3)); // 6
 println(test02()); // <null>
 ```
 
+You can create nested functions that will be available inside the nested scope. For example:
+```
+# function in scope #0
+fn hello() {
+    # function in scope #1
+    fn hello() {
+        return "hello";
+    }
+    # function in scope #1
+    fn world() {
+        return "world";
+    }
+
+    return hello() + " " + world();
+}
+hello(); // hello world
+```
+
 ## Closures
 
 Closures can be used to store functions in variables and call it later.
@@ -162,10 +180,16 @@ println(add(1, 2)); // 3
 
 ## Code comments
 
-PLAN support comments in code only using `//` notation. As example:
+PLAN support comments in code using next notations:
 ```
-a = 1; // this is my awesome variable
+// this is my awesome comment
 
-// let's sum variable with number
-a = a + 1;
+# this is my awesome comment too
+
+/*
+    this is
+    my myltiline
+    awesome
+    comment
+*/
 ```

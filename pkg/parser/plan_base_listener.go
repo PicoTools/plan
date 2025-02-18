@@ -20,17 +20,35 @@ func (s *BasePLANListener) EnterEveryRule(ctx antlr.ParserRuleContext) {}
 // ExitEveryRule is called when any rule is exited.
 func (s *BasePLANListener) ExitEveryRule(ctx antlr.ParserRuleContext) {}
 
-// EnterProg is called when production prog is entered.
-func (s *BasePLANListener) EnterProg(ctx *ProgContext) {}
+// EnterProgFile is called when production progFile is entered.
+func (s *BasePLANListener) EnterProgFile(ctx *ProgFileContext) {}
 
-// ExitProg is called when production prog is exited.
-func (s *BasePLANListener) ExitProg(ctx *ProgContext) {}
+// ExitProgFile is called when production progFile is exited.
+func (s *BasePLANListener) ExitProgFile(ctx *ProgFileContext) {}
+
+// EnterStmts is called when production stmts is entered.
+func (s *BasePLANListener) EnterStmts(ctx *StmtsContext) {}
+
+// ExitStmts is called when production stmts is exited.
+func (s *BasePLANListener) ExitStmts(ctx *StmtsContext) {}
 
 // EnterStmt is called when production stmt is entered.
 func (s *BasePLANListener) EnterStmt(ctx *StmtContext) {}
 
 // ExitStmt is called when production stmt is exited.
 func (s *BasePLANListener) ExitStmt(ctx *StmtContext) {}
+
+// EnterSimpleStmt is called when production simpleStmt is entered.
+func (s *BasePLANListener) EnterSimpleStmt(ctx *SimpleStmtContext) {}
+
+// ExitSimpleStmt is called when production simpleStmt is exited.
+func (s *BasePLANListener) ExitSimpleStmt(ctx *SimpleStmtContext) {}
+
+// EnterCompoundStmt is called when production compoundStmt is entered.
+func (s *BasePLANListener) EnterCompoundStmt(ctx *CompoundStmtContext) {}
+
+// ExitCompoundStmt is called when production compoundStmt is exited.
+func (s *BasePLANListener) ExitCompoundStmt(ctx *CompoundStmtContext) {}
 
 // EnterWhileStmt is called when production whileStmt is entered.
 func (s *BasePLANListener) EnterWhileStmt(ctx *WhileStmtContext) {}
@@ -43,6 +61,54 @@ func (s *BasePLANListener) EnterForStmt(ctx *ForStmtContext) {}
 
 // ExitForStmt is called when production forStmt is exited.
 func (s *BasePLANListener) ExitForStmt(ctx *ForStmtContext) {}
+
+// EnterIfStmt is called when production ifStmt is entered.
+func (s *BasePLANListener) EnterIfStmt(ctx *IfStmtContext) {}
+
+// ExitIfStmt is called when production ifStmt is exited.
+func (s *BasePLANListener) ExitIfStmt(ctx *IfStmtContext) {}
+
+// EnterIfBlockStmt is called when production ifBlockStmt is entered.
+func (s *BasePLANListener) EnterIfBlockStmt(ctx *IfBlockStmtContext) {}
+
+// ExitIfBlockStmt is called when production ifBlockStmt is exited.
+func (s *BasePLANListener) ExitIfBlockStmt(ctx *IfBlockStmtContext) {}
+
+// EnterElifBlockStmt is called when production elifBlockStmt is entered.
+func (s *BasePLANListener) EnterElifBlockStmt(ctx *ElifBlockStmtContext) {}
+
+// ExitElifBlockStmt is called when production elifBlockStmt is exited.
+func (s *BasePLANListener) ExitElifBlockStmt(ctx *ElifBlockStmtContext) {}
+
+// EnterElseBlockStmt is called when production elseBlockStmt is entered.
+func (s *BasePLANListener) EnterElseBlockStmt(ctx *ElseBlockStmtContext) {}
+
+// ExitElseBlockStmt is called when production elseBlockStmt is exited.
+func (s *BasePLANListener) ExitElseBlockStmt(ctx *ElseBlockStmtContext) {}
+
+// EnterFnStmt is called when production fnStmt is entered.
+func (s *BasePLANListener) EnterFnStmt(ctx *FnStmtContext) {}
+
+// ExitFnStmt is called when production fnStmt is exited.
+func (s *BasePLANListener) ExitFnStmt(ctx *FnStmtContext) {}
+
+// EnterFnBody is called when production fnBody is entered.
+func (s *BasePLANListener) EnterFnBody(ctx *FnBodyContext) {}
+
+// ExitFnBody is called when production fnBody is exited.
+func (s *BasePLANListener) ExitFnBody(ctx *FnBodyContext) {}
+
+// EnterFnParams is called when production fnParams is entered.
+func (s *BasePLANListener) EnterFnParams(ctx *FnParamsContext) {}
+
+// ExitFnParams is called when production fnParams is exited.
+func (s *BasePLANListener) ExitFnParams(ctx *FnParamsContext) {}
+
+// EnterIncludeStmt is called when production includeStmt is entered.
+func (s *BasePLANListener) EnterIncludeStmt(ctx *IncludeStmtContext) {}
+
+// ExitIncludeStmt is called when production includeStmt is exited.
+func (s *BasePLANListener) ExitIncludeStmt(ctx *IncludeStmtContext) {}
 
 // EnterReturnStmt is called when production returnStmt is entered.
 func (s *BasePLANListener) EnterReturnStmt(ctx *ReturnStmtContext) {}
@@ -104,47 +170,47 @@ func (s *BasePLANListener) EnterAssignPow(ctx *AssignPowContext) {}
 // ExitAssignPow is called when production assignPow is exited.
 func (s *BasePLANListener) ExitAssignPow(ctx *AssignPowContext) {}
 
-// EnterAssignIdxRegular is called when production assignIdxRegular is entered.
-func (s *BasePLANListener) EnterAssignIdxRegular(ctx *AssignIdxRegularContext) {}
+// EnterAssignIdxsRegular is called when production assignIdxsRegular is entered.
+func (s *BasePLANListener) EnterAssignIdxsRegular(ctx *AssignIdxsRegularContext) {}
 
-// ExitAssignIdxRegular is called when production assignIdxRegular is exited.
-func (s *BasePLANListener) ExitAssignIdxRegular(ctx *AssignIdxRegularContext) {}
+// ExitAssignIdxsRegular is called when production assignIdxsRegular is exited.
+func (s *BasePLANListener) ExitAssignIdxsRegular(ctx *AssignIdxsRegularContext) {}
 
-// EnterAssignIdxSum is called when production assignIdxSum is entered.
-func (s *BasePLANListener) EnterAssignIdxSum(ctx *AssignIdxSumContext) {}
+// EnterAssignIdxsSum is called when production assignIdxsSum is entered.
+func (s *BasePLANListener) EnterAssignIdxsSum(ctx *AssignIdxsSumContext) {}
 
-// ExitAssignIdxSum is called when production assignIdxSum is exited.
-func (s *BasePLANListener) ExitAssignIdxSum(ctx *AssignIdxSumContext) {}
+// ExitAssignIdxsSum is called when production assignIdxsSum is exited.
+func (s *BasePLANListener) ExitAssignIdxsSum(ctx *AssignIdxsSumContext) {}
 
-// EnterAssignIdxSub is called when production assignIdxSub is entered.
-func (s *BasePLANListener) EnterAssignIdxSub(ctx *AssignIdxSubContext) {}
+// EnterAssignIdxsSub is called when production assignIdxsSub is entered.
+func (s *BasePLANListener) EnterAssignIdxsSub(ctx *AssignIdxsSubContext) {}
 
-// ExitAssignIdxSub is called when production assignIdxSub is exited.
-func (s *BasePLANListener) ExitAssignIdxSub(ctx *AssignIdxSubContext) {}
+// ExitAssignIdxsSub is called when production assignIdxsSub is exited.
+func (s *BasePLANListener) ExitAssignIdxsSub(ctx *AssignIdxsSubContext) {}
 
-// EnterAssignIdxMul is called when production assignIdxMul is entered.
-func (s *BasePLANListener) EnterAssignIdxMul(ctx *AssignIdxMulContext) {}
+// EnterAssignIdxsMul is called when production assignIdxsMul is entered.
+func (s *BasePLANListener) EnterAssignIdxsMul(ctx *AssignIdxsMulContext) {}
 
-// ExitAssignIdxMul is called when production assignIdxMul is exited.
-func (s *BasePLANListener) ExitAssignIdxMul(ctx *AssignIdxMulContext) {}
+// ExitAssignIdxsMul is called when production assignIdxsMul is exited.
+func (s *BasePLANListener) ExitAssignIdxsMul(ctx *AssignIdxsMulContext) {}
 
-// EnterAssignIdxDiv is called when production assignIdxDiv is entered.
-func (s *BasePLANListener) EnterAssignIdxDiv(ctx *AssignIdxDivContext) {}
+// EnterAssignIdxsDiv is called when production assignIdxsDiv is entered.
+func (s *BasePLANListener) EnterAssignIdxsDiv(ctx *AssignIdxsDivContext) {}
 
-// ExitAssignIdxDiv is called when production assignIdxDiv is exited.
-func (s *BasePLANListener) ExitAssignIdxDiv(ctx *AssignIdxDivContext) {}
+// ExitAssignIdxsDiv is called when production assignIdxsDiv is exited.
+func (s *BasePLANListener) ExitAssignIdxsDiv(ctx *AssignIdxsDivContext) {}
 
-// EnterAssignIdxMod is called when production assignIdxMod is entered.
-func (s *BasePLANListener) EnterAssignIdxMod(ctx *AssignIdxModContext) {}
+// EnterAssignIdxsMod is called when production assignIdxsMod is entered.
+func (s *BasePLANListener) EnterAssignIdxsMod(ctx *AssignIdxsModContext) {}
 
-// ExitAssignIdxMod is called when production assignIdxMod is exited.
-func (s *BasePLANListener) ExitAssignIdxMod(ctx *AssignIdxModContext) {}
+// ExitAssignIdxsMod is called when production assignIdxsMod is exited.
+func (s *BasePLANListener) ExitAssignIdxsMod(ctx *AssignIdxsModContext) {}
 
-// EnterAssignIdxPow is called when production assignIdxPow is entered.
-func (s *BasePLANListener) EnterAssignIdxPow(ctx *AssignIdxPowContext) {}
+// EnterAssignIdxsPow is called when production assignIdxsPow is entered.
+func (s *BasePLANListener) EnterAssignIdxsPow(ctx *AssignIdxsPowContext) {}
 
-// ExitAssignIdxPow is called when production assignIdxPow is exited.
-func (s *BasePLANListener) ExitAssignIdxPow(ctx *AssignIdxPowContext) {}
+// ExitAssignIdxsPow is called when production assignIdxsPow is exited.
+func (s *BasePLANListener) ExitAssignIdxsPow(ctx *AssignIdxsPowContext) {}
 
 // EnterList is called when production list is entered.
 func (s *BasePLANListener) EnterList(ctx *ListContext) {}
@@ -169,6 +235,12 @@ func (s *BasePLANListener) EnterIdx(ctx *IdxContext) {}
 
 // ExitIdx is called when production idx is exited.
 func (s *BasePLANListener) ExitIdx(ctx *IdxContext) {}
+
+// EnterIdxs is called when production idxs is entered.
+func (s *BasePLANListener) EnterIdxs(ctx *IdxsContext) {}
+
+// ExitIdxs is called when production idxs is exited.
+func (s *BasePLANListener) ExitIdxs(ctx *IdxsContext) {}
 
 // EnterIdentifierMethodInvoke is called when production identifierMethodInvoke is entered.
 func (s *BasePLANListener) EnterIdentifierMethodInvoke(ctx *IdentifierMethodInvokeContext) {}
@@ -338,56 +410,8 @@ func (s *BasePLANListener) EnterExpSumSub(ctx *ExpSumSubContext) {}
 // ExitExpSumSub is called when production expSumSub is exited.
 func (s *BasePLANListener) ExitExpSumSub(ctx *ExpSumSubContext) {}
 
-// EnterIfBlockStmt is called when production ifBlockStmt is entered.
-func (s *BasePLANListener) EnterIfBlockStmt(ctx *IfBlockStmtContext) {}
-
-// ExitIfBlockStmt is called when production ifBlockStmt is exited.
-func (s *BasePLANListener) ExitIfBlockStmt(ctx *IfBlockStmtContext) {}
-
-// EnterElifBlockStmt is called when production elifBlockStmt is entered.
-func (s *BasePLANListener) EnterElifBlockStmt(ctx *ElifBlockStmtContext) {}
-
-// ExitElifBlockStmt is called when production elifBlockStmt is exited.
-func (s *BasePLANListener) ExitElifBlockStmt(ctx *ElifBlockStmtContext) {}
-
-// EnterElseBlockStmt is called when production elseBlockStmt is entered.
-func (s *BasePLANListener) EnterElseBlockStmt(ctx *ElseBlockStmtContext) {}
-
-// ExitElseBlockStmt is called when production elseBlockStmt is exited.
-func (s *BasePLANListener) ExitElseBlockStmt(ctx *ElseBlockStmtContext) {}
-
-// EnterIfStmt is called when production ifStmt is entered.
-func (s *BasePLANListener) EnterIfStmt(ctx *IfStmtContext) {}
-
-// ExitIfStmt is called when production ifStmt is exited.
-func (s *BasePLANListener) ExitIfStmt(ctx *IfStmtContext) {}
-
-// EnterFnParams is called when production fnParams is entered.
-func (s *BasePLANListener) EnterFnParams(ctx *FnParamsContext) {}
-
-// ExitFnParams is called when production fnParams is exited.
-func (s *BasePLANListener) ExitFnParams(ctx *FnParamsContext) {}
-
-// EnterFnBody is called when production fnBody is entered.
-func (s *BasePLANListener) EnterFnBody(ctx *FnBodyContext) {}
-
-// ExitFnBody is called when production fnBody is exited.
-func (s *BasePLANListener) ExitFnBody(ctx *FnBodyContext) {}
-
-// EnterFn is called when production fn is entered.
-func (s *BasePLANListener) EnterFn(ctx *FnContext) {}
-
-// ExitFn is called when production fn is exited.
-func (s *BasePLANListener) ExitFn(ctx *FnContext) {}
-
 // EnterClosure is called when production closure is entered.
 func (s *BasePLANListener) EnterClosure(ctx *ClosureContext) {}
 
 // ExitClosure is called when production closure is exited.
 func (s *BasePLANListener) ExitClosure(ctx *ClosureContext) {}
-
-// EnterInclude is called when production include is entered.
-func (s *BasePLANListener) EnterInclude(ctx *IncludeContext) {}
-
-// ExitInclude is called when production include is exited.
-func (s *BasePLANListener) ExitInclude(ctx *IncludeContext) {}

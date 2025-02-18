@@ -25,6 +25,8 @@ type Scope struct {
 	isLoopContinue bool
 	// variables storage
 	objects map[string]object.Object
+	// runtime functions storage
+	functions map[string]*object.RuntimeFunc
 }
 
 // NewScope creates new scope
@@ -34,14 +36,41 @@ func NewScope(
 	isFunc bool,
 	isLoop bool,
 	objects map[string]object.Object,
+	functions map[string]*object.RuntimeFunc,
 ) *Scope {
 	return &Scope{
-		parent:  parent,
-		depth:   depth,
-		isFunc:  isFunc,
-		isLoop:  isLoop,
-		objects: objects,
+		parent:    parent,
+		depth:     depth,
+		isFunc:    isFunc,
+		isLoop:    isLoop,
+		objects:   objects,
+		functions: functions,
 	}
+}
+
+// NewBaseScope create current scope on top of another
+func NewCurrentScope(isFunc bool, isLoop bool) {
+	CurrentScope = NewScope(
+		CurrentScope,
+		CurrentScope.depth+1,
+		isFunc,
+		isLoop,
+		map[string]object.Object{},
+		map[string]*object.RuntimeFunc{},
+	)
+}
+
+// NewGlobalScope initializes global scope
+func NewGlobalScope() {
+	GlobalScope = NewScope(
+		nil,
+		0,
+		false,
+		false,
+		map[string]object.Object{},
+		map[string]*object.RuntimeFunc{},
+	)
+	CurrentScope = GlobalScope
 }
 
 // IsGLobal returns true if scope is global
@@ -57,6 +86,26 @@ func (s *Scope) Parent() *Scope {
 // IsFunc returns true if scope is function
 func (s *Scope) IsFunc() bool {
 	return s.isFunc
+}
+
+// Functions returns map with functions registered in current scope
+func (s *Scope) Functions() map[string]*object.RuntimeFunc {
+	return s.functions
+}
+
+// GetFunction returns runtime function by name (search in parent scopes)
+func (s *Scope) GetFunction(name string) object.Object {
+	t := s
+	for {
+		if t == nil {
+			// global scope
+			return nil
+		}
+		if val, ok := t.functions[name]; ok {
+			return val
+		}
+		t = t.parent
+	}
 }
 
 // IsInFunc returns true if scope inside of function

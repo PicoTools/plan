@@ -1,0 +1,11 @@
+    a = 123
+
+
+
+
+;
+                        b = 1;
+        assert(a + b == 124);
+
+c = 3; d = 4;e = 5;         assert(c + d != d + e)
+    ; # ; used on prev line to close function invoke

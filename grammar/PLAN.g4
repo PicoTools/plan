@@ -1,207 +1,161 @@
 grammar PLAN;
 
-WS : [ \t\r\n] -> channel(HIDDEN) ;
+WS: [ \t\r\n] -> channel(HIDDEN);
 
-prog
-    : (stmt | fn | include)* EOF
-    ;
+// STARTING RULES
 
-stmt
-    : assignment ';'
-    | methodInvoke ';'
-    | csInvoke ';'
-    | fnInvoke ';'
-    | whileStmt
-    | forStmt
-    | ifStmt
-    | breakStmt ';'
-    | continueStmt ';'
-    | returnStmt ';'
-    ;
+progFile: stmts? EOF;
 
-whileStmt
-    : 'while' exp '{' stmt* '}'
-    ;
+// GENERAL STATEMENTS
 
-forStmt
-    : 'for' assignment ';' exp ';' assignment '{' stmt* '}'
-    ;
+stmts: stmt+;
 
-returnStmt
-    : 'return' exp?
-    ;
+stmt: simpleStmt ';' | compoundStmt;
 
-continueStmt
-    : 'continue'
-    ;
+simpleStmt:
+	assignment
+	| includeStmt
+	| methodInvoke
+	| csInvoke
+	| fnInvoke
+	| breakStmt
+	| continueStmt
+	| returnStmt;
 
-breakStmt
-    : 'break'
-    ;
+compoundStmt: whileStmt | forStmt | ifStmt | fnStmt;
 
-assignment
-    : name = Identifier '=' exp #assignRegular
-    | name = Identifier AssSum exp #assignSum
-    | name = Identifier AssSub exp #assignSub
-    | name = Identifier AssMul exp #assignMul
-    | name = Identifier AssDiv exp #assignDiv
-    | name = Identifier AssMod exp #assignMod
-    | name = Identifier AssPow exp #assignPow
-    | name = Identifier idx '=' exp #assignIdxRegular
-    | name = Identifier idx AssSum exp #assignIdxSum
-    | name = Identifier idx AssSub exp #assignIdxSub
-    | name = Identifier idx AssMul exp #assignIdxMul
-    | name = Identifier idx AssDiv exp #assignIdxDiv
-    | name = Identifier idx AssMod exp #assignIdxMod
-    | name = Identifier idx AssPow exp #assignIdxPow
-    ;
+// COMPOUND STATEMENTS
 
-list
-    : '[' (exp (',' exp)*)? ']'
-    ;
+whileStmt: 'while' exp '{' stmt* '}';
 
-dictUnit
-    : exp ':' exp
-    ;
+forStmt: 'for' assignment ';' exp ';' assignment '{' stmt* '}';
 
-dict
-    : '{' (dictUnit (',' dictUnit)*)? '}'
-    ;
+ifStmt: ifBlock elifBlock* elseBlock?;
 
-idx
-    : '[' exp ']'
-    ;
+ifBlock: 'if' exp '{' stmt* '}' # ifBlockStmt;
 
-methodInvoke
-    : var = Identifier '.' name = Identifier '(' (exp (',' exp)*)? ')' #identifierMethodInvoke
-    ;
+elifBlock: 'elif' exp '{' stmt* '}' # elifBlockStmt;
 
-fnInvoke
-    : name = Identifier '(' (exp (',' exp)*)? ')' #identifierFnInvoke
-    ;
+elseBlock: 'else' '{' stmt* '}' # elseBlockStmt;
 
-csInvoke
-    : Closure name = Identifier '(' (exp (',' exp)*)? ')' #identifierCsInvoke
-    ;
+fnStmt: 'fn' name = Identifier fnBody;
 
-exp
-    : Integer #expInteger
-    | IntegerHex #expIntegerHex
-    | Null #expNull
-    | Bool #expBool
-    | Identifier #expIdentifier
-    | Float #expFloat
-    | String #expString
-    | closure #expCs
-    | methodInvoke #expMethodInvoke
-    | fnInvoke #expFnInvoke
-    | csInvoke #expCsInvoke
-    | exp idx #expIdx
-    | Subtract exp #expNeg
-    | Not exp #expLogicalNot
-    | <assoc=right> exp Pow exp #expPow
-    | exp op=(Multiply|Division|Modulus) exp #expMulDivMod
-    | exp op=(Add|Subtract) exp #expSumSub
-    | exp op=(GtEq|LtEq|Gt|Lt) exp #expComparison
-    | exp op=(Eq|Neq) exp #expEqual
-    | exp Xor exp #expXor
-    | exp And exp #expLogicalAnd
-    | exp Or exp #expLogicalOr
-    | '(' exp ')' #expParentheses
-    | list #expList
-    | dict #expDict
-    ;
+fnBody: '(' fnParams? ')' '{' stmt* '}';
 
-ifBlock
-    : 'if' exp '{' stmt* '}' #ifBlockStmt
-    ;
+fnParams: Identifier (',' Identifier)*;
 
-elifBlock
-    : 'elif' exp '{' stmt* '}' #elifBlockStmt
-    ;
+// SIMPLE STATEMENTS
 
-elseBlock
-    : 'else' '{' stmt* '}' #elseBlockStmt
-    ;
+includeStmt: 'include' '(' exp ')';
 
-ifStmt
-    : ifBlock elifBlock* elseBlock?
-    ;
+returnStmt: 'return' exp?;
 
-fnParams
-    : Identifier (',' Identifier)*
-    ;
+continueStmt: 'continue';
 
-fnBody
-    : '(' fnParams? ')' '{' stmt* '}'
-    ;
+breakStmt: 'break';
 
-fn
-    : 'fn' name = Identifier fnBody
-    ;
+assignment:
+	name = Identifier '=' exp			# assignRegular
+	| name = Identifier AssSum exp		# assignSum
+	| name = Identifier AssSub exp		# assignSub
+	| name = Identifier AssMul exp		# assignMul
+	| name = Identifier AssDiv exp		# assignDiv
+	| name = Identifier AssMod exp		# assignMod
+	| name = Identifier AssPow exp		# assignPow
+	| name = Identifier idxs '=' exp	# assignIdxsRegular
+	| name = Identifier idxs AssSum exp	# assignIdxsSum
+	| name = Identifier idxs AssSub exp	# assignIdxsSub
+	| name = Identifier idxs AssMul exp	# assignIdxsMul
+	| name = Identifier idxs AssDiv exp	# assignIdxsDiv
+	| name = Identifier idxs AssMod exp	# assignIdxsMod
+	| name = Identifier idxs AssPow exp	# assignIdxsPow;
 
-closure
-    : 'fn' fnBody
-    ;
+list: '[' (exp (',' exp)*)? ']';
 
-include
-    : 'include' '(' exp ')' ';'
-    ;
+dictUnit: exp ':' exp;
 
-Eq : '==' ;
-Neq : '!=' ;
-Or : '||' ;
-And : '&&' ;
-Pow : '**' ;
-GtEq : '>=' ;
-LtEq : '<=';
-AssSum : '+=';
-AssSub : '-=';
-AssMul : '*=';
-AssDiv : '/=';
-AssMod : '%=';
-AssPow : '**=';
-Gt : '>' ;
-Lt : '<' ;
-Multiply : '*' ;
-Division : '/' ;
-Modulus : '%' ;
-Add : '+' ;
-Subtract : '-' ;
-Xor : '^' ;
-Not : '!' ;
-Closure : '@' ;
+dict: '{' (dictUnit (',' dictUnit)*)? '}';
 
-Bool
-    : 'true'
-    | 'false'
-    ;
+idx: '[' exp ']';
 
-Null
-    : 'null'
-    ;
+idxs: idx idx*;
 
-Identifier
-    : [a-zA-Z_][a-zA-Z0-9_]*
-    ;
+methodInvoke:
+	var = Identifier '.' name = Identifier '(' (exp (',' exp)*)? ')' # identifierMethodInvoke;
 
-Integer
-    : [0-9]+
-    ;
+fnInvoke:
+	name = Identifier '(' (exp (',' exp)*)? ')' # identifierFnInvoke;
 
-IntegerHex
-    : [0][xX][0-9a-fA-F]+
-    ;
+csInvoke:
+	Closure name = Identifier '(' (exp (',' exp)*)? ')' # identifierCsInvoke;
 
-Float
-    : [0-9]* '.' [0-9]+
-    ;
+exp:
+	Integer											# expInteger
+	| IntegerHex									# expIntegerHex
+	| Null											# expNull
+	| Bool											# expBool
+	| Identifier									# expIdentifier
+	| Float											# expFloat
+	| String										# expString
+	| closure										# expCs
+	| methodInvoke									# expMethodInvoke
+	| fnInvoke										# expFnInvoke
+	| csInvoke										# expCsInvoke
+	| exp idx										# expIdx
+	| Subtract exp									# expNeg
+	| Not exp										# expLogicalNot
+	| <assoc = right> exp Pow exp					# expPow
+	| exp op = (Multiply | Division | Modulus) exp	# expMulDivMod
+	| exp op = (Add | Subtract) exp					# expSumSub
+	| exp op = (GtEq | LtEq | Gt | Lt) exp			# expComparison
+	| exp op = (Eq | Neq) exp						# expEqual
+	| exp Xor exp									# expXor
+	| exp And exp									# expLogicalAnd
+	| exp Or exp									# expLogicalOr
+	| '(' exp ')'									# expParentheses
+	| list											# expList
+	| dict											# expDict;
 
-String
-    : ["] ( ~["\r\n\\] | '\\' ~[\r\n] )* ["]
-    | ['] ( ~['\r\n\\] | '\\' ~[\r\n] )* [']
-    ;
+closure: 'fn' fnBody;
 
-Comment
-    : ( '//' ~[\r\n]* | '/*' .*? '*/' ) -> channel(HIDDEN)
-    ;
+Eq: '==';
+Neq: '!=';
+Or: '||';
+And: '&&';
+Pow: '**';
+GtEq: '>=';
+LtEq: '<=';
+AssSum: '+=';
+AssSub: '-=';
+AssMul: '*=';
+AssDiv: '/=';
+AssMod: '%=';
+AssPow: '**=';
+Gt: '>';
+Lt: '<';
+Multiply: '*';
+Division: '/';
+Modulus: '%';
+Add: '+';
+Subtract: '-';
+Xor: '^';
+Not: '!';
+Closure: '@';
+
+Bool: 'true' | 'false';
+
+Null: 'null';
+
+Identifier: [a-zA-Z_][a-zA-Z0-9_]*;
+
+Integer: [0-9]+;
+
+IntegerHex: [0][xX][0-9a-fA-F]+;
+
+Float: [0-9]* '.' [0-9]+;
+
+String:
+	["] (~["\r\n\\] | '\\' ~[\r\n])* ["]
+	| ['] ( ~['\r\n\\] | '\\' ~[\r\n])* ['];
+
+Comment: ('//' ~[\r\n]* | '#' ~[\r\n]* | '/*' .*? '*/') -> channel(HIDDEN);

@@ -1,0 +1,24 @@
+# a() stores in global scope
+fn a() {
+    # b() stores in scope #1
+    fn b() {
+        # b() stores in scope #2
+        fn b() {
+            return true;
+        }
+        assert(b() == true);
+
+        return false;
+    }
+    assert(b() == false);
+
+    # a() stores in scope #1
+    fn a() {
+        return false;
+    }
+    assert(a() == false);
+
+    return true;
+}
+
+assert(a() == true);
