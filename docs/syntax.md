@@ -5,7 +5,8 @@ PLAN syntax resembles `C` in structure (brackets and semicolons), while its typi
 ## Values
 
 PLAN uses dynamic typification, so variable can be set by all of data types:
-```
+
+```python
 a = false; # bool
 a = {"a": "b"}; # dict
 a = 1.0; # float
@@ -22,7 +23,7 @@ Indexer `[]` can be used to access values/objects from `str`/`dict`/`list` data 
 
 **In case of `str` logic of indexer use runes instead of raw bytes.**
 
-```
+```python
 list_value = [1, 2, 3, 4];
 println(list_value[1]); # 2
 
@@ -35,7 +36,7 @@ println(str_value[1]); # и
 
 
 Also supports multidemension indexers:
-```
+```python
 test = [[[1], 2], 3];
 println(test[0][0][0]); # 1
 ```
@@ -45,7 +46,7 @@ println(test[0][0][0]); # 1
 Functions, defined in PLAN context, stored in runtime using [RuntimeFunc](../pkg/engine/object/runtime_func.go) type.
 
 Definition of functions looks like that:
-```
+```python
 fn test01(a, b, c) {
     return a + b + c;
 }
@@ -56,13 +57,13 @@ fn test02() {
 ```
 
 In case of obvious `return` statement, function will return object with specific data type. Otherwise `null` will be returned.
-```
+```python
 println(test01(1, 2, 3)); # 6
 println(test02()); # <null>
 ```
 
 You can create nested functions that will be available inside of the nested scope. For example:
-```
+```python
 # function in scope #0
 fn hello() {
     # function in scope #1
@@ -82,7 +83,7 @@ hello(); // hello world
 ## Closures
 
 Closures can be used to store functions in variables and call it later.
-```
+```python
 my_closure = fn(a, b, c) {
     return a * b + c;
 };
@@ -92,7 +93,7 @@ println(result); # 6
 ```
 
 As closure stores in variable it can be reassigned:
-```
+```python
 a = fn(a) {
     return a;
 };
@@ -103,7 +104,7 @@ println(@b(1)); # 1
 ## `if` statement
 
 `if` statement looks like that:
-```
+```python
 a = 3;
 
 if a == 0 {
@@ -122,14 +123,14 @@ if a == 0 {
 ## `for` statement
 
 `for` statement looks like that:
-```
+```python
 for i = 0; i < 5; i += 1 {
     println(i);
 }
 ```
 
 In case of `for` loop, `continue` and `break` can be used to change control flow.
-```
+```python
 a = 3;
 for i = 0; i < 10; i += 1 {
     if i == a {
@@ -141,7 +142,7 @@ for i = 0; i < 10; i += 1 {
 ## `while` statement
 
 `while` statement looks like that:
-```
+```python
 a = 10;
 while a > 0 {
     println(a);
@@ -150,7 +151,7 @@ while a > 0 {
 ```
 
 In case of `while` loop, `continue` and `break` can be used to change control flow.
-```
+```python
 a = 5;
 while a > 0 {
     a -= 1;
@@ -166,14 +167,14 @@ while a > 0 {
 PLAN offered with `include` statement, which support including of another scripts.
 
 Place in `add.pico` next code:
-```
+```python
 fn add(a, b) {
     return a + b;
 }
 ```
 
 In `main.pico` include script and run function `add()`.
-```
+```python
 include("add.pico");
 
 println(add(1, 2)); # 3
@@ -182,7 +183,7 @@ println(add(1, 2)); # 3
 ## Code comments
 
 PLAN supports comments in code using next notations:
-```
+```c
 // this is my awesome comment
 
 # this is my awesome comment too

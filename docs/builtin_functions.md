@@ -7,8 +7,9 @@ Signature: `assert(arg0)`
 Arguments:
 - `arg0`: `bool`
 
-Throw error if argument if `false`:
-```
+Throw error if argument is `false`.
+
+```python
 assert(1 == 1); # no error
 assert(1 == 2); # error occured
 ```
@@ -23,7 +24,8 @@ Arguments:
 - `argN`: `*`
 
 Print string line in default STDOUT without '\n'. Print will automatically convert each argument in string, using object's interface function `String()`.
-```
+
+```python
 print("hello", " world"); # hello world
 print(1, " ", true); # 1 true
 print([0, 1, 2], {"a": "b"}); # [0, 1, 2]{a: b}
@@ -39,7 +41,8 @@ Arguments:
 - `argN`: `*`
 
 Print string line in default STDOUT with '\n'. Print will automatically convert each argument in string, using object's interface function `String()`.
-```
+
+```python
 println("hello", " world"); # hello world
 println(1, " ", true); # 1 true
 println([0, 1, 2], {"a": "b"}); # [0, 1, 2]{a: b}
@@ -53,7 +56,8 @@ Arguments:
 - `arg0`: `*`
 
 Return `true`, if data type of `arg0` is `bool`.
-```
+
+```python
 println(is_bool("a")); # false
 println(is_bool(false)); # true
 a = true;
@@ -68,7 +72,8 @@ Arguments:
 - `arg0`: `*`
 
 Return `true`, if data type of `arg0` is `dict`.
-```
+
+```python
 println(is_dict("a")); # false
 println(is_dict({"a": true})); # true
 ```
@@ -81,7 +86,8 @@ Arguments:
 - `arg0`: `*`
 
 Return `true`, if data type of `arg0` is `float`.
-```
+
+```python
 println(is_float(1)); # false
 println(is_float(float(1))); # true
 println(is_float(1.0)); # true
@@ -95,7 +101,8 @@ Arguments:
 - `arg0`: `*`
 
 Return `true`, if data type of `arg0` is `int`.
-```
+
+```python
 println(is_int(1)); # true
 println(is_int(1.0)); # false
 println(is_int(true)); # false
@@ -109,9 +116,10 @@ Arguments:
 - `arg0`: `*`
 
 Return `true`, if data type of `arg0` is `list`.
-```
+
+```python
 println(is_list(null)); # false
-println(is_list(["a", 0", true])); # true
+println(is_list(["a", 0, true])); # true
 ```
 
 ## is_null
@@ -122,7 +130,8 @@ Arguments:
 - `arg0`: `*`
 
 Return `true`, if data type of `arg0` is `null`.
-```
+
+```python
 a = null;
 println(is_null(a)); # true
 println(is_null([])); # false
@@ -136,7 +145,8 @@ Arguments:
 - `arg0`: `*`
 
 Return `true`, if data type of `arg0` is `str`.
-```
+
+```python
 println(is_str("hello world")); # true
 println(is_str(["A"])); # false
 ```
@@ -149,7 +159,8 @@ Arguments:
 - `arg0`: `bool`/`dict`/`float`/`int`/`list`/`null`/`str`
 
 Cast `arg0` to `bool`.
-```
+
+```python
 println(bool(true)); # true
 println(bool(false)); # false
 println(bool({})); # false
@@ -173,7 +184,8 @@ Arguments:
 - `arg0`: `bool`/`float`/`int`
 
 Cast `arg0` to `float`.
-```
+
+```python
 println(float(true)); # 1
 println(float(false)); # 0
 println(float(1.0)); # 1
@@ -190,7 +202,8 @@ Arguments:
 - `arg0`: `bool`/`float`/`int`/`str`
 
 Cast `arg0` to `int`.
-```
+
+```python
 println(int(true)); # 1
 println(int(false)); # 0
 println(int(1.5)); # 1
@@ -208,7 +221,7 @@ Arguments:
 
 Cast `arg0` to `str`. Will use underly `String()` implementation of each type.
 
-```
+```python
 println(true); # true
 println([1]); # [1]
 println(fn () {}); # <native-func>
@@ -223,7 +236,7 @@ Arguments:
 
 Returns character with type `str` associated with value of `arg0`.
 
-```
+```python
 println(chr(81)); # Q
 println(chr(181)); # µ
 println(chr(1181)); # ҝ
@@ -238,7 +251,7 @@ Arguments:
 
 Returns code with type `int` associated with `arg0` character. Length of `arg0` must be "1 rune".
 
-```
+```python
 println(ord("A")); # 65
 println(ord("П")); # 1055
 ```
@@ -252,7 +265,7 @@ Arguments:
 
 Hexify `arg0`.
 
-```
+```python
 println(hex("hello")); # 68656c6c6f
 println(hex("\x01\x02\x03")); # 010203
 ```
@@ -266,7 +279,7 @@ Arguments:
 
 Unhexify `arg0`.
 
-```
+```python
 println(unhex("68656c6c6f")); # hello
 ```
 
@@ -279,7 +292,7 @@ Arguments:
 
 Encodes `arg0` to base64 `str`.
 
-```
+```python
 println(base64_enc("hello")); # aGVsbG8=
 println(base64_enc("привет")); # 0L/RgNC40LLQtdGC
 ```
@@ -293,7 +306,7 @@ Arguments:
 
 Decodes `arg0` from base64 to raw `str`.
 
-```
+```python
 println(base64_dec("aGVsbG8=")); # hello
 println(base64_dec("0L/RgNC40LLQtdGC")); # привет
 ```
@@ -307,7 +320,7 @@ Arguments:
 
 Encodes `arg0` to base64 `str`.
 
-```
+```python
 println(base32_enc("hello")); # NBSWY3DP
 println(base32_enc("привет")); # 2C75DAGQXDILFUFV2GBA====
 ```
@@ -321,7 +334,7 @@ Arguments:
 
 Decodes `arg0` from base64 to raw `str`.
 
-```
+```python
 println(base32_dec("NBSWY3DP")); # hello
 println(base32_dec("2C75DAGQXDILFUFV2GBA====")); # привет
 ```
@@ -335,7 +348,7 @@ Arguments:
 
 Returns hex representation (bytes in `str`) of MD5 checksum algorithm on `arg0`.
 
-```
+```python
 println(hex(md5("hello"))); # 5d41402abc4b2a76b9719d911017c592
 println(hex(md5("привет"))); # 608333adc72f545078ede3aad71bfe74
 ```
@@ -349,7 +362,7 @@ Arguments:
 
 Returns hex representation (bytes in `str`) of SHA1 checksum algorithm on `arg0`.
 
-```
+```python
 println(hex(sha1("hello"))); # aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
 println(hex(sha1("привет"))); # e24505f94db2b5df4c7c2596b0788e720e073021
 ```
@@ -363,7 +376,7 @@ Arguments:
 
 Returns hex representation (bytes in `str`) of SHA256 checksum algorithm on `arg0`.
 
-```
+```python
 println(hex(sha256("hello"))); # 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824
 println(hex(sha256("привет"))); # e58f1e8c55fa105bdd3f40e5037eb0b039b5998d52c05e6cd98878dd2da5cab2
 ```
@@ -377,7 +390,7 @@ Arguments:
 
 Returns gzipped value of `arg0` as bytes in `str`.
 
-```
+```python
 println(hex(gzip("hello"))); # 1f8b08000000000000ffca48cdc9c907040000ffff86a6103605000000
 ```
 
@@ -390,7 +403,7 @@ Arguments:
 
 Retuns gunzipped value of `arg0` as bytes in `str`.
 
-```
+```python
 println(gunzip(unhex("1f8b08000000000000ffca48cdc9c907040000ffff86a6103605000000"))); # hello
 ```
 
@@ -403,7 +416,7 @@ Arguments:
 
 Read bytes in `str` from file specified by `arg0`.
 
-```
+```python
 println(fread("/etc/hostname")); # plan.example.com
 ```
 

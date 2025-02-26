@@ -7,7 +7,8 @@ Signature: `dict.len()`
 Arguments: <none>
 
 Get number of keys in `dict`.
-```
+
+```python
 a = {"a": 0, "b": 1};
 println(a.len()); # 2
 ```
@@ -20,7 +21,8 @@ Arguments:
 - `arg0`: `str`
 
 Pop value from `dict` by key with `str` type.
-```
+
+```python
 a = {"a": 0, "b": 1};
 println(a); # {a: 0, b: 1}
 a.pop("a");
@@ -34,7 +36,8 @@ Signature: `list.len()`
 Arguments: <none>
 
 Get number of objects in `list`.
-```
+
+```python
 a = [1, 2, 3, 4, 5];
 println(a.len()); # 5
 ```
@@ -46,7 +49,8 @@ Signature: `list.reverse()`
 Arguments: <none>
 
 Reverse order of objects in `list`.
-```
+
+```python
 a = [1, 2, 3, 4, 5];
 a.reverse();
 println(a); # [5, 4, 3, 2, 1]
@@ -60,7 +64,8 @@ Arguments:
 - `arg0`: `int`
 
 Pop value from `list` by index with `int` type.
-```
+
+```python
 a = [1, 2, 3, 4, 5];
 a.pop(0);
 a.pop(1);
@@ -77,7 +82,8 @@ Aguments:
 - `argN`: `*`
 
 Append values to `list`.
-```
+
+```python
 a = [1];
 a.append(2, 3, 4, 5);
 println(a); # [1, 2, 3, 4, 5]
@@ -90,7 +96,8 @@ Signature: `str.len()`
 Arguments: <none>
 
 Get number of characters (Golang runes) in `str`.
-```
+
+```python
 a = "привет";
 b = "hello";
 println(a.len()); # 6
@@ -104,7 +111,8 @@ Signature: `list.reverse()`
 Arguments: <none>
 
 Reverse order of characters (Golang runes) in `str`.
-```
+
+```python
 a = "привет";
 b = "hello";
 a.reverse();
@@ -121,7 +129,8 @@ Arguments:
 - `arg0`: `str`
 
 Split `str` by delimeter (underhood will split by rune). Result will be `list`.
-```
+
+```python
 a = "hello world";
 b = a.split(" ");
 println(b); # [hello, world]
