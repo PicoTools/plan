@@ -54,6 +54,10 @@ func Register() {
 	storage.BuiltinFunctions["chr"] = object.NewNativeFunc("chr", Chr)
 	// ord: get int code of character
 	storage.BuiltinFunctions["ord"] = object.NewNativeFunc("ord", Ord)
+	// hex: converts string to its hex representation
+	storage.BuiltinFunctions["hex"] = object.NewNativeFunc("hex", Hex)
+	// unhex: unhexify string
+	storage.BuiltinFunctions["unhex"] = object.NewNativeFunc("unhex", Unhex)
 	// base64_enc: encode string in base64
 	storage.BuiltinFunctions["base64_enc"] = object.NewNativeFunc("base64_enc", Base64Enc)
 	// base64_dec: decode string from base64
@@ -362,7 +366,7 @@ func Md5(args ...object.Object) (object.Object, error) {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
 	md5sum := md5.Sum([]byte(str.GetValue().(string)))
-	return object.NewStr(hex.EncodeToString(md5sum[:])), nil
+	return object.NewStr(string(md5sum[:])), nil
 }
 
 func Sha1(args ...object.Object) (object.Object, error) {
@@ -374,7 +378,7 @@ func Sha1(args ...object.Object) (object.Object, error) {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
 	sha1sum := sha1.Sum([]byte(str.GetValue().(string)))
-	return object.NewStr(hex.EncodeToString(sha1sum[:])), nil
+	return object.NewStr(string(sha1sum[:])), nil
 }
 
 func Sha256(args ...object.Object) (object.Object, error) {
@@ -386,7 +390,7 @@ func Sha256(args ...object.Object) (object.Object, error) {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
 	sha256sum := sha256.Sum256([]byte(str.GetValue().(string)))
-	return object.NewStr(hex.EncodeToString(sha256sum[:])), nil
+	return object.NewStr(string(sha256sum[:])), nil
 }
 
 func Gzip(args ...object.Object) (object.Object, error) {
@@ -460,4 +464,30 @@ func Fwrite(args ...object.Object) (object.Object, error) {
 		return nil, err
 	}
 	return object.NewNull(), nil
+}
+
+func Hex(args ...object.Object) (object.Object, error) {
+	if len(args) != 1 {
+		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
+	}
+	str, ok := args[0].(*object.Str)
+	if !ok {
+		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
+	}
+	return object.NewStr(hex.EncodeToString([]byte(str.GetValue().(string)))), nil
+}
+
+func Unhex(args ...object.Object) (object.Object, error) {
+	if len(args) != 1 {
+		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
+	}
+	str, ok := args[0].(*object.Str)
+	if !ok {
+		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
+	}
+	v, err := hex.DecodeString(str.GetValue().(string))
+	if err != nil {
+		return nil, err
+	}
+	return object.NewStr(string(v)), nil
 }

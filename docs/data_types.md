@@ -24,7 +24,7 @@ Moreover data types has builtin methods. More information you can find [here](./
 
 There are 2 underly realization for different purposes:
 - [`NativeFunc`](../pkg/engine/object/native_func.go): used to hold Golang defined functions (builtins and users).
-- [`RuntimeFunc`](../pkg/engine/object/runtime_func.go): used to hold PLAN defined functions/closures in runtime. Map with this type of functions filled in process of visiting AST.
+- [`RuntimeFunc`](../pkg/engine/object/runtime_func.go): used to hold PLAN defined functions/closures in runtime. Map with runtime functions is filled in process of AST visiting.
 
 ## Casting rules
 

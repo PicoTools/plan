@@ -8,13 +8,13 @@ The development of this language was part of the creation of a C2 framework — 
 
 The PLAN runtime is used in the [operator's CLI](https://github.com/PicoTools/pico-cli) to extend the built-in functionality of interactions with the server and beacons.  
 
-Performance was not the primary goal of this language, but it can be easily improved by mapping functions written in native Golang.
+Performance was not the primary goal of this language, but it can be easily achieved with display features written in native Golang.
 
 ## Syntax
 
-PLAN syntax resembles C in structure (brackets and semicolons), while its typing system and execution logic are more similar to Python.
+PLAN syntax resembles `C` in structure (brackets and semicolons), while its typing system and execution logic are more similar to `Python`.
 
-A C-like example (explicit brackets and semicolons):
+A `C`-like example (explicit brackets and semicolons):
 ```c
 fn fib(n) {
   if n < 2 {
@@ -27,8 +27,8 @@ fn fib(n) {
 println(fib(35));
 ```
 
-A Python-like example (dynamic typing of variable a):
-```python
+A `Python`-like example (dynamic typing of variable `a`):
+```c
 a = 1;
 a = [a, 2, 3, 4];
 a = {"test": a};
@@ -62,14 +62,3 @@ Here you can find additional information:
 - [Data types](docs/data_types.md)
 - [Builtin functions](docs/builtin_functions.md)
 - [Builtin methods](docs/builtin_methods.md)
-
-## TODO
-
-- [ ] Improve documentation quality
-- [x] Built-in methods for data types
-- [ ] Built-in functions for handling regex
-- [ ] Built-in functions for network interactions
-- [ ] Extend built-in functions for filesystem interactions
-- [ ] Extend built-in functions for string processing
-- [ ] Testing of critical components separately
-- [ ] Expand the collection of examples with different algorithm implementations
