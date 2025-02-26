@@ -7,17 +7,50 @@ import "github.com/antlr4-go/antlr/v4"
 type PLANVisitor interface {
 	antlr.ParseTreeVisitor
 
-	// Visit a parse tree produced by PLANParser#prog.
-	VisitProg(ctx *ProgContext) interface{}
+	// Visit a parse tree produced by PLANParser#progFile.
+	VisitProgFile(ctx *ProgFileContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#stmts.
+	VisitStmts(ctx *StmtsContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#stmt.
 	VisitStmt(ctx *StmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#simpleStmt.
+	VisitSimpleStmt(ctx *SimpleStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#compoundStmt.
+	VisitCompoundStmt(ctx *CompoundStmtContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#whileStmt.
 	VisitWhileStmt(ctx *WhileStmtContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#forStmt.
 	VisitForStmt(ctx *ForStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#ifStmt.
+	VisitIfStmt(ctx *IfStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#ifBlockStmt.
+	VisitIfBlockStmt(ctx *IfBlockStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#elifBlockStmt.
+	VisitElifBlockStmt(ctx *ElifBlockStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#elseBlockStmt.
+	VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#fnStmt.
+	VisitFnStmt(ctx *FnStmtContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#fnBody.
+	VisitFnBody(ctx *FnBodyContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#fnParams.
+	VisitFnParams(ctx *FnParamsContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#includeStmt.
+	VisitIncludeStmt(ctx *IncludeStmtContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#returnStmt.
 	VisitReturnStmt(ctx *ReturnStmtContext) interface{}
@@ -49,8 +82,26 @@ type PLANVisitor interface {
 	// Visit a parse tree produced by PLANParser#assignPow.
 	VisitAssignPow(ctx *AssignPowContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#assignIdxRegular.
-	VisitAssignIdxRegular(ctx *AssignIdxRegularContext) interface{}
+	// Visit a parse tree produced by PLANParser#assignIdxsRegular.
+	VisitAssignIdxsRegular(ctx *AssignIdxsRegularContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxsSum.
+	VisitAssignIdxsSum(ctx *AssignIdxsSumContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxsSub.
+	VisitAssignIdxsSub(ctx *AssignIdxsSubContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxsMul.
+	VisitAssignIdxsMul(ctx *AssignIdxsMulContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxsDiv.
+	VisitAssignIdxsDiv(ctx *AssignIdxsDivContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxsMod.
+	VisitAssignIdxsMod(ctx *AssignIdxsModContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#assignIdxsPow.
+	VisitAssignIdxsPow(ctx *AssignIdxsPowContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#list.
 	VisitList(ctx *ListContext) interface{}
@@ -63,6 +114,9 @@ type PLANVisitor interface {
 
 	// Visit a parse tree produced by PLANParser#idx.
 	VisitIdx(ctx *IdxContext) interface{}
+
+	// Visit a parse tree produced by PLANParser#idxs.
+	VisitIdxs(ctx *IdxsContext) interface{}
 
 	// Visit a parse tree produced by PLANParser#identifierMethodInvoke.
 	VisitIdentifierMethodInvoke(ctx *IdentifierMethodInvokeContext) interface{}
@@ -148,30 +202,6 @@ type PLANVisitor interface {
 	// Visit a parse tree produced by PLANParser#expSumSub.
 	VisitExpSumSub(ctx *ExpSumSubContext) interface{}
 
-	// Visit a parse tree produced by PLANParser#ifBlockStmt.
-	VisitIfBlockStmt(ctx *IfBlockStmtContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#elifBlockStmt.
-	VisitElifBlockStmt(ctx *ElifBlockStmtContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#elseBlockStmt.
-	VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#ifStmt.
-	VisitIfStmt(ctx *IfStmtContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#fnParams.
-	VisitFnParams(ctx *FnParamsContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#fnBody.
-	VisitFnBody(ctx *FnBodyContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#fn.
-	VisitFn(ctx *FnContext) interface{}
-
 	// Visit a parse tree produced by PLANParser#closure.
 	VisitClosure(ctx *ClosureContext) interface{}
-
-	// Visit a parse tree produced by PLANParser#include.
-	VisitInclude(ctx *IncludeContext) interface{}
 }

@@ -29,6 +29,7 @@ func (o *List) fillMethods() {
 	o.methods["len"] = NewNativeFunc("len", o.MethodLen)
 	o.methods["reverse"] = NewNativeFunc("reverse", o.MethodReverse)
 	o.methods["pop"] = NewNativeFunc("pop", o.MethodPop)
+	o.methods["append"] = NewNativeFunc("append", o.MethodAppend)
 }
 
 // TypeName returns name of List type
@@ -291,5 +292,14 @@ func (o *List) MethodPop(args ...Object) (Object, error) {
 		return nil, planerrors.ErrIndexOutOfRange
 	}
 	o.value = append(o.value[:idx.GetValue().(int64)], o.value[idx.GetValue().(int64)+1:]...)
+	return NewNull(), nil
+}
+
+// MethodPush append objects at the end of the list
+func (o *List) MethodAppend(args ...Object) (Object, error) {
+	if len(args) < 1 {
+		return nil, fmt.Errorf("expecting 1 or more arguments, got %d", len(args))
+	}
+	o.value = append(o.value, args...)
 	return NewNull(), nil
 }

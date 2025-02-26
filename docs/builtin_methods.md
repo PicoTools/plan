@@ -7,9 +7,10 @@ Signature: `dict.len()`
 Arguments: <none>
 
 Get number of keys in `dict`.
-```
+
+```python
 a = {"a": 0, "b": 1};
-println(a.len()); // 2
+println(a.len()); # 2
 ```
 
 ## dict.pop
@@ -20,11 +21,12 @@ Arguments:
 - `arg0`: `str`
 
 Pop value from `dict` by key with `str` type.
-```
+
+```python
 a = {"a": 0, "b": 1};
-println(a); // {a: 0, b: 1}
+println(a); # {a: 0, b: 1}
 a.pop("a");
-println(a); //  {b: 1}
+println(a); #  {b: 1}
 ```
 
 ## list.len
@@ -34,9 +36,10 @@ Signature: `list.len()`
 Arguments: <none>
 
 Get number of objects in `list`.
-```
+
+```python
 a = [1, 2, 3, 4, 5];
-println(a.len()); // 5
+println(a.len()); # 5
 ```
 
 ## list.reverse
@@ -46,10 +49,11 @@ Signature: `list.reverse()`
 Arguments: <none>
 
 Reverse order of objects in `list`.
-```
+
+```python
 a = [1, 2, 3, 4, 5];
 a.reverse();
-println(a); // [5, 4, 3, 2, 1]
+println(a); # [5, 4, 3, 2, 1]
 ```
 
 ## list.pop
@@ -60,11 +64,29 @@ Arguments:
 - `arg0`: `int`
 
 Pop value from `list` by index with `int` type.
-```
+
+```python
 a = [1, 2, 3, 4, 5];
 a.pop(0);
 a.pop(1);
-println(a); // [2, 4, 5]
+println(a); # [2, 4, 5]
+```
+
+## list.append
+
+Signature: `list.append(arg0, arg1, ..., argN)`
+
+Aguments:
+- `arg0`: `*`
+- `arg1`: `*`
+- `argN`: `*`
+
+Append values to `list`.
+
+```python
+a = [1];
+a.append(2, 3, 4, 5);
+println(a); # [1, 2, 3, 4, 5]
 ```
 
 ## str.len
@@ -74,11 +96,12 @@ Signature: `str.len()`
 Arguments: <none>
 
 Get number of characters (Golang runes) in `str`.
-```
+
+```python
 a = "привет";
 b = "hello";
-println(a.len()); // 6
-println(b.len()); // 5
+println(a.len()); # 6
+println(b.len()); # 5
 ```
 
 ## str.reverse
@@ -88,13 +111,14 @@ Signature: `list.reverse()`
 Arguments: <none>
 
 Reverse order of characters (Golang runes) in `str`.
-```
+
+```python
 a = "привет";
 b = "hello";
 a.reverse();
 b.reverse();
-println(a); // тевирп
-println(b); // olleh
+println(a); # тевирп
+println(b); # olleh
 ```
 
 ## str.split
@@ -105,12 +129,13 @@ Arguments:
 - `arg0`: `str`
 
 Split `str` by delimeter (underhood will split by rune). Result will be `list`.
-```
+
+```python
 a = "hello world";
 b = a.split(" ");
-println(b); // [hello, world]
+println(b); # [hello, world]
 
 a = "привет мир";
 b = a.split("и");
-println(b); // [пр, вет м, р]
+println(b); # [пр, вет м, р]
 ```

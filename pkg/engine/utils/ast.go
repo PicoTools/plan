@@ -6,8 +6,8 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 )
 
-// CreateAST creates AST from string data
-func CreateAST(data string) (antlr.ParseTree, error) {
+// CreateAstProgFile creates AST from string data based on progFile entrypoint
+func CreateAstProgFile(data string) (antlr.ParseTree, error) {
 	iStream := antlr.NewInputStream(data)
 	lexer := parser.NewPLANLexer(iStream)
 	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
@@ -15,6 +15,6 @@ func CreateAST(data string) (antlr.ParseTree, error) {
 	errorParser := &perror.Error{}
 	p.RemoveErrorListeners()
 	p.AddErrorListener(errorParser)
-	tree := p.Prog()
+	tree := p.ProgFile()
 	return tree, errorParser.Err
 }

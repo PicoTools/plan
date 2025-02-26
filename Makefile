@@ -2,29 +2,76 @@ BIN_DIR=$(PWD)/bin
 PLAN_DIR=$(PWD)/cmd/plan
 CC=gcc
 CXX=g++
+GOFILES=`go list ./...`
+GOFILESNOTEST=`go list ./... | grep -ve "test\|parser"` # ignore tests and parser (codegen)
 ANTLR_VERSION=4.13.2
+LDFLAGS=-ldflags="-s -w"
+GOARCH=`go env -json | jq -r .GOARCH`
+GOOS=`go env -json | jq -r .GOOS`
+# colors
+RED=\033[0;31m
+GREEN=\033[0;32m
+NC=\033[0m
 
-.PHONY: plan
-plan: gen-parser
+build: gen-parser go-lint
 	@mkdir -p ${BIN_DIR}
-	@echo "Building PLAN..."
-	@CGO_ENABLED=0 CC=${CC} CXX=${CXX} go build -o ${BIN_DIR}/plan ${PLAN_DIR}
+	@echo "Building PLAN runtime executor for ${GOOS}/${GOARCH}"
+	@CGO_ENABLED=0 CC=${CC} CXX=${CXX} go build -trimpath ${LDFLAGS} -o ${BIN_DIR}/plan.${GOOS}.${GOARCH} ${PLAN_DIR}
 
-.PHONY: test-plan
-test-plan: plan
-	@echo "Testing language..."
-	@${BIN_DIR}/plan samples/assert.pico
-	@echo "  assert.pico: OK"
-	@${BIN_DIR}/plan samples/recursion_max_depth.pico 1>/dev/null 2>/dev/null || true
-	@echo "  recursion_depth.pico: OK"
-	@${BIN_DIR}/plan samples/cast.pico 1>/dev/null 2>/dev/null
-	@echo "  cast.pico: OK"
-	@${BIN_DIR}/plan samples/files.pico
-	@echo "  files.pico: OK"
+darwin-arm64: gen-parser go-lint
+	@mkdir -p ${BIN_DIR}
+	@echo "Building PLAN runtime executor for darwin/arm64"
+	@GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 CC=${CC} CXX=${CXX} go build -trimpath ${LDFLAGS} -o ${BIN_DIR}/plan.darwin.arm64 ${PLAN_DIR}
 
-.PHONY: gen-parser
+darwin-amd64: gen-parser go-lint
+	@mkdir -p ${BIN_DIR}
+	@echo "Building PLAN runtime executor for darwin/amd64"
+	@GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 CC=${CC} CXX=${CXX} go build -trimpath ${LDFLAGS} -o ${BIN_DIR}/plan.darwin.amd64 ${PLAN_DIR}
+
+linux-arm64: gen-parser go-lint
+	@mkdir -p ${BIN_DIR}
+	@echo "Building PLAN runtime executor for linux/arm64"
+	@GOOS=linux GOARCH=arm64 CGO_ENABLED=0 CC=${CC} CXX=${CXX} go build -trimpath ${LDFLAGS} -o ${BIN_DIR}/plan.linux.arm64 ${PLAN_DIR}
+
+linux-amd64: gen-parser go-lint
+	@mkdir -p ${BIN_DIR}
+	@echo "Building PLAN runtime executor for linux/amd64"
+	@GOOS=linux GOARCH=amd64 CGO_ENABLED=0 CC=${CC} CXX=${CXX} go build -trimpath ${LDFLAGS} -o ${BIN_DIR}/plan.linux.amd64 ${PLAN_DIR}
+
+go-lint:
+	@go fmt ${GOFILES}
+	@go vet ${GOFILESNOTEST}
+
+test: test-pass test-fail test-sort
+
+test-pass: build
+	@echo "\nPASS tests\n"
+	@for i in `find samples -type f -name "pass-*"`; do \
+		printf "$$i: " && \
+		${BIN_DIR}/plan.${GOOS}.${GOARCH} $$i 1>/dev/null 2>/dev/null ; \
+		[ $$? -eq 0 ] && echo "${GREEN}OK${NC}" || echo "${RED}FAILED${NC}" \
+		; \
+	done
+
+test-fail: build
+	@echo "\nFAIL tests\n"
+	@for i in `find samples -type f -name "fail-*"`; do \
+		printf "$$i: " && \
+		${BIN_DIR}/plan.${GOOS}.${GOARCH} $$i 1>/dev/null 2>/dev/null ; \
+		[ $$? -eq 0 ] && printf "${RED}FAILED${NC}" || echo "${GREEN}OK${NC}" \
+		; \
+	done
+
+test-sort: build
+	@echo "\nSORT tests\n"
+	@for i in `find samples/sorting -type f -name "*.pico"`; do \
+		printf "$$i: " && \
+		${BIN_DIR}/plan.${GOOS}.${GOARCH} $$i 1>/dev/null 2>/dev/null ; \
+		[ $$? -eq 0 ] && echo "${GREEN}OK${NC}" || echo "${RED}FAILED${NC}" \
+		; \
+	done
+
 gen-parser: download-antlr
-	@echo "Generating parser..."
 	@java -jar files/antlr-${ANTLR_VERSION}.jar -o pkg/parser -visitor -package parser -Dlanguage=Go -Xexact-output-dir ./grammar/PLAN.g4
 
 download-antlr:

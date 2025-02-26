@@ -22,22 +22,45 @@ import (
 // NewVisitor returns new Visitor object
 func NewVisitor() *Visitor {
 	return &Visitor{
-		err: nil,
+		file:   "<entrypoint>",
+		depth:  0,
+		parent: nil,
+		err:    nil,
 	}
 }
 
 // Visitor implements BasePLANVisitor interface
 type Visitor struct {
 	parser.BasePLANVisitor
+
+	// parent visitor object
+	// used for includes to process new context
+	parent *Visitor
+	// depth of visitors
+	depth int
+	// name of evaluated file (ommited if entrypoint)
+	file string
 	// line number of executed script
 	line int
 	// visitor error
 	err error
 }
 
-// SetError saves error with current execution line
+// SetError saves error with current execution line (and file)
 func (v *Visitor) SetError(err error) {
-	v.err = errors.Wrap(err, fmt.Sprintf("line %d", v.line))
+	// TODO: try to change model of nested visitors
+	t := v
+	for {
+		if t.parent == nil {
+			if v.file != "" {
+				t.err = errors.Wrap(err, fmt.Sprintf("%s: line %d", v.file, v.line))
+			} else {
+				t.err = errors.Wrap(err, fmt.Sprintf("line %d", v.line))
+			}
+			return
+		}
+		t = t.parent
+	}
 }
 
 // GetError returns error
@@ -50,6 +73,21 @@ func (v *Visitor) GetLine() int {
 	return v.line
 }
 
+// GetFile returns current evaluated file
+func (v *Visitor) GetFile() string {
+	return v.file
+}
+
+// SetFile sets name of evaluated file
+func (v *Visitor) SetFile(name string) {
+	v.file = name
+}
+
+// UnsetFile unsets filename used for previous evaluation
+func (v *Visitor) UnsetFile() {
+	v.file = ""
+}
+
 // Visit visits AST and evaluate statements
 func (v *Visitor) Visit(tree antlr.ParseTree) any {
 	if retValue != nil {
@@ -60,17 +98,29 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 	// set line number
 	v.line = tree.(antlr.ParserRuleContext).GetStart().GetLine()
 
-	// exit in case of max depth
+	// exit in case of max visitor depth
+	if v.depth > constants.MaxVisitorDepth {
+		v.SetError(fmt.Errorf("max include depth reached"))
+		return types.Failure
+	}
+
+	// exit in case of max scope depth
 	if scope.CurrentScope.Depth() > constants.MaxScopeDepth {
-		v.err = fmt.Errorf("max depth reached")
+		v.SetError(fmt.Errorf("max depth reached"))
 		return types.Failure
 	}
 
 	switch val := tree.(type) {
-	case *parser.ProgContext:
-		return v.VisitProg(val)
+	case *parser.ProgFileContext:
+		return v.VisitProgFile(val)
+	case *parser.StmtsContext:
+		return v.VisitStmts(val)
 	case *parser.StmtContext:
 		return v.VisitStmt(val)
+	case *parser.SimpleStmtContext:
+		return v.VisitSimpleStmt(val)
+	case *parser.CompoundStmtContext:
+		return v.VisitCompoundStmt(val)
 	case *parser.AssignRegularContext:
 		return v.VisitAssignRegular(val)
 	case *parser.ExpBoolContext:
@@ -139,16 +189,28 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 		return v.VisitReturnStmt(val)
 	case *parser.ExpIdxContext:
 		return v.VisitExpIdx(val)
-	case *parser.AssignIdxRegularContext:
-		return v.VisitAssignIdxRegular(val)
+	case *parser.AssignIdxsRegularContext:
+		return v.VisitAssignIdxsRegular(val)
+	case *parser.AssignIdxsSumContext:
+		return v.VisitAssignIdxsSum(val)
+	case *parser.AssignIdxsSubContext:
+		return v.VisitAssignIdxsSub(val)
+	case *parser.AssignIdxsMulContext:
+		return v.VisitAssignIdxsMul(val)
+	case *parser.AssignIdxsDivContext:
+		return v.VisitAssignIdxsDiv(val)
+	case *parser.AssignIdxsModContext:
+		return v.VisitAssignIdxsMod(val)
+	case *parser.AssignIdxsPowContext:
+		return v.VisitAssignIdxsPow(val)
 	case *parser.ExpCsInvokeContext:
 		return v.VisitExpCsInvoke(val)
 	case *parser.IdentifierCsInvokeContext:
 		return v.VisitIdentifierCsInvoke(val)
-	case *parser.IncludeContext:
-		return v.VisitInclude(val)
-	case *parser.FnContext:
-		return v.VisitFn(val)
+	case *parser.IncludeStmtContext:
+		return v.VisitIncludeStmt(val)
+	case *parser.FnStmtContext:
+		return v.VisitFnStmt(val)
 	case *parser.FnBodyContext:
 		return v.VisitFnBody(val)
 	case *parser.AssignSumContext:
@@ -181,26 +243,18 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 	}
 }
 
-func (v *Visitor) VisitProg(ctx *parser.ProgContext) any {
-	// resolve includes
-	for _, item := range ctx.AllInclude() {
-		tree, ok := v.Visit(item).(antlr.ParseTree)
-		if !ok {
-			return types.Failure
-		}
-		if res := v.Visit(tree); res != types.Success {
-			return types.Failure
-		}
-	}
-
-	// register native functions
-	for _, item := range ctx.AllFn() {
-		if ok := v.Visit(item).(types.VisitResultType); !ok {
-			return types.Failure
-		}
-	}
-
+func (v *Visitor) VisitProgFile(ctx *parser.ProgFileContext) any {
 	// execute statements
+	if ctx.Stmts() != nil {
+		if ok := v.Visit(ctx.Stmts()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	return types.Success
+}
+
+func (v *Visitor) VisitStmts(ctx *parser.StmtsContext) any {
 	for _, item := range ctx.AllStmt() {
 		if ok := v.Visit(item).(types.VisitResultType); !ok {
 			return types.Failure
@@ -211,6 +265,23 @@ func (v *Visitor) VisitProg(ctx *parser.ProgContext) any {
 }
 
 func (v *Visitor) VisitStmt(ctx *parser.StmtContext) any {
+	// process simple statements
+	if ctx.SimpleStmt() != nil {
+		if ok := v.Visit(ctx.SimpleStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	// process compound statements
+	if ctx.CompoundStmt() != nil {
+		if ok := v.Visit(ctx.CompoundStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitSimpleStmt(ctx *parser.SimpleStmtContext) any {
 	// assignment
 	if ctx.Assignment() != nil {
 		if ok := v.Visit(ctx.Assignment()).(types.VisitResultType); !ok {
@@ -218,55 +289,11 @@ func (v *Visitor) VisitStmt(ctx *parser.StmtContext) any {
 		}
 	}
 
-	// if/elif/else
-	if ctx.IfStmt() != nil {
-		scope.CurrentScope = scope.NewScope(
-			scope.CurrentScope,
-			scope.CurrentScope.Depth()+1,
-			false,
-			false,
-			make(map[string]object.Object),
-		)
-		// statements inside if block
-		if ok := v.Visit(ctx.IfStmt()).(types.VisitResultType); !ok {
-			scope.CurrentScope = scope.CurrentScope.Parent()
+	// resolve includes
+	if ctx.IncludeStmt() != nil {
+		if res := v.Visit(ctx.IncludeStmt()).(types.VisitResultType); res == types.Failure {
 			return types.Failure
 		}
-		scope.CurrentScope = scope.CurrentScope.Parent()
-	}
-
-	// while
-	if ctx.WhileStmt() != nil {
-		scope.CurrentScope = scope.NewScope(
-			scope.CurrentScope,
-			scope.CurrentScope.Depth()+1,
-			false,
-			true,
-			make(map[string]object.Object),
-		)
-		// statements inside while block
-		if ok := v.Visit(ctx.WhileStmt()).(types.VisitResultType); !ok {
-			scope.CurrentScope = scope.CurrentScope.Parent()
-			return types.Failure
-		}
-		scope.CurrentScope = scope.CurrentScope.Parent()
-	}
-
-	// for
-	if ctx.ForStmt() != nil {
-		scope.CurrentScope = scope.NewScope(
-			scope.CurrentScope,
-			scope.CurrentScope.Depth()+1,
-			false,
-			true,
-			make(map[string]object.Object),
-		)
-		// statements inside for block
-		if ok := v.Visit(ctx.ForStmt()).(types.VisitResultType); !ok {
-			scope.CurrentScope = scope.CurrentScope.Parent()
-			return types.Failure
-		}
-		scope.CurrentScope = scope.CurrentScope.Parent()
 	}
 
 	// invoke function
@@ -320,6 +347,50 @@ func (v *Visitor) VisitStmt(ctx *parser.StmtContext) any {
 	return types.Success
 }
 
+func (v *Visitor) VisitCompoundStmt(ctx *parser.CompoundStmtContext) any {
+	// if/elif/else
+	if ctx.IfStmt() != nil {
+		scope.NewCurrentScope(false, false)
+		// statements inside if block
+		if ok := v.Visit(ctx.IfStmt()).(types.VisitResultType); !ok {
+			scope.CurrentScope = scope.CurrentScope.Parent()
+			return types.Failure
+		}
+		scope.CurrentScope = scope.CurrentScope.Parent()
+	}
+
+	// while
+	if ctx.WhileStmt() != nil {
+		scope.NewCurrentScope(false, true)
+		// statements inside while block
+		if ok := v.Visit(ctx.WhileStmt()).(types.VisitResultType); !ok {
+			scope.CurrentScope = scope.CurrentScope.Parent()
+			return types.Failure
+		}
+		scope.CurrentScope = scope.CurrentScope.Parent()
+	}
+
+	// for
+	if ctx.ForStmt() != nil {
+		scope.NewCurrentScope(false, true)
+		// statements inside for block
+		if ok := v.Visit(ctx.ForStmt()).(types.VisitResultType); !ok {
+			scope.CurrentScope = scope.CurrentScope.Parent()
+			return types.Failure
+		}
+		scope.CurrentScope = scope.CurrentScope.Parent()
+	}
+
+	// register native function
+	if ctx.FnStmt() != nil {
+		if ok := v.Visit(ctx.FnStmt()).(types.VisitResultType); !ok {
+			return types.Failure
+		}
+	}
+
+	return types.Success
+}
+
 func (v *Visitor) VisitAssignRegular(ctx *parser.AssignRegularContext) any {
 	val, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
@@ -358,7 +429,7 @@ func (v *Visitor) VisitIdentifierFnInvoke(ctx *parser.IdentifierFnInvokeContext)
 }
 
 func (v *Visitor) VisitExpIdentifier(ctx *parser.ExpIdentifierContext) any {
-	val := scope.CurrentScope.Get(ctx.GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetText()))
 		return types.Failure
@@ -487,8 +558,11 @@ func (v *Visitor) VisitExpLogicalOr(ctx *parser.ExpLogicalOrContext) any {
 	}
 	// fast exit hack to return value in case of left expression is true
 	// true || X == true, where X is undefined
-	if lhs.GetValue().(bool) {
-		return lhs
+	switch lhs.(type) {
+	case *object.Bool:
+		if lhs.GetValue().(bool) {
+			return lhs
+		}
 	}
 	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
@@ -513,8 +587,11 @@ func (v *Visitor) VisitExpLogicalAnd(ctx *parser.ExpLogicalAndContext) any {
 	}
 	// fast exit hack to return value in case of left expression is false
 	// false && X == false, where X is undefined
-	if !lhs.GetValue().(bool) {
-		return lhs
+	switch lhs.(type) {
+	case *object.Bool:
+		if !lhs.GetValue().(bool) {
+			return lhs
+		}
 	}
 	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
@@ -886,9 +963,15 @@ func (v *Visitor) VisitElifBlockStmt(ctx *parser.ElifBlockStmtContext) any {
 	return res
 }
 
-func (v *Visitor) VisitFn(ctx *parser.FnContext) any {
-	// check if function already exists
-	if _, ok := storage.NativeFunctions[ctx.GetName().GetText()]; ok {
+func (v *Visitor) VisitFnStmt(ctx *parser.FnStmtContext) any {
+	// check if function already exists in builtin
+	if val := storage.GetFunction(ctx.GetName().GetText()); val != nil {
+		v.SetError(fmt.Errorf("function '%s' already defined", ctx.GetName().GetText()))
+		return types.Failure
+	}
+
+	// check if function already exists in scope
+	if _, ok := scope.CurrentScope.Functions()[ctx.GetName().GetText()]; ok {
 		v.SetError(fmt.Errorf("function '%s' already defined", ctx.GetName().GetText()))
 		return types.Failure
 	}
@@ -903,7 +986,7 @@ func (v *Visitor) VisitFn(ctx *parser.FnContext) any {
 	fn.SetName(ctx.GetName().GetText())
 
 	// save native function
-	storage.NativeFunctions[ctx.GetName().GetText()] = fn
+	scope.CurrentScope.Functions()[ctx.GetName().GetText()] = fn
 
 	return types.Success
 }
@@ -974,17 +1057,30 @@ func (v *Visitor) VisitIdx(ctx *parser.IdxContext) any {
 	return v.Visit(ctx.Exp())
 }
 
-func (v *Visitor) VisitAssignIdxRegular(ctx *parser.AssignIdxRegularContext) any {
+func (v *Visitor) VisitAssignIdxsRegular(ctx *parser.AssignIdxsRegularContext) any {
 	// get variable from scope
-	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if lhs == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// get index
-	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
-	if !ok {
-		return types.Failure
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
 	}
 	// get value
 	val, ok := v.Visit(ctx.Exp()).(object.Object)
@@ -992,7 +1088,307 @@ func (v *Visitor) VisitAssignIdxRegular(ctx *parser.AssignIdxRegularContext) any
 		return types.Failure
 	}
 	// update value by index in variable
-	if err := lhs.IndexSet(idx, val); err != nil {
+	if err := lhs.IndexSet(lastIdx, val); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxsSum(ctx *parser.AssignIdxsSumContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
+	}
+	// get value by index
+	val, err := lhs.IndexGet(lastIdx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssSum, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxsSub(ctx *parser.AssignIdxsSubContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
+	}
+	// get value by index
+	val, err := lhs.IndexGet(lastIdx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssSub, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxsMul(ctx *parser.AssignIdxsMulContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
+	}
+	// get value by index
+	val, err := lhs.IndexGet(lastIdx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssMul, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxsDiv(ctx *parser.AssignIdxsDivContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
+	}
+	// get value by index
+	val, err := lhs.IndexGet(lastIdx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssDiv, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxsMod(ctx *parser.AssignIdxsModContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
+	}
+	// get value by index
+	val, err := lhs.IndexGet(lastIdx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssMod, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignIdxsPow(ctx *parser.AssignIdxsPowContext) any {
+	// get variable from scope
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
+	if lhs == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	var lastIdx object.Object
+	// get all nested indexes
+	for i, idxStmt := range ctx.Idxs().AllIdx() {
+		idx, ok := v.Visit(idxStmt).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		if i == len(ctx.Idxs().AllIdx())-1 {
+			lastIdx = idx
+			break
+		}
+		var err error
+		lhs, err = lhs.IndexGet(idx)
+		if err != nil {
+			v.SetError(err)
+			return types.Failure
+		}
+	}
+	// get value by index
+	val, err := lhs.IndexGet(lastIdx)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// get result of rhs expression
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// get result of expression
+	res, err := val.BinaryOp(parser.PLANLexerAssPow, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// update value by index in variable
+	if err := lhs.IndexSet(lastIdx, res); err != nil {
 		v.SetError(err)
 		return types.Failure
 	}
@@ -1025,7 +1421,7 @@ func (v *Visitor) VisitIdentifierCsInvoke(ctx *parser.IdentifierCsInvokeContext)
 	return v.invokeClosure(ctx.GetName().GetText(), params...)
 }
 
-func (v *Visitor) VisitInclude(ctx *parser.IncludeContext) any {
+func (v *Visitor) VisitIncludeStmt(ctx *parser.IncludeStmtContext) any {
 	val, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
@@ -1040,12 +1436,26 @@ func (v *Visitor) VisitInclude(ctx *parser.IncludeContext) any {
 		v.SetError(err)
 		return types.Failure
 	}
-	tree, err := utils.CreateAST(string(data))
+	tree, err := utils.CreateAstProgFile(string(data))
 	if err != nil {
 		v.SetError(err)
 		return types.Failure
 	}
-	return tree
+
+	// update visitor context
+	v = &Visitor{
+		parent: v,
+		err:    nil,
+		file:   path.GetValue().(string),
+		depth:  v.depth + 1,
+	}
+	// traverse AST
+	if res := v.Visit(tree); res != types.Success {
+		return types.Failure
+	}
+	// revert parent visitor
+	v = v.parent
+	return types.Success
 }
 
 func (v *Visitor) VisitExpCs(ctx *parser.ExpCsContext) any {
@@ -1058,7 +1468,7 @@ func (v *Visitor) VisitClosure(ctx *parser.ClosureContext) interface{} {
 
 func (v *Visitor) VisitAssignSum(ctx *parser.AssignSumContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1080,7 +1490,7 @@ func (v *Visitor) VisitAssignSum(ctx *parser.AssignSumContext) any {
 
 func (v *Visitor) VisitAssignSub(ctx *parser.AssignSubContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1102,7 +1512,7 @@ func (v *Visitor) VisitAssignSub(ctx *parser.AssignSubContext) any {
 
 func (v *Visitor) VisitAssignMul(ctx *parser.AssignMulContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1124,7 +1534,7 @@ func (v *Visitor) VisitAssignMul(ctx *parser.AssignMulContext) any {
 
 func (v *Visitor) VisitAssignDiv(ctx *parser.AssignDivContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1146,7 +1556,7 @@ func (v *Visitor) VisitAssignDiv(ctx *parser.AssignDivContext) any {
 
 func (v *Visitor) VisitAssignMod(ctx *parser.AssignModContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1168,7 +1578,7 @@ func (v *Visitor) VisitAssignMod(ctx *parser.AssignModContext) any {
 
 func (v *Visitor) VisitAssignPow(ctx *parser.AssignPowContext) any {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
@@ -1194,7 +1604,7 @@ func (v *Visitor) VisitExpMethodInvoke(ctx *parser.ExpMethodInvokeContext) inter
 
 func (v *Visitor) VisitIdentifierMethodInvoke(ctx *parser.IdentifierMethodInvokeContext) interface{} {
 	// variable from scope
-	val := scope.CurrentScope.Get(ctx.GetVar_().GetText(), true)
+	val := scope.CurrentScope.Get(ctx.GetVar_().GetText(), false)
 	if val == nil {
 		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetVar_().GetText()))
 		return types.Failure
@@ -1211,7 +1621,7 @@ func (v *Visitor) VisitIdentifierMethodInvoke(ctx *parser.IdentifierMethodInvoke
 	// invoke method
 	obj, err := val.MethodCall(ctx.GetName().GetText(), params...)
 	if err != nil {
-		v.err = err
+		v.SetError(err)
 		return types.Failure
 	}
 	return obj

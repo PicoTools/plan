@@ -8,9 +8,6 @@ var BuiltinFunctions = make(map[string]*object.NativeFunc)
 // user functions implemented in Golang (1 priority)
 var UserFunctions = make(map[string]*object.NativeFunc)
 
-// runtime native PLAN functions (2 priority)
-var NativeFunctions = make(map[string]*object.RuntimeFunc)
-
 // GetFunction searches function in storage
 func GetFunction(name string) object.Object {
 	if val, ok := BuiltinFunctions[name]; ok {
@@ -21,9 +18,11 @@ func GetFunction(name string) object.Object {
 		return val
 	}
 
-	if val, ok := NativeFunctions[name]; ok {
-		return val
-	}
-
 	return nil
+}
+
+// ResetStorages resets storage for functions
+func ResetStorage() {
+	BuiltinFunctions = make(map[string]*object.NativeFunc)
+	UserFunctions = make(map[string]*object.NativeFunc)
 }

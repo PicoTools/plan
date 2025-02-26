@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/PicoTools/plan/pkg/engine/builtin"
-	"github.com/PicoTools/plan/pkg/engine/object"
 	"github.com/PicoTools/plan/pkg/engine/scope"
 	"github.com/PicoTools/plan/pkg/engine/storage"
 	"github.com/PicoTools/plan/pkg/engine/types"
@@ -19,22 +18,13 @@ func init() {
 
 // Init initializes PLAN runtime
 func Init() {
-	scope.GlobalScope = scope.NewScope(
-		nil,
-		0,
-		false,
-		false,
-		map[string]object.Object{},
-	)
-	scope.CurrentScope = scope.GlobalScope
+	scope.NewGlobalScope()
 	builtin.Register()
 }
 
 // Reset clears PLAN runtime and reinit it
 func Reset() {
-	storage.BuiltinFunctions = make(map[string]*object.NativeFunc)
-	storage.UserFunctions = make(map[string]*object.NativeFunc)
-	storage.NativeFunctions = make(map[string]*object.RuntimeFunc)
+	storage.ResetStorage()
 	visitor.ClearRet()
 	Init()
 }
@@ -46,7 +36,7 @@ func Evaluate(file string) error {
 		return err
 	}
 
-	tree, err := utils.CreateAST(string(data))
+	tree, err := utils.CreateAstProgFile(string(data))
 	if err != nil {
 		return err
 	}

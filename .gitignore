@@ -1,4 +1,5 @@
 bin/
+grammar/.antlr/
 files/*.jar
 .vscode/
 .idea/

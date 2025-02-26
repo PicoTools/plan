@@ -11,11 +11,15 @@ import (
 
 // invokeFunc invokes function from storage
 func (v *Visitor) invokeFunc(name string, params ...object.Object) any {
+	var val object.Object
+
 	// get function object from storage
-	val := storage.GetFunction(name)
-	if val == nil {
-		v.SetError(fmt.Errorf("undefined function '%s'", name))
-		return types.Failure
+	if val = storage.GetFunction(name); val == nil {
+		// get function from scope (runtime)
+		if val = scope.CurrentScope.GetFunction(name); val == nil {
+			v.SetError(fmt.Errorf("undefined function '%s'", name))
+			return types.Failure
+		}
 	}
 
 	// check if object callable
@@ -25,13 +29,7 @@ func (v *Visitor) invokeFunc(name string, params ...object.Object) any {
 	}
 
 	// create new context to execute function in
-	scope.CurrentScope = scope.NewScope(
-		scope.CurrentScope,
-		scope.CurrentScope.Depth()+1,
-		true,
-		false,
-		make(map[string]object.Object),
-	)
+	scope.NewCurrentScope(true, false)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()
 	}()
@@ -53,7 +51,7 @@ func (v *Visitor) invokeFunc(name string, params ...object.Object) any {
 // invokeClosure invokes closure function
 func (v *Visitor) invokeClosure(name string, params ...object.Object) any {
 	// get function name from scope
-	fn := scope.CurrentScope.Get(name, true)
+	fn := scope.CurrentScope.Get(name, false)
 	if fn == nil {
 		v.SetError(fmt.Errorf("undefined closure '%s'", name))
 		return types.Failure
@@ -66,13 +64,7 @@ func (v *Visitor) invokeClosure(name string, params ...object.Object) any {
 	}
 
 	// create new context to execute function in
-	scope.CurrentScope = scope.NewScope(
-		scope.CurrentScope,
-		scope.CurrentScope.Depth()+1,
-		true,
-		false,
-		make(map[string]object.Object),
-	)
+	scope.NewCurrentScope(true, false)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()
 	}()
@@ -119,13 +111,7 @@ func (v *Visitor) invokeRuntimeFunc(fn *object.RuntimeFunc, isClosure bool, para
 // InvokeRuntimeFunc invokes directly runtime function with context
 func (v *Visitor) InvokeRuntimeFunc(fn *object.RuntimeFunc, params ...object.Object) any {
 	// create new context to execute function in
-	scope.CurrentScope = scope.NewScope(
-		scope.CurrentScope,
-		scope.CurrentScope.Depth()+1,
-		true,
-		false,
-		make(map[string]object.Object),
-	)
+	scope.NewCurrentScope(true, false)
 	defer func() {
 		scope.CurrentScope = scope.CurrentScope.Parent()
 	}()

@@ -1,0 +1,25 @@
+# if simple
+x = 10;
+if x > 25 {
+  assert(false);
+}
+
+# if/else simple
+x = 10;
+if x > 25 {
+  x += 1;
+} else {
+  x += 2;
+}
+assert(x == 12);
+
+# if/elif/else
+x = 5;
+if x < 5 {
+  assert(false);
+} elif x == 5 {
+  x += 25;
+} else {
+  x = 0;
+}
+assert(x == 30);
