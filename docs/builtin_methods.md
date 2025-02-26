@@ -9,7 +9,7 @@ Arguments: <none>
 Get number of keys in `dict`.
 ```
 a = {"a": 0, "b": 1};
-println(a.len()); // 2
+println(a.len()); # 2
 ```
 
 ## dict.pop
@@ -22,9 +22,9 @@ Arguments:
 Pop value from `dict` by key with `str` type.
 ```
 a = {"a": 0, "b": 1};
-println(a); // {a: 0, b: 1}
+println(a); # {a: 0, b: 1}
 a.pop("a");
-println(a); //  {b: 1}
+println(a); #  {b: 1}
 ```
 
 ## list.len
@@ -36,7 +36,7 @@ Arguments: <none>
 Get number of objects in `list`.
 ```
 a = [1, 2, 3, 4, 5];
-println(a.len()); // 5
+println(a.len()); # 5
 ```
 
 ## list.reverse
@@ -49,7 +49,7 @@ Reverse order of objects in `list`.
 ```
 a = [1, 2, 3, 4, 5];
 a.reverse();
-println(a); // [5, 4, 3, 2, 1]
+println(a); # [5, 4, 3, 2, 1]
 ```
 
 ## list.pop
@@ -64,7 +64,7 @@ Pop value from `list` by index with `int` type.
 a = [1, 2, 3, 4, 5];
 a.pop(0);
 a.pop(1);
-println(a); // [2, 4, 5]
+println(a); # [2, 4, 5]
 ```
 
 ## list.append
@@ -80,7 +80,7 @@ Append values to `list`.
 ```
 a = [1];
 a.append(2, 3, 4, 5);
-println(a); /// [1, 2, 3, 4, 5]
+println(a); # [1, 2, 3, 4, 5]
 ```
 
 ## str.len
@@ -93,8 +93,8 @@ Get number of characters (Golang runes) in `str`.
 ```
 a = "привет";
 b = "hello";
-println(a.len()); // 6
-println(b.len()); // 5
+println(a.len()); # 6
+println(b.len()); # 5
 ```
 
 ## str.reverse
@@ -109,8 +109,8 @@ a = "привет";
 b = "hello";
 a.reverse();
 b.reverse();
-println(a); // тевирп
-println(b); // olleh
+println(a); # тевирп
+println(b); # olleh
 ```
 
 ## str.split
@@ -124,9 +124,9 @@ Split `str` by delimeter (underhood will split by rune). Result will be `list`.
 ```
 a = "hello world";
 b = a.split(" ");
-println(b); // [hello, world]
+println(b); # [hello, world]
 
 a = "привет мир";
 b = a.split("и");
-println(b); // [пр, вет м, р]
+println(b); # [пр, вет м, р]
 ```

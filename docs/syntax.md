@@ -1,19 +1,19 @@
 # PLAN syntax
 
-We can charactarized PLAN as follows: syntax more like `C` way, typification and logic of processing like `Python` way.
+PLAN syntax resembles `C` in structure (brackets and semicolons), while its typing system and execution logic are more similar to `Python`.
 
 ## Values
 
-PLAN is dynamically typification, so variable can be set by all of data types:
+PLAN uses dynamic typification, so variable can be set by all of data types:
 ```
-a = false; // bool
-a = {"a": "b"}; // dict
-a = 1.0; // float
-a = 23; // int
-a = [1, 2, 3]; // list
-a = null; // null
-a = "hello"; // str
-a = fn () { return "test"; }; // closure
+a = false; # bool
+a = {"a": "b"}; # dict
+a = 1.0; # float
+a = 23; # int
+a = [1, 2, 3]; # list
+a = null; # null
+a = "hello"; # str
+a = fn () { return "test"; }; # closure
 ```
 
 ## Indexer
@@ -21,22 +21,23 @@ a = fn () { return "test"; }; // closure
 Indexer `[]` can be used to access values/objects from `str`/`dict`/`list` data types. 
 
 **In case of `str` logic of indexer use runes instead of raw bytes.**
+
 ```
 list_value = [1, 2, 3, 4];
-println(list_value[1]); // 2
+println(list_value[1]); # 2
 
 dict_value = {"a": 123, "b": list_value};
-println(dict_value[1]); // [1, 2, 3, 4]
+println(dict_value[1]); # [1, 2, 3, 4]
 
 str_value = "привет";
-println(str_value[1]); // и
+println(str_value[1]); # и
 ```
 
 
 Also supports multidemension indexers:
 ```
 test = [[[1], 2], 3];
-println(test[0][0][0]); // 1
+println(test[0][0][0]); # 1
 ```
 
 ## Funtions
@@ -56,11 +57,11 @@ fn test02() {
 
 In case of obvious `return` statement, function will return object with specific data type. Otherwise `null` will be returned.
 ```
-println(test01(1, 2, 3)); // 6
-println(test02()); // <null>
+println(test01(1, 2, 3)); # 6
+println(test02()); # <null>
 ```
 
-You can create nested functions that will be available inside the nested scope. For example:
+You can create nested functions that will be available inside of the nested scope. For example:
 ```
 # function in scope #0
 fn hello() {
@@ -87,7 +88,7 @@ my_closure = fn(a, b, c) {
 };
 
 result = @my_closure(2, 2, 2);
-println(result); // 6
+println(result); # 6
 ```
 
 As closure stores in variable it can be reassigned:
@@ -96,7 +97,7 @@ a = fn(a) {
     return a;
 };
 b = a;
-println(@b(1)); // 1
+println(@b(1)); # 1
 ```
 
 ## `if` statement
@@ -110,13 +111,13 @@ if a == 0 {
 } elif a == 2 {
     println("B");
 } elif a == 3 {
-    println("C"); // will be printed
+    println("C"); # will be printed
 } else {
     println("D");
 }
 ```
 
-`if`/`elif` block expect `bool` condition.
+`if`/`elif` blocks expect `bool` condition.
 
 ## `for` statement
 
@@ -175,12 +176,12 @@ In `main.pico` include script and run function `add()`.
 ```
 include("add.pico");
 
-println(add(1, 2)); // 3
+println(add(1, 2)); # 3
 ```
 
 ## Code comments
 
-PLAN support comments in code using next notations:
+PLAN supports comments in code using next notations:
 ```
 // this is my awesome comment
 
