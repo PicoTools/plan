@@ -52,7 +52,7 @@ PLAN comes with the following data types, which implement the object interface:
 - `null` (an empty object)
 - `str` (a string in Golang, operating with runes)
 - `closures` (a special type of object that can be called inline)
-- 
+
 For more information and examples, see data [data types](docs/data_types.md).
 
 ## References
