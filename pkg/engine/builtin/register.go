@@ -86,10 +86,12 @@ func Assert(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
-	if _, ok := args[0].(*object.Bool); !ok {
+	// get lhs type
+	lhs, ok := args[0].(*object.Bool)
+	if !ok {
 		return nil, fmt.Errorf("expecting bool, got %s", args[0].TypeName())
 	}
-	if !args[0].(*object.Bool).GetValue().(bool) {
+	if !lhs.Value() {
 		return nil, fmt.Errorf("assertion occured")
 	}
 	return object.NewNull(), nil
@@ -184,33 +186,33 @@ func Bool(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
-	switch args[0].(type) {
+	switch obj := args[0].(type) {
 	case *object.Bool:
-		return args[0], nil
+		return obj, nil
 	case *object.Dict:
-		if len(args[0].(*object.Dict).GetValue().(map[string]object.Object)) == 0 {
+		if len(obj.Value()) == 0 {
 			return object.NewBool(false), nil
 		}
 		return object.NewBool(true), nil
 	case *object.Float:
-		if args[0].(*object.Float).GetValue().(float64) == 0.0 {
+		if obj.Value() == 0.0 {
 			return object.NewBool(false), nil
 		}
 		return object.NewBool(true), nil
 	case *object.Int:
-		if args[0].(*object.Int).GetValue().(int64) == 0 {
+		if obj.Value() == 0 {
 			return object.NewBool(false), nil
 		}
 		return object.NewBool(true), nil
 	case *object.List:
-		if len(args[0].(*object.List).GetValue().([]object.Object)) == 0 {
+		if len(obj.Value()) == 0 {
 			return object.NewBool(false), nil
 		}
 		return object.NewBool(true), nil
 	case *object.Null:
 		return object.NewBool(false), nil
 	case *object.Str:
-		if len(args[0].(*object.Str).GetValue().(string)) == 0 {
+		if len(obj.Value()) == 0 {
 			return object.NewBool(false), nil
 		}
 		return object.NewBool(true), nil
@@ -222,13 +224,13 @@ func Float(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
-	switch args[0].(type) {
+	switch obj := args[0].(type) {
 	case *object.Bool:
-		return object.NewFloat(utils.BoolToFloat(args[0].(*object.Bool).GetValue().(bool))), nil
+		return object.NewFloat(utils.BoolToFloat(obj.Value())), nil
 	case *object.Float:
-		return args[0], nil
+		return obj, nil
 	case *object.Int:
-		return object.NewFloat(utils.IntToFloat(args[0].(*object.Int).GetValue().(int64))), nil
+		return object.NewFloat(utils.IntToFloat(obj.Value())), nil
 	}
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
@@ -237,15 +239,15 @@ func Int(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
-	switch args[0].(type) {
+	switch obj := args[0].(type) {
 	case *object.Bool:
-		return object.NewInt(utils.BoolToInt(args[0].(*object.Bool).GetValue().(bool))), nil
+		return object.NewInt(utils.BoolToInt(obj.Value())), nil
 	case *object.Float:
-		return object.NewInt(utils.FloatToInt(args[0].(*object.Float).GetValue().(float64))), nil
+		return object.NewInt(utils.FloatToInt(obj.Value())), nil
 	case *object.Int:
-		return args[0], nil
+		return obj, nil
 	case *object.Str:
-		val, err := strconv.Atoi(args[0].(*object.Str).GetValue().(string))
+		val, err := strconv.Atoi(obj.Value())
 		if err != nil {
 			return nil, fmt.Errorf("unable convert str to int: %v", err)
 		}
@@ -258,21 +260,21 @@ func Str(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
-	switch args[0].(type) {
+	switch obj := args[0].(type) {
 	case *object.Bool:
-		return object.NewStr(args[0].(*object.Bool).String()), nil
+		return object.NewStr(obj.String()), nil
 	case *object.Dict:
-		return object.NewStr(args[0].(*object.Dict).String()), nil
+		return object.NewStr(obj.String()), nil
 	case *object.Float:
-		return object.NewStr(args[0].(*object.Float).String()), nil
+		return object.NewStr(obj.String()), nil
 	case *object.Int:
-		return object.NewStr(args[0].(*object.Int).String()), nil
+		return object.NewStr(obj.String()), nil
 	case *object.List:
-		return object.NewStr(args[0].(*object.List).String()), nil
+		return object.NewStr(obj.String()), nil
 	case *object.Null:
-		return object.NewStr(args[0].(*object.Null).String()), nil
+		return object.NewStr(obj.String()), nil
 	case *object.Str:
-		return args[0], nil
+		return obj, nil
 	}
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
@@ -281,11 +283,11 @@ func Chr(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
-	switch args[0].(type) {
+	switch obj := args[0].(type) {
 	case *object.Bool:
-		return object.NewStr(string(rune(utils.BoolToInt(args[0].(*object.Bool).GetValue().(bool))))), nil
+		return object.NewStr(string(rune(utils.BoolToInt(obj.Value())))), nil
 	case *object.Int:
-		return object.NewStr(string(rune(args[0].(*object.Int).GetValue().(int64)))), nil
+		return object.NewStr(string(rune(obj.Value()))), nil
 	}
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
@@ -294,12 +296,12 @@ func Ord(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
-	switch args[0].(type) {
+	switch obj := args[0].(type) {
 	case *object.Str:
-		if utf8.RuneCountInString(args[0].(*object.Str).GetValue().(string)) != 1 {
+		if utf8.RuneCountInString(obj.Value()) != 1 {
 			return nil, fmt.Errorf("str must have only one char")
 		}
-		r, _ := utf8.DecodeRuneInString(args[0].(*object.Str).GetValue().(string))
+		r, _ := utf8.DecodeRuneInString(obj.Value())
 		return object.NewInt(int64(r)), nil
 	}
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
@@ -313,7 +315,7 @@ func Base64Enc(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	return object.NewStr(base64.StdEncoding.EncodeToString([]byte(str.GetValue().(string)))), nil
+	return object.NewStr(base64.StdEncoding.EncodeToString([]byte(str.Value()))), nil
 }
 
 func Base64Dec(args ...object.Object) (object.Object, error) {
@@ -324,7 +326,7 @@ func Base64Dec(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	val, err := base64.StdEncoding.DecodeString(str.GetValue().(string))
+	val, err := base64.StdEncoding.DecodeString(str.Value())
 	if err != nil {
 		return nil, err
 	}
@@ -339,7 +341,7 @@ func Base32Enc(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	return object.NewStr(base32.StdEncoding.EncodeToString([]byte(str.GetValue().(string)))), nil
+	return object.NewStr(base32.StdEncoding.EncodeToString([]byte(str.Value()))), nil
 }
 
 func Base32Dec(args ...object.Object) (object.Object, error) {
@@ -350,7 +352,7 @@ func Base32Dec(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	val, err := base32.StdEncoding.DecodeString(str.GetValue().(string))
+	val, err := base32.StdEncoding.DecodeString(str.Value())
 	if err != nil {
 		return nil, err
 	}
@@ -365,7 +367,7 @@ func Md5(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	md5sum := md5.Sum([]byte(str.GetValue().(string)))
+	md5sum := md5.Sum([]byte(str.Value()))
 	return object.NewStr(string(md5sum[:])), nil
 }
 
@@ -377,7 +379,7 @@ func Sha1(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	sha1sum := sha1.Sum([]byte(str.GetValue().(string)))
+	sha1sum := sha1.Sum([]byte(str.Value()))
 	return object.NewStr(string(sha1sum[:])), nil
 }
 
@@ -389,7 +391,7 @@ func Sha256(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	sha256sum := sha256.Sum256([]byte(str.GetValue().(string)))
+	sha256sum := sha256.Sum256([]byte(str.Value()))
 	return object.NewStr(string(sha256sum[:])), nil
 }
 
@@ -403,7 +405,7 @@ func Gzip(args ...object.Object) (object.Object, error) {
 	}
 	b := &bytes.Buffer{}
 	w := gzip.NewWriter(b)
-	_, err := w.Write([]byte(str.GetValue().(string)))
+	_, err := w.Write([]byte(str.Value()))
 	if err != nil {
 		return nil, err
 	}
@@ -419,7 +421,7 @@ func Gunzip(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	r, err := gzip.NewReader(bytes.NewBufferString(str.GetValue().(string)))
+	r, err := gzip.NewReader(bytes.NewBufferString(str.Value()))
 	if err != nil {
 		return nil, err
 	}
@@ -441,7 +443,7 @@ func Fread(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	data, err := os.ReadFile(str.GetValue().(string))
+	data, err := os.ReadFile(str.Value())
 	if err != nil {
 		return nil, err
 	}
@@ -460,7 +462,7 @@ func Fwrite(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 2nd argument, got '%s'", args[1].TypeName())
 	}
-	if err := os.WriteFile(path.GetValue().(string), []byte(data.GetValue().(string)), 0640); err != nil {
+	if err := os.WriteFile(path.Value(), []byte(data.Value()), 0640); err != nil {
 		return nil, err
 	}
 	return object.NewNull(), nil
@@ -474,7 +476,7 @@ func Hex(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	return object.NewStr(hex.EncodeToString([]byte(str.GetValue().(string)))), nil
+	return object.NewStr(hex.EncodeToString([]byte(str.Value()))), nil
 }
 
 func Unhex(args ...object.Object) (object.Object, error) {
@@ -485,7 +487,7 @@ func Unhex(args ...object.Object) (object.Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
 	}
-	v, err := hex.DecodeString(str.GetValue().(string))
+	v, err := hex.DecodeString(str.Value())
 	if err != nil {
 		return nil, err
 	}

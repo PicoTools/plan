@@ -511,16 +511,18 @@ func (v *Visitor) VisitDict(ctx *parser.DictContext) any {
 		}
 
 		// check if key is str
-		switch key.(type) {
+		var keyStr *object.Str
+		switch obj := key.(type) {
 		case *object.Str:
+			keyStr = obj
 		default:
 			v.SetError(fmt.Errorf("key of dict must be str"))
 			return types.Failure
 		}
 
 		// check if duplicates exist
-		if _, ok = dict[key.GetValue().(string)]; ok {
-			v.SetError(fmt.Errorf("duplicated key '%s' in dict", key.GetValue().(string)))
+		if _, ok = dict[keyStr.Value()]; ok {
+			v.SetError(fmt.Errorf("duplicated key '%s' in dict", keyStr.Value()))
 			return types.Failure
 		}
 
@@ -529,7 +531,7 @@ func (v *Visitor) VisitDict(ctx *parser.DictContext) any {
 		if !ok {
 			return types.Failure
 		}
-		dict[key.GetValue().(string)] = val
+		dict[keyStr.Value()] = val
 	}
 	return dict
 }
@@ -558,9 +560,9 @@ func (v *Visitor) VisitExpLogicalOr(ctx *parser.ExpLogicalOrContext) any {
 	}
 	// fast exit hack to return value in case of left expression is true
 	// true || X == true, where X is undefined
-	switch lhs.(type) {
+	switch value := lhs.(type) {
 	case *object.Bool:
-		if lhs.GetValue().(bool) {
+		if value.Value() {
 			return lhs
 		}
 	}
@@ -587,9 +589,9 @@ func (v *Visitor) VisitExpLogicalAnd(ctx *parser.ExpLogicalAndContext) any {
 	}
 	// fast exit hack to return value in case of left expression is false
 	// false && X == false, where X is undefined
-	switch lhs.(type) {
+	switch value := lhs.(type) {
 	case *object.Bool:
-		if !lhs.GetValue().(bool) {
+		if !value.Value() {
 			return lhs
 		}
 	}
@@ -780,6 +782,7 @@ func (v *Visitor) VisitForStmt(ctx *parser.ForStmtContext) any {
 		}
 
 		// false -> exit from loop
+		// TODO: handle type is Bool
 		if !res.(*object.Bool).GetValue().(bool) {
 			break
 		}
@@ -844,6 +847,7 @@ func (v *Visitor) VisitWhileStmt(ctx *parser.WhileStmtContext) any {
 		}
 
 		// false -> exit loop
+		// TODO: handle type is Bool
 		if !res.(*object.Bool).GetValue().(bool) {
 			break
 		}
@@ -879,6 +883,7 @@ func (v *Visitor) VisitIfStmt(ctx *parser.IfStmtContext) any {
 		if !ok {
 			return types.Failure
 		}
+		// TODO: handle type is Bool
 		if res.(*object.Bool).GetValue().(bool) {
 			return types.Success
 		}
@@ -891,6 +896,7 @@ func (v *Visitor) VisitIfStmt(ctx *parser.IfStmtContext) any {
 		if !ok {
 			return types.Failure
 		}
+		// TODO: handle type is Bool
 		if res.(*object.Bool).GetValue().(bool) {
 			return types.Success
 		}
@@ -918,6 +924,7 @@ func (v *Visitor) VisitIfBlockStmt(ctx *parser.IfBlockStmtContext) any {
 		return types.Failure
 	}
 
+	// TODO: handle type is Bool
 	if res.(*object.Bool).GetValue().(bool) {
 		// true -> execute block's statements
 		for _, item := range ctx.AllStmt() {
@@ -951,6 +958,7 @@ func (v *Visitor) VisitElifBlockStmt(ctx *parser.ElifBlockStmtContext) any {
 		return types.Failure
 	}
 
+	// TODO: handle type is Bool
 	if res.(*object.Bool).GetValue().(bool) {
 		// true -> execute block's statements
 		for _, item := range ctx.AllStmt() {
@@ -1431,7 +1439,7 @@ func (v *Visitor) VisitIncludeStmt(ctx *parser.IncludeStmtContext) any {
 		v.SetError(fmt.Errorf("invalid argument of type '%s'", val.TypeName()))
 		return types.Failure
 	}
-	data, err := os.ReadFile(path.GetValue().(string))
+	data, err := os.ReadFile(path.Value())
 	if err != nil {
 		v.SetError(err)
 		return types.Failure
@@ -1446,7 +1454,7 @@ func (v *Visitor) VisitIncludeStmt(ctx *parser.IncludeStmtContext) any {
 	v = &Visitor{
 		parent: v,
 		err:    nil,
-		file:   path.GetValue().(string),
+		file:   path.Value(),
 		depth:  v.depth + 1,
 	}
 	// traverse AST

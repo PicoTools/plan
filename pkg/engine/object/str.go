@@ -47,6 +47,11 @@ func (o *Str) GetValue() any {
 	return o.value
 }
 
+// Value returns exact underlay value of Golang type
+func (o *Str) Value() string {
+	return o.value
+}
+
 // IndexGet returns value from Str by index. Operates on rune level
 func (o *Str) IndexGet(rs Object) (Object, error) {
 	idx, ok := rs.(*Int)
@@ -163,7 +168,7 @@ func (o *Str) LogicalOr(rs Object) (Object, error) {
 
 // LogicalAnd implements logical AND between Str object and other types of objects
 func (o *Str) LogicalAnd(rs Object) (Object, error) {
-	switch rs.(type) {
+	switch rs := rs.(type) {
 	case *Null:
 		return rs, nil
 	}
