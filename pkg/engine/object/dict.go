@@ -48,6 +48,11 @@ func (o *Dict) GetValue() any {
 	return o.value
 }
 
+// Value returns exact underlay value of Golang type
+func (o *Dict) Value() map[string]Object {
+	return o.value
+}
+
 // BinaryOp provides logic of binary operations between 2 objects
 func (o *Dict) BinaryOp(op int, rhs Object) (Object, error) {
 	switch op {
@@ -124,21 +129,22 @@ func (o *Dict) LogicalAnd(rs Object) (Object, error) {
 
 // Equal implements checking of equation between Dict object and other types of objects
 func (o *Dict) Equal(rs Object) (Object, error) {
-	switch rs.(type) {
+	switch rs := rs.(type) {
 	case *Bool:
 		return NewBool(false), nil
 	case *Dict:
-		if len(o.value) != len(rs.(*Dict).value) {
+		if len(o.value) != len(rs.value) {
 			return NewBool(false), nil
 		}
 		for k, v := range o.value {
-			if (rs.(*Dict).value)[k] == nil {
+			if (rs.value)[k] == nil {
 				return NewBool(false), nil
 			}
-			val, err := v.Equal(rs.(*Dict).value[k])
+			val, err := v.Equal(rs.value[k])
 			if err != nil {
 				return nil, err
 			}
+			// TODO: handle if type of object is not Bool
 			if !val.(*Bool).value {
 				return NewBool(false), nil
 			}
@@ -160,21 +166,22 @@ func (o *Dict) Equal(rs Object) (Object, error) {
 
 // NotEqual implements checking of unequation between Dict object and other types of objects
 func (o *Dict) NotEqual(rs Object) (Object, error) {
-	switch rs.(type) {
+	switch rs := rs.(type) {
 	case *Bool:
 		return NewBool(true), nil
 	case *Dict:
-		if len(o.value) != len(rs.(*Dict).value) {
+		if len(o.value) != len(rs.value) {
 			return NewBool(true), nil
 		}
 		for k, v := range o.value {
-			if (rs.(*Dict).value)[k] == nil {
+			if (rs.value)[k] == nil {
 				return NewBool(true), nil
 			}
-			val, err := v.Equal(rs.(*Dict).value[k])
+			val, err := v.Equal(rs.value[k])
 			if err != nil {
 				return nil, err
 			}
+			// TODO: handle if type of object is not Bool
 			if !val.(*Bool).value {
 				return NewBool(true), nil
 			}
@@ -220,6 +227,6 @@ func (o *Dict) MethodPop(args ...Object) (Object, error) {
 	if !ok {
 		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[1].TypeName())
 	}
-	delete(o.value, key.GetValue().(string))
+	delete(o.value, key.value)
 	return NewNull(), nil
 }

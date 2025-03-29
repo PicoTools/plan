@@ -38,6 +38,11 @@ func (o *Int) GetValue() any {
 	return o.value
 }
 
+// Value returns exact underlay value of Golang type
+func (o *Int) Value() int64 {
+	return o.value
+}
+
 // BinaryOp provides logic of binary operations between 2 objects
 func (o *Int) BinaryOp(op int, rhs Object) (Object, error) {
 	switch op {
@@ -120,7 +125,7 @@ func (o *Int) LogicalOr(rs Object) (Object, error) {
 
 // LogicalAnd implements logical AND between Int object and other types of objects
 func (o *Int) LogicalAnd(rs Object) (Object, error) {
-	switch rs.(type) {
+	switch rs := rs.(type) {
 	case *Null:
 		return rs, nil
 	}
