@@ -100,13 +100,13 @@ func (v *Visitor) Visit(tree antlr.ParseTree) any {
 
 	// exit in case of max visitor depth
 	if v.depth > constants.MaxVisitorDepth {
-		v.SetError(fmt.Errorf("max include depth reached"))
+		v.SetError(planerrors.ErrMaxVisitorDepth)
 		return types.Failure
 	}
 
 	// exit in case of max scope depth
 	if scope.CurrentScope.Depth() > constants.MaxScopeDepth {
-		v.SetError(fmt.Errorf("max depth reached"))
+		v.SetError(planerrors.ErrMaxRecurseDepth)
 		return types.Failure
 	}
 
@@ -409,7 +409,7 @@ func (v *Visitor) VisitExpBool(ctx *parser.ExpBoolContext) any {
 	case "false":
 		return object.NewBool(false)
 	}
-	v.SetError(fmt.Errorf("unable get bool from '%s'", ctx.GetText()))
+	v.SetError(fmt.Errorf("unable get 'bool' from '%s'", ctx.GetText()))
 	return types.Failure
 }
 
@@ -440,7 +440,7 @@ func (v *Visitor) VisitExpIdentifier(ctx *parser.ExpIdentifierContext) any {
 func (v *Visitor) VisitExpInteger(ctx *parser.ExpIntegerContext) any {
 	val, err := strconv.ParseInt(ctx.GetText(), 10, 64)
 	if err != nil {
-		v.SetError(fmt.Errorf("unable get int from '%s'", ctx.GetText()))
+		v.SetError(fmt.Errorf("unable get 'int' from '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return object.NewInt(val)
@@ -449,7 +449,7 @@ func (v *Visitor) VisitExpInteger(ctx *parser.ExpIntegerContext) any {
 func (v *Visitor) VisitExpIntegerHex(ctx *parser.ExpIntegerHexContext) any {
 	val, err := strconv.ParseInt(utils.StripHexPrefix(ctx.GetText()), 16, 64)
 	if err != nil {
-		v.SetError(fmt.Errorf("unable get int from '%s'", ctx.GetText()))
+		v.SetError(fmt.Errorf("unable get 'int' from '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return object.NewInt(val)
@@ -462,7 +462,7 @@ func (v *Visitor) VisitExpNull(_ *parser.ExpNullContext) any {
 func (v *Visitor) VisitExpFloat(ctx *parser.ExpFloatContext) any {
 	val, err := strconv.ParseFloat(ctx.GetText(), 64)
 	if err != nil {
-		v.SetError(fmt.Errorf("unable get float from '%s'", ctx.GetText()))
+		v.SetError(fmt.Errorf("unable get 'float' from '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return object.NewFloat(val)
@@ -471,7 +471,7 @@ func (v *Visitor) VisitExpFloat(ctx *parser.ExpFloatContext) any {
 func (v *Visitor) VisitExpString(ctx *parser.ExpStringContext) any {
 	val, err := strconv.Unquote(ctx.GetText())
 	if err != nil {
-		v.SetError(fmt.Errorf("unable get str from '%s'", ctx.GetText()))
+		v.SetError(fmt.Errorf("unable get 'str' from '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return object.NewStr(val)
@@ -516,7 +516,7 @@ func (v *Visitor) VisitDict(ctx *parser.DictContext) any {
 		case *object.Str:
 			keyStr = obj
 		default:
-			v.SetError(fmt.Errorf("key of dict must be str"))
+			v.SetError(fmt.Errorf("key of dict must be 'str'"))
 			return types.Failure
 		}
 
