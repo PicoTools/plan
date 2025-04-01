@@ -29,7 +29,7 @@ func (o *RuntimeFunc) SetName(name string) {
 
 // TypeName returns type name of runtime function and its name
 func (o *RuntimeFunc) TypeName() string {
-	return "native-func: " + o.name
+	return "runtime-func: " + o.name
 }
 
 // GetName returns name of runtime function
@@ -39,7 +39,7 @@ func (o *RuntimeFunc) GetName() string {
 
 // String returns string representation of runtime function object
 func (o *RuntimeFunc) String() string {
-	return "<native-func>"
+	return "<runtime-func>"
 }
 
 // CanCall indicates if object is callable
