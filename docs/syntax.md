@@ -34,7 +34,6 @@ str_value = "привет";
 println(str_value[1]); # и
 ```
 
-
 Also supports multidemension indexers:
 ```python
 test = [[[1], 2], 3];

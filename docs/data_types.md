@@ -28,7 +28,7 @@ There are 2 underly realization for different purposes:
 
 ## Casting rules
 
-In process of PLAN development the most part of casting rules has been taken from `Python`:
+In process of PLAN development the most part of casting rules has been taken from `Python` language:
 
 |       | bool  | dict | float | int   | list | null | str  |
 |-------|-------|------|-------|-------|------|------|------|
@@ -41,16 +41,18 @@ In process of PLAN development the most part of casting rules has been taken fro
 | str   | str   | str  | str   | str   | str  | str  | -    |
 
 `-`: will return same object, as was passed for casting
+
 `x`: will be thrown error and execution stopped
+
 `int*`: `strconv.Atoi()` under the hood
 
-Casting realized with using of next [builtin](../pkg/engine/builtin/register.go) functions:
+Casting realized with using of the next [builtin](../pkg/engine/builtin/register.go) functions:
 - `bool(v)`: return `bool` if casting appliable
 - `float(v)`: return `float` if casting appliable
 - `int(v)`: return `int` if casting appliable
 - `str(v)`: return `str` if casting appliable
 
-To avoid runtime errors you can use next [builtin](../pkg/engine/builtin/register.go) function to determine data type:
+To avoid runtime errors you can be used next [builtin](../pkg/engine/builtin/register.go) function to determine data type:
 - `is_bool(v)`: return `true` if `bool`
 - `is_dict(v)`: return `true` if `dict`
 - `is_float(v)`: return `true` if `float`
@@ -59,4 +61,4 @@ To avoid runtime errors you can use next [builtin](../pkg/engine/builtin/registe
 - `is_null(v)`: return `true` if `null`
 - `is_str(v)`: return `true` if `str`
 
-Full list of current builtin functions you can found [here](./builtin_functions.md).
+Full list of current builtin functions can be found [here](./builtin_functions.md).

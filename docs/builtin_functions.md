@@ -1,5 +1,36 @@
 # Builtin functions
 
+List of builtin functions:
+- [assert](#assert)
+- [print](#print)
+- [println](#println)
+- [is_bool](#is_bool)
+- [is_dict](#is_dict)
+- [is_float](#is_float)
+- [is_int](#is_int)
+- [is_list](#is_list)
+- [is_null](#is_null)
+- [is_str](#is_str)
+- [bool](#bool)
+- [float](#float)
+- [int](#int)
+- [str](#str)
+- [chr](#chr)
+- [ord](#ord)
+- [hex](#hex)
+- [unhex](#unhex)
+- [base64_enc](#base64_enc)
+- [base64_dec](#base64_dec)
+- [base32_enc](#base32_enc)
+- [base32_dec](#base32_dec)
+- [md5](#md5)
+- [sha1](#sha1)
+- [sha256](#sha256)
+- [gzip](#gzip)
+- [gunzip](#gunzip)
+- [fread](#fread)
+- [fwrite](#fwrite)
+
 ## assert
 
 Signature: `assert(arg0)`
@@ -283,7 +314,7 @@ Unhexify `arg0`.
 println(unhex("68656c6c6f")); # hello
 ```
 
-# base64_enc
+## base64_enc
 
 Signature: `base64_enc(arg0)`
 
@@ -297,7 +328,7 @@ println(base64_enc("hello")); # aGVsbG8=
 println(base64_enc("привет")); # 0L/RgNC40LLQtdGC
 ```
 
-# base64_dec
+## base64_dec
 
 Signature: `base64_dec(arg0)`
 
@@ -311,7 +342,7 @@ println(base64_dec("aGVsbG8=")); # hello
 println(base64_dec("0L/RgNC40LLQtdGC")); # привет
 ```
 
-# base32_enc
+## base32_enc
 
 Signature: `base32_enc(arg0)`
 
@@ -325,7 +356,7 @@ println(base32_enc("hello")); # NBSWY3DP
 println(base32_enc("привет")); # 2C75DAGQXDILFUFV2GBA====
 ```
 
-# base32_dec
+## base32_dec
 
 Signature: `base32_dec(arg0)`
 
@@ -339,7 +370,7 @@ println(base32_dec("NBSWY3DP")); # hello
 println(base32_dec("2C75DAGQXDILFUFV2GBA====")); # привет
 ```
 
-# md5
+## md5
 
 Signature: `md5(arg0)`
 
@@ -353,7 +384,7 @@ println(hex(md5("hello"))); # 5d41402abc4b2a76b9719d911017c592
 println(hex(md5("привет"))); # 608333adc72f545078ede3aad71bfe74
 ```
 
-# sha1
+## sha1
 
 Signature: `sha1(arg0)`
 
@@ -367,7 +398,7 @@ println(hex(sha1("hello"))); # aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d
 println(hex(sha1("привет"))); # e24505f94db2b5df4c7c2596b0788e720e073021
 ```
 
-# sha256
+## sha256
 
 Signature: `sha1(arg0)`
 
@@ -381,7 +412,7 @@ println(hex(sha256("hello"))); # 2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425
 println(hex(sha256("привет"))); # e58f1e8c55fa105bdd3f40e5037eb0b039b5998d52c05e6cd98878dd2da5cab2
 ```
 
-# gzip
+## gzip
 
 Signature: `gzip(arg0)`
 
@@ -394,7 +425,7 @@ Returns gzipped value of `arg0` as bytes in `str`.
 println(hex(gzip("hello"))); # 1f8b08000000000000ffca48cdc9c907040000ffff86a6103605000000
 ```
 
-# gunzip
+## gunzip
 
 Signature: `gunzip(arg0)`
 
@@ -407,7 +438,7 @@ Retuns gunzipped value of `arg0` as bytes in `str`.
 println(gunzip(unhex("1f8b08000000000000ffca48cdc9c907040000ffff86a6103605000000"))); # hello
 ```
 
-# fread
+## fread
 
 Signature: `fread(arg0)`
 
@@ -420,7 +451,7 @@ Read bytes in `str` from file specified by `arg0`.
 println(fread("/etc/hostname")); # plan.example.com
 ```
 
-# fwrite
+## fwrite
 
 Signature: `fwrite(arg0, arg1)`
 
