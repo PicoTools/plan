@@ -1,0 +1,5 @@
+if null {
+    assert(false);
+} else {
+    assert(true);
+}

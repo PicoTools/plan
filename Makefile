@@ -58,7 +58,7 @@ test-fail: build
 	@for i in `find samples -type f -name "fail-*"`; do \
 		printf "$$i: " && \
 		${BIN_DIR}/plan.${GOOS}.${GOARCH} $$i 1>/dev/null 2>/dev/null ; \
-		[ $$? -eq 0 ] && printf "${RED}FAILED${NC}" || echo "${GREEN}OK${NC}" \
+		[ $$? -eq 0 ] && echo "${RED}FAILED${NC}" || echo "${GREEN}OK${NC}" \
 		; \
 	done
 

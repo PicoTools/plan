@@ -117,7 +117,20 @@ if a == 0 {
 }
 ```
 
-`if`/`elif` blocks expect `bool` condition.
+> :warning: `if`/`elif` conditions will try to automatically convert data type to bool.
+```python
+if "hello" {
+    println("A"); # will be printed
+}
+
+if 23 {
+    println("B"); # will be printed
+}
+
+if [] {
+    println("C"); # will NOT be printed
+}
+```
 
 ## `for` statement
 

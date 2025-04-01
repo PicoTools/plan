@@ -1,0 +1,7 @@
+if {} {
+    assert(false);
+}
+
+if {"a": "b"} {
+    assert(true);
+}
