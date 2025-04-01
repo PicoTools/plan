@@ -51,6 +51,11 @@ func (o *List) GetValue() any {
 	return o.value
 }
 
+// Value returns exact underlay value of Golang type
+func (o *List) Value() []Object {
+	return o.value
+}
+
 // BinaryOp provides logic of binary operations between 2 objects
 func (o *List) BinaryOp(op int, rhs Object) (Object, error) {
 	switch op {
@@ -127,7 +132,7 @@ func (o *List) LogicalOr(rs Object) (Object, error) {
 
 // LogicalAnd implements logical AND between List object and other types of objects
 func (o *List) LogicalAnd(rs Object) (Object, error) {
-	switch rs.(type) {
+	switch rs := rs.(type) {
 	case *Null:
 		return rs, nil
 	}
@@ -154,6 +159,7 @@ func (o *List) Equal(rs Object) (Object, error) {
 			if err != nil {
 				return nil, err
 			}
+			// TODO: handle return type is Bool
 			if !val.GetValue().(bool) {
 				return NewBool(false), nil
 			}
@@ -187,6 +193,7 @@ func (o *List) NotEqual(rs Object) (Object, error) {
 			if err != nil {
 				return nil, err
 			}
+			// TODO: handle return type is bool
 			if !val.GetValue().(bool) {
 				return NewBool(true), nil
 			}
@@ -286,12 +293,12 @@ func (o *List) MethodPop(args ...Object) (Object, error) {
 	}
 	idx, ok := args[0].(*Int)
 	if !ok {
-		return nil, fmt.Errorf("expecting int as 1st argument, got '%s'", args[1].TypeName())
+		return nil, fmt.Errorf("expecting 'int' as 1st argument, got '%s'", args[1].TypeName())
 	}
-	if idx.GetValue().(int64) < 0 || int(idx.GetValue().(int64)) >= len(o.value) {
+	if idx.value < 0 || int(idx.value) >= len(o.value) {
 		return nil, planerrors.ErrIndexOutOfRange
 	}
-	o.value = append(o.value[:idx.GetValue().(int64)], o.value[idx.GetValue().(int64)+1:]...)
+	o.value = append(o.value[:idx.value], o.value[idx.value+1:]...)
 	return NewNull(), nil
 }
 

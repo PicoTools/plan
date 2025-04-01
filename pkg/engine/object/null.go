@@ -56,7 +56,7 @@ func (o *Null) LogicalNot() (Object, error) {
 
 // LogicalOr implements logical OR between Null object and other types of objects
 func (o *Null) LogicalOr(rs Object) (Object, error) {
-	switch rs.(type) {
+	switch rs := rs.(type) {
 	case *Bool:
 		return rs, nil
 	case *Dict:

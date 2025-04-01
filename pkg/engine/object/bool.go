@@ -39,6 +39,11 @@ func (o *Bool) GetValue() any {
 	return o.value
 }
 
+// Value returns exact underlay value of Golang type
+func (o *Bool) Value() bool {
+	return o.value
+}
+
 // BinaryOp provides logic of binary operations between 2 objects
 func (o *Bool) BinaryOp(op int, rhs Object) (Object, error) {
 	switch op {

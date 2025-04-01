@@ -34,7 +34,6 @@ str_value = "привет";
 println(str_value[1]); # и
 ```
 
-
 Also supports multidemension indexers:
 ```python
 test = [[[1], 2], 3];
@@ -77,7 +76,7 @@ fn hello() {
 
     return hello() + " " + world();
 }
-hello(); // hello world
+hello(); # hello world
 ```
 
 ## Closures
@@ -118,7 +117,20 @@ if a == 0 {
 }
 ```
 
-`if`/`elif` blocks expect `bool` condition.
+> :warning: `if`/`elif` conditions will try to automatically convert data type to bool.
+```python
+if "hello" {
+    println("A"); # will be printed
+}
+
+if 23 {
+    println("B"); # will be printed
+}
+
+if [] {
+    println("C"); # will NOT be printed
+}
+```
 
 ## `for` statement
 

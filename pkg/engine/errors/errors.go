@@ -12,4 +12,6 @@ var (
 	ErrInvalidIndexType = errors.New("invalid index type")
 	ErrIndexOutOfRange  = errors.New("index out of range")
 	ErrUnknownMethod    = errors.New("unknown method")
+	ErrMaxRecurseDepth  = errors.New("max depth reached")
+	ErrMaxVisitorDepth  = errors.New("max includes depth reached")
 )
