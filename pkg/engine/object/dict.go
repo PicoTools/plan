@@ -225,7 +225,7 @@ func (o *Dict) MethodPop(args ...Object) (Object, error) {
 	}
 	key, ok := args[0].(*Str)
 	if !ok {
-		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[1].TypeName())
+		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[1].TypeName())
 	}
 	delete(o.value, key.value)
 	return NewNull(), nil

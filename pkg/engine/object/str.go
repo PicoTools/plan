@@ -319,7 +319,7 @@ func (o *Str) MethodSplit(args ...Object) (Object, error) {
 	}
 	key, ok := args[0].(*Str)
 	if !ok {
-		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[1].TypeName())
+		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[1].TypeName())
 	}
 	temp := strings.Split(o.value, key.value)
 	result := make([]Object, 0)

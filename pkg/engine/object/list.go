@@ -293,7 +293,7 @@ func (o *List) MethodPop(args ...Object) (Object, error) {
 	}
 	idx, ok := args[0].(*Int)
 	if !ok {
-		return nil, fmt.Errorf("expecting int as 1st argument, got '%s'", args[1].TypeName())
+		return nil, fmt.Errorf("expecting 'int' as 1st argument, got '%s'", args[1].TypeName())
 	}
 	if idx.value < 0 || int(idx.value) >= len(o.value) {
 		return nil, planerrors.ErrIndexOutOfRange
