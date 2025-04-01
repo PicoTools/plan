@@ -76,7 +76,7 @@ fn hello() {
 
     return hello() + " " + world();
 }
-hello(); // hello world
+hello(); # hello world
 ```
 
 ## Closures
