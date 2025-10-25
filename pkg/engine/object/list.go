@@ -18,6 +18,10 @@ type List struct {
 
 // NewList create new List object containing list of objects
 func NewList(v []Object) *List {
+	// Create list of objects if nil
+	if v == nil {
+		v = make([]Object, 0)
+	}
 	l := &List{value: v}
 	l.fillMethods()
 	return l
