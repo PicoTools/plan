@@ -6,3 +6,4 @@ files/*.jar
 .devcontainer/
 *.swp
 cpu.pprof
+coverage.out
