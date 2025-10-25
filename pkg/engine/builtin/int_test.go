@@ -95,12 +95,14 @@ func TestInt(t *testing.T) {
 	})
 
 	t.Run("native func", func(t *testing.T) {
+		t.Parallel()
 		v, err := Int(object.NewNativeFunc("a", nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("runtime func", func(t *testing.T) {
+		t.Parallel()
 		v, err := Int(object.NewRuntimeFunc(nil, nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)

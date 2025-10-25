@@ -9,78 +9,91 @@ import (
 
 func TestBase64Dec(t *testing.T) {
 	t.Run("str", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewStr(""))
 		require.NoError(t, err)
 		require.Equal(t, "", v.String())
 	})
 
 	t.Run("str", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewStr("aGVsbG8="))
 		require.NoError(t, err)
 		require.Equal(t, "hello", v.String())
 	})
 
 	t.Run("str", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewStr("0L/RgNC40LLQtdGC"))
 		require.NoError(t, err)
 		require.Equal(t, "привет", v.String())
 	})
 
 	t.Run("str", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewStr("5L2g5aW9"))
 		require.NoError(t, err)
 		require.Equal(t, "你好", v.String())
 	})
 
 	t.Run("str", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewStr("aaaaaa"))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("bool", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewBool(true))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("int", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewInt(1))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("float", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewFloat(0.012))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("null", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewNull())
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("list", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewList(nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("dict", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewDict(nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("native func", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewNativeFunc("a", nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("runtime func", func(t *testing.T) {
+		t.Parallel()
 		v, err := Base64Dec(object.NewRuntimeFunc(nil, nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)

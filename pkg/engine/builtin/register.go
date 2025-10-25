@@ -3,9 +3,6 @@ package builtin
 import (
 	"bytes"
 	"compress/gzip"
-	"crypto/md5"
-	"crypto/sha1"
-	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -80,42 +77,6 @@ func Register() {
 // registerBuiltin registers builtin function to reduce boilerplate
 func registerBuiltin(name string, fn func(args ...object.Object) (object.Object, error)) {
 	storage.BuiltinFunctions[name] = object.NewNativeFunc(name, fn)
-}
-
-func Md5(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	md5sum := md5.Sum([]byte(str.Value()))
-	return object.NewStr(string(md5sum[:])), nil
-}
-
-func Sha1(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	sha1sum := sha1.Sum([]byte(str.Value()))
-	return object.NewStr(string(sha1sum[:])), nil
-}
-
-func Sha256(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	sha256sum := sha256.Sum256([]byte(str.Value()))
-	return object.NewStr(string(sha256sum[:])), nil
 }
 
 func Gzip(args ...object.Object) (object.Object, error) {
