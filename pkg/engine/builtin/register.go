@@ -87,36 +87,6 @@ func registerBuiltin(name string, fn func(args ...object.Object) (object.Object,
 	storage.BuiltinFunctions[name] = object.NewNativeFunc(name, fn)
 }
 
-func IsList(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	if _, ok := args[0].(*object.List); ok {
-		return object.NewBool(true), nil
-	}
-	return object.NewBool(false), nil
-}
-
-func IsNull(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	if _, ok := args[0].(*object.Null); ok {
-		return object.NewBool(true), nil
-	}
-	return object.NewBool(false), nil
-}
-
-func IsStr(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	if _, ok := args[0].(*object.Str); ok {
-		return object.NewBool(true), nil
-	}
-	return object.NewBool(false), nil
-}
-
 func Bool(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
