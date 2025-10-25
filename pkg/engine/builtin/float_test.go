@@ -87,6 +87,18 @@ func TestFloat(t *testing.T) {
 		require.Equal(t, nil, v)
 	})
 
+	t.Run("native func", func(t *testing.T) {
+		v, err := Chr(object.NewNativeFunc("a", nil))
+		require.Error(t, err)
+		require.Equal(t, nil, v)
+	})
+
+	t.Run("runtime func", func(t *testing.T) {
+		v, err := Chr(object.NewRuntimeFunc(nil, nil))
+		require.Error(t, err)
+		require.Equal(t, nil, v)
+	})
+
 	t.Run("more args", func(t *testing.T) {
 		t.Parallel()
 		v, err := Float(object.NewBool(true), object.NewFloat(2.0))

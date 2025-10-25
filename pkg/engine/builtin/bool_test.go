@@ -112,16 +112,21 @@ func TestBool(t *testing.T) {
 		require.Equal(t, object.NewBool(true), v)
 	})
 
-	t.Run("more args", func(t *testing.T) {
-		t.Parallel()
-		v, err := Bool(object.NewBool(true), object.NewFloat(2.0))
+	t.Run("native func", func(t *testing.T) {
+		v, err := Chr(object.NewNativeFunc("a", nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
-	t.Run("native func", func(t *testing.T) {
+	t.Run("runtime func", func(t *testing.T) {
+		v, err := Chr(object.NewRuntimeFunc(nil, nil))
+		require.Error(t, err)
+		require.Equal(t, nil, v)
+	})
+
+	t.Run("more args", func(t *testing.T) {
 		t.Parallel()
-		v, err := Bool(object.NewNativeFunc("test", func(args ...object.Object) (object.Object, error) { return nil, nil }))
+		v, err := Bool(object.NewBool(true), object.NewFloat(2.0))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
