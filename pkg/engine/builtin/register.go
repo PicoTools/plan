@@ -6,7 +6,6 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
-	"encoding/base32"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -81,32 +80,6 @@ func Register() {
 // registerBuiltin registers builtin function to reduce boilerplate
 func registerBuiltin(name string, fn func(args ...object.Object) (object.Object, error)) {
 	storage.BuiltinFunctions[name] = object.NewNativeFunc(name, fn)
-}
-
-func Base32Enc(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	return object.NewStr(base32.StdEncoding.EncodeToString([]byte(str.Value()))), nil
-}
-
-func Base32Dec(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	val, err := base32.StdEncoding.DecodeString(str.Value())
-	if err != nil {
-		return nil, err
-	}
-	return object.NewStr(string(val)), nil
 }
 
 func Md5(args ...object.Object) (object.Object, error) {
