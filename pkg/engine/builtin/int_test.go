@@ -95,13 +95,13 @@ func TestInt(t *testing.T) {
 	})
 
 	t.Run("native func", func(t *testing.T) {
-		v, err := Chr(object.NewNativeFunc("a", nil))
+		v, err := Int(object.NewNativeFunc("a", nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
 
 	t.Run("runtime func", func(t *testing.T) {
-		v, err := Chr(object.NewRuntimeFunc(nil, nil))
+		v, err := Int(object.NewRuntimeFunc(nil, nil))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})

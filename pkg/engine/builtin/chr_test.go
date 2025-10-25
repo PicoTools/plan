@@ -88,7 +88,7 @@ func TestChr(t *testing.T) {
 
 	t.Run("more args", func(t *testing.T) {
 		t.Parallel()
-		v, err := Bool(object.NewBool(true), object.NewFloat(2.0))
+		v, err := Chr(object.NewBool(true), object.NewFloat(2.0))
 		require.Error(t, err)
 		require.Equal(t, nil, v)
 	})
