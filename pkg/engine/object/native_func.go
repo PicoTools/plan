@@ -1,5 +1,7 @@
 package object
 
+import "fmt"
+
 // NativeFunc implements ObjectImpl interfaces
 type NativeFunc struct {
 	ObjectImpl
@@ -18,12 +20,12 @@ func NewNativeFunc(n string, c func(args ...Object) (Object, error)) *NativeFunc
 
 // TypeName returns type name of native function and its name
 func (o *NativeFunc) TypeName() string {
-	return "native-func: " + o.name
+	return "native-func"
 }
 
 // String returns string representation of native function object
 func (o *NativeFunc) String() string {
-	return "<native-func>"
+	return fmt.Sprintf("<native-func: %s>", o.name)
 }
 
 // CanCall indicates if object is callable
