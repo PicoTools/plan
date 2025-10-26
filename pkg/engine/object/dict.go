@@ -17,6 +17,10 @@ type Dict struct {
 
 // NewBool create new Dict object containing map of values
 func NewDict(v map[string]Object) *Dict {
+	// Create map of objects if nil
+	if v == nil {
+		v = make(map[string]Object)
+	}
 	d := &Dict{value: v}
 	d.fillMethods()
 	return d

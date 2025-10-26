@@ -1,6 +1,8 @@
 package object
 
 import (
+	"fmt"
+
 	"github.com/PicoTools/plan/pkg/parser"
 )
 
@@ -29,7 +31,7 @@ func (o *RuntimeFunc) SetName(name string) {
 
 // TypeName returns type name of runtime function and its name
 func (o *RuntimeFunc) TypeName() string {
-	return "runtime-func: " + o.name
+	return "runtime-func"
 }
 
 // GetName returns name of runtime function
@@ -39,7 +41,7 @@ func (o *RuntimeFunc) GetName() string {
 
 // String returns string representation of runtime function object
 func (o *RuntimeFunc) String() string {
-	return "<runtime-func>"
+	return fmt.Sprintf("<runtime-func: %s>", o.name)
 }
 
 // CanCall indicates if object is callable

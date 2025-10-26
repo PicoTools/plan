@@ -42,7 +42,12 @@ go-lint:
 	@go fmt ${GOFILES}
 	@go vet ${GOFILESNOTEST}
 
-test: test-pass test-fail test-sort
+test: test-go test-pass test-fail test-sort
+
+test-go:
+	@echo "\nGOLANG tests\n"
+	@CGO_ENABLED=1 go test -count=1 -race -covermode=atomic -coverpkg=./... -coverprofile=coverage.out ./...
+	@go tool cover -func=coverage.out | grep ^total | tr -s '\t'
 
 test-pass: build
 	@echo "\nPASS tests\n"
