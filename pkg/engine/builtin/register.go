@@ -1,13 +1,6 @@
 package builtin
 
 import (
-	"bytes"
-	"compress/gzip"
-	"encoding/hex"
-	"fmt"
-	"io"
-	"os"
-
 	"github.com/PicoTools/plan/pkg/engine/object"
 	"github.com/PicoTools/plan/pkg/engine/storage"
 )
@@ -77,103 +70,4 @@ func Register() {
 // registerBuiltin registers builtin function to reduce boilerplate
 func registerBuiltin(name string, fn func(args ...object.Object) (object.Object, error)) {
 	storage.BuiltinFunctions[name] = object.NewNativeFunc(name, fn)
-}
-
-func Gzip(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	b := &bytes.Buffer{}
-	w := gzip.NewWriter(b)
-	_, err := w.Write([]byte(str.Value()))
-	if err != nil {
-		return nil, err
-	}
-	_ = w.Close()
-	return object.NewStr(b.String()), nil
-}
-
-func Gunzip(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	r, err := gzip.NewReader(bytes.NewBufferString(str.Value()))
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		_ = r.Close()
-	}()
-	res, err := io.ReadAll(r)
-	if err != nil {
-		return nil, err
-	}
-	return object.NewStr(string(res)), nil
-}
-
-func Fread(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	data, err := os.ReadFile(str.Value())
-	if err != nil {
-		return nil, err
-	}
-	return object.NewStr(string(data)), nil
-}
-
-func Fwrite(args ...object.Object) (object.Object, error) {
-	if len(args) != 2 {
-		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
-	}
-	path, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	data, ok := args[1].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 2nd argument, got '%s'", args[1].TypeName())
-	}
-	if err := os.WriteFile(path.Value(), []byte(data.Value()), 0640); err != nil {
-		return nil, err
-	}
-	return object.NewNull(), nil
-}
-
-func Hex(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	return object.NewStr(hex.EncodeToString([]byte(str.Value()))), nil
-}
-
-func Unhex(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting 'str' as 1st argument, got '%s'", args[0].TypeName())
-	}
-	v, err := hex.DecodeString(str.Value())
-	if err != nil {
-		return nil, err
-	}
-	return object.NewStr(string(v)), nil
 }
